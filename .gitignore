@@ -1,5 +1,4 @@
 node_modules/
 test/assets
 
-test/mochawesome.html
-test/mochawesome.json
+test/minimatrix.js

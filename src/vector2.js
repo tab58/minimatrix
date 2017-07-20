@@ -167,21 +167,6 @@ Object.assign(Vector2.prototype, {
     return this;
   },
 
-  clampScalar: (function () {
-    const min = new Vector2();
-    const max = new Vector2();
-    return function clampScalar (minVal, maxVal) {
-      min.set(minVal, minVal);
-      max.set(maxVal, maxVal);
-      return this.clamp(min, max);
-    };
-  }()),
-
-  clampLength: function (min, max) {
-    const length = this.length();
-    return this.multiplyScalar(_Math.max(min, _Math.min(max, length)) / length);
-  },
-
   floor: function () {
     this.x = _Math.floor(this.x);
     this.y = _Math.floor(this.y);
@@ -216,6 +201,10 @@ Object.assign(Vector2.prototype, {
     return this.x * v.x + this.y * v.y;
   },
 
+  cross: function (v) {
+    return this.x * v.y - this.y * v.x;
+  },
+
   lengthSq: function () {
     // rewritten to deal with overflow/underflow
     const a = this.x;
@@ -244,10 +233,6 @@ Object.assign(Vector2.prototype, {
     return u * _Math.sqrt(1 + t * t);
   },
 
-  lengthManhattan: function () {
-    return _Math.abs(this.x) + _Math.abs(this.y);
-  },
-
   normalize: function () {
     return this.divideScalar(this.length());
   },
@@ -271,10 +256,6 @@ Object.assign(Vector2.prototype, {
     return dx * dx + dy * dy;
   },
 
-  distanceToManhattan: function (v) {
-    return _Math.abs(this.x - v.x) + _Math.abs(this.y - v.y);
-  },
-
   setLength: function (length) {
     return this.multiplyScalar(length / this.length());
   },
@@ -287,10 +268,6 @@ Object.assign(Vector2.prototype, {
 
   lerpVectors: function (v1, v2, alpha) {
     return this.subVectors(v2, v1).multiplyScalar(alpha).add(v1);
-  },
-
-  equals: function (v) {
-    return ((v.x === this.x) && (v.y === this.y));
   },
 
   fromArray: function (array, offset) {
@@ -321,15 +298,6 @@ Object.assign(Vector2.prototype, {
     const y = this.y;
     this.x = x * c - y * s;
     this.y = x * s + y * c;
-    return this;
-  },
-
-  fromBufferAttribute: function (attribute, index, offset) {
-    if (offset !== undefined) {
-      console.warn('THREE.Vector2: offset has been removed from .fromBufferAttribute().');
-    }
-    this.x = attribute.getX(index);
-    this.y = attribute.getY(index);
     return this;
   },
 

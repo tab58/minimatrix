@@ -23,10 +23,6 @@ jsFiles.forEach(file => {
 });
 
 // Run the tests.
-mocha.run(failures => {
-  process.on('exit', () => {
-    process.exit(failures);  // exit with non-zero status if there were failures
-  });
-});
+mocha.run();
 
 console.log('Run the Mocha tests.');
