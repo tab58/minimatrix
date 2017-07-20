@@ -1,5 +1,7 @@
 'use strict';
 
+const Utils = require('./utils.js');
+
 /*
  *   Base code from THREE.js authors below.
  *   Additions by Tim Bright
@@ -17,49 +19,7 @@ function Matrix2 () {
     1, 0,
     0, 1
   ];
-  if (arguments.length > 0) {
-    console.error('THREE.Matrix2: the constructor no longer reads arguments. use .set() instead.');
-  }
 }
-const helpers = {
-  prettyPrint: function () {
-    const formatNumber = function formatNumber(x) {
-      const maxLen = 6;
-      let rawStr = '' + x;
-      let str = rawStr.substring(0, maxLen);
-      let padding1 = '';
-      let padding2 = '';
-      const initStrLen = str.length;
-      for (let i = initStrLen; i <= maxLen; i += 2) {
-        padding1 += ' ';
-        padding2 += ' ';
-      }
-      const extra = ((maxLen > initStrLen) && ((maxLen - initStrLen) % 2 === 1) ? ' ' : '');
-      // format string with sci-notation
-      const eIdx = rawStr.indexOf('e');
-      if (eIdx > -1) {
-        const expStr = rawStr.substring(eIdx);
-        const expStrLen = expStr.length;
-        str = str.substring(0, maxLen - expStrLen) + expStr;
-      }
-      const formatted = padding1 + str + padding2 + extra;
-      return formatted;
-    };
-    const te = this.elements;
-    const cap = '+-                -+';
-    let matString = '\n' + cap + '\n';
-    for (let i = 0; i < 2; ++i) {
-      let rowString = '| ';
-      for (let j = 0; j < 2; ++j) {
-        const val = te[(j * 2) + i];
-        const valStr = formatNumber(val);
-        rowString += valStr;
-      }
-      matString += rowString + ' |\n';
-    }
-    return matString + cap;
-  }
-};
 
 Object.assign(Matrix2.prototype, {
   isMatrix2: true,
@@ -272,7 +232,7 @@ Object.assign(Matrix2.prototype, {
   },
 
   prettyPrint: function () {
-    return helpers.prettyPrint.call(this);
+    return Utils.printMatrix2;
   }
 });
 

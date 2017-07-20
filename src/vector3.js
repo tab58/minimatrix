@@ -5,8 +5,8 @@
  *   Additions by Tim Bright
  */
 
-const _Math = require('./mathFunctions.js');
-const Utils = require('./mathUtils.js');
+const _Math = require('./stdMath.js');
+const Compare = require('./compare.js');
 // const Matrix3 = require('./matrix3.js');
 // const Quaternion = require('./quaternion.js');
 
@@ -379,7 +379,7 @@ Object.assign(Vector3.prototype, {
   angleTo: function (v) {
     const theta = this.dot(v) / (_Math.sqrt(this.lengthSq() * v.lengthSq()));
     // clamp, to handle numerical problems
-    return _Math.acos(Utils.clamp(theta, -1, 1));
+    return _Math.acos(Compare.clamp(theta, -1, 1));
   },
 
   distanceTo: function (v) {

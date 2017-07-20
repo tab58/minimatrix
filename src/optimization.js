@@ -1,9 +1,9 @@
 'use strict';
 
-const Utils = require('./mathUtils.js');
-const TOLERANCE = Utils.DEFAULT_TOLERANCE;
+const Compare = require('./compare.js');
+const TOLERANCE = Compare.DEFAULT_TOLERANCE;
 
-const _Math = require('./mathFunctions.js');
+const _Math = require('./stdMath.js');
 const Matrix2 = require('./matrix2.js');
 const Vector2 = require('./vector2.js');
 

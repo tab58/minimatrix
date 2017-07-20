@@ -5,7 +5,7 @@
  *   Additions by Tim Bright
  */
 
-const _Math = require('./mathFunctions.js');
+const _Math = require('./stdMath.js');
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -18,27 +18,6 @@ function Vector2 (x, y) {
   this.x = x || 0;
   this.y = y || 0;
 }
-
-Object.defineProperties(Vector2.prototype, {
-  'width': {
-    get: function () {
-      return this.x;
-    },
-
-    set: function (value) {
-      this.x = value;
-    }
-  },
-
-  'height': {
-    get: function () {
-      return this.y;
-    },
-    set: function (value) {
-      this.y = value;
-    }
-  }
-});
 
 Object.assign(Vector2.prototype, {
   isVector2: true,
@@ -62,23 +41,6 @@ Object.assign(Vector2.prototype, {
   setY: function (y) {
     this.y = y;
     return this;
-  },
-
-  setComponent: function (index, value) {
-    switch (index) {
-      case 0: this.x = value; break;
-      case 1: this.y = value; break;
-      default: throw new Error('index is out of range: ' + index);
-    }
-    return this;
-  },
-
-  getComponent: function (index) {
-    switch (index) {
-      case 0: return this.x;
-      case 1: return this.y;
-      default: throw new Error('index is out of range: ' + index);
-    }
   },
 
   clone: function () {

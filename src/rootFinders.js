@@ -1,8 +1,7 @@
 'use strict';
 
-const _Math = require('./mathFunctions.js');
-const Utils = require('./mathUtils.js');
-const TOLERANCE = Utils.DEFAULT_TOLERANCE;
+const Compare = require('./compare.js');
+const TOLERANCE = Compare.DEFAULT_TOLERANCE;
 
 const RootFinders = {
   bisectionMethod: function bisectionMethod (f, options) {
@@ -25,7 +24,7 @@ const RootFinders = {
         xl = xr;
         fl = fr;
       }
-    } while (!Utils.isZero(f(xr), es) && iter < imax);
+    } while (!Compare.isZero(f(xr), es) && iter < imax);
     if (iter >= imax) {
       console.warn('bisectionMethod(): Iteration max reached. Solution may not be accurate.');
     }

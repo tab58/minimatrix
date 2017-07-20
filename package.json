@@ -4,7 +4,8 @@
   "description": "A linear algebra package for 2x2 and 3x3 matrices and 2D/3D vectors.",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build-browser-tests": "./node_modules/.bin/webpack --config ./test/webpack.config-tests.js",
+    "test": "./node_modules/.bin/mocha ./test/node-tests.js"
   },
   "repository": {
     "type": "git",
@@ -19,5 +20,11 @@
   "bugs": {
     "url": "https://github.com/tab58/mini-matrix/issues"
   },
-  "homepage": "https://github.com/tab58/mini-matrix#readme"
+  "homepage": "https://github.com/tab58/mini-matrix#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^4.1.0",
+    "mocha": "^3.4.2",
+    "webpack": "^3.3.0"
+  }
 }

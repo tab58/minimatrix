@@ -5,12 +5,12 @@
  *   Additions by Tim Bright
  */
 
-const _Math = require('./mathFunctions.js');
+const _Math = require('./stdMath.js');
 const Polynomial = require('./polynomial.js');
 const Vector3 = require('./vector3.js');
 
-const Utils = require('./mathUtils.js');
-const EPSILON = Utils.DEFAULT_TOLERANCE;
+const Compare = require('./compare.js');
+const EPSILON = Compare.DEFAULT_TOLERANCE;
 
 /**
  * @author alteredq / http://alteredqualia.com/
@@ -111,7 +111,7 @@ const helpers = {
     const me = m.elements;
     const TOLERANCE = TOL || EPSILON;
     for (let i = 0; i < 9; ++i) {
-      if (Utils.isZero(me[i], TOLERANCE)) {
+      if (Compare.isZero(me[i], TOLERANCE)) {
         me[i] = 0;
       }
     }
@@ -224,11 +224,11 @@ const helpers = {
       }
       // scale and add current row to all rows underneath
       const largestElem = me[(i * 3) + i];
-      if (!Utils.isZero(largestElem, EPSILON)) {
+      if (!Compare.isZero(largestElem, EPSILON)) {
         helpers.scaleRow(m, i, 1.0 / largestElem);
         for (let j = i + 1; j < 3; ++j) {
           const scaleElem = me[(i * 3) + j];
-          if (!Utils.isZero(scaleElem, EPSILON)) {
+          if (!Compare.isZero(scaleElem, EPSILON)) {
             helpers.scaleAndAddRow(m, i, j, -scaleElem);
           }
         }
@@ -237,10 +237,10 @@ const helpers = {
     // iterate back through to get RREF since everything on diagonals should be 1 or 0
     for (let i = 2; i >= 0; --i) {
       const val = me[(i * 3) + i];
-      if (!Utils.isZero(val, EPSILON)) {
+      if (!Compare.isZero(val, EPSILON)) {
         for (let j = i - 1; j >= 0; --j) {
           const scaleElem = me[(i * 3) + j];
-          if (!Utils.isZero(scaleElem, EPSILON)) {
+          if (!Compare.isZero(scaleElem, EPSILON)) {
             helpers.scaleAndAddRow(m, i, j, -scaleElem);
           }
         }
@@ -250,9 +250,9 @@ const helpers = {
   },
   isRowNonzero: function isRowNonzero (m, i) {
     const me = m.elements;
-    return !(Utils.isZero(me[i], EPSILON) &&
-              Utils.isZero(me[i + 3], EPSILON) &&
-              Utils.isZero(me[i + 6], EPSILON));
+    return !(Compare.isZero(me[i], EPSILON) &&
+              Compare.isZero(me[i + 3], EPSILON) &&
+              Compare.isZero(me[i + 6], EPSILON));
   }
 };
 
@@ -689,11 +689,11 @@ Object.assign(Matrix3.prototype, {
       column: 0,
       value: te[0]
     };
-    if (Utils.isZero(te[0], EPSILON)) {
+    if (Compare.isZero(te[0], EPSILON)) {
       for (let i = 0; i < 3; ++i) {
         for (let j = 0; j < 3; ++j) {
           const val = te[i * 3 + j];
-          if (!Utils.isZero(val, EPSILON)) {
+          if (!Compare.isZero(val, EPSILON)) {
             rowCol.row = j;
             rowCol.column = i;
             rowCol.value = val;

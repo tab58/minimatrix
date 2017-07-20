@@ -1,8 +1,8 @@
 'use strict';
 
-const _Math = require('./mathFunctions.js');
-const Utils = require('./mathUtils.js');
-const TOLERANCE = Utils.DEFAULT_TOLERANCE;
+const _Math = require('./stdMath.js');
+const Compare = require('./compare.js');
+const TOLERANCE = Compare.DEFAULT_TOLERANCE;
 
 const helpers = {
   // Based on method from http://web.cs.iastate.edu/~cs577/handouts/polyroots.pdf
@@ -13,9 +13,9 @@ const helpers = {
 
     // check discriminant
     const disc = (b * b) / 4 + (a * a * a) / 27;
-    if (Utils.isZero(disc, TOLERANCE)) {
+    if (Compare.isZero(disc, TOLERANCE)) {
       // three roots, one with multiplicity 2 or 3
-      if (Utils.isZero(b, TOLERANCE)) {
+      if (Compare.isZero(b, TOLERANCE)) {
         // roots are all 0
         return [
           -p / 3
@@ -58,9 +58,9 @@ const Polynomial = {
   getRealQuadraticRoots: function (a, b, c) {
     const disc = b * b - 4 * a * c;
     const Q =  -b / (2 * a);
-    if (Utils.isZero(disc, TOLERANCE)) {
+    if (Compare.isZero(disc, TOLERANCE)) {
       return [ Q ];
-    } else if (Utils.isLTZero(disc, TOLERANCE)) {
+    } else if (Compare.isLTZero(disc, TOLERANCE)) {
       return [];
     } else {
       const S = _Math.sqrt(disc);
