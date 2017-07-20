@@ -1,12 +1,11 @@
 'use strict';
 /* globals describe it Minimatrix expect */
 
-const Vector2 = Minimatrix.Vector2;
-const Matrix2 = Minimatrix.Matrix2;
-const Matrix3 = Minimatrix.Matrix3;
-const EPS = 1e-14;
-
 describe('Vector2', () => {
+  const Vector2 = Minimatrix.Vector2;
+  const Matrix2 = Minimatrix.Matrix2;
+  const Matrix3 = Minimatrix.Matrix3;
+  const EPS = 1e-14;
   describe('Basic Manipulations', () => {
     it('should have the proper coordinates on create', () => {
       const v = new Vector2(5, 7);
@@ -87,7 +86,7 @@ describe('Vector2', () => {
       v.subScalar(11);
       expect(v).to.be.eql(new Vector2(5 - 11, 7 - 11));
     });
-    it('should add 2 vectors properly', () => {
+    it('should subtract 2 vectors properly', () => {
       const a = new Vector2(5, 7);
       const b = new Vector2(11, 13);
       const c = (new Vector2(0, 0)).subVectors(a, b);

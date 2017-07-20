@@ -360,7 +360,7 @@ Object.assign(Vector3.prototype, {
     };
   }()),
 
-  thresholdValuesToZero: function clampToZero(tol) {
+  thresholdValuesToZero: function (tol) {
     this.x = (_Math.abs(this.x) < tol ? 0 : this.x);
     this.y = (_Math.abs(this.y) < tol ? 0 : this.y);
     this.z = (_Math.abs(this.z) < tol ? 0 : this.z);
@@ -379,7 +379,7 @@ Object.assign(Vector3.prototype, {
   angleTo: function (v) {
     const theta = this.dot(v) / (_Math.sqrt(this.lengthSq() * v.lengthSq()));
     // clamp, to handle numerical problems
-    return _Math.acos(Compare.clamp(theta, -1, 1));
+    return _Math.acos(Math.max(-1, Math.min(theta, 1)));
   },
 
   distanceTo: function (v) {
@@ -391,10 +391,6 @@ Object.assign(Vector3.prototype, {
     const dy = this.y - v.y;
     const dz = this.z - v.z;
     return dx * dx + dy * dy + dz * dz;
-  },
-
-  distanceToManhattan: function (v) {
-    return _Math.abs(this.x - v.x) + _Math.abs(this.y - v.y) + _Math.abs(this.z - v.z);
   },
 
   equals: function (v) {
@@ -422,16 +418,6 @@ Object.assign(Vector3.prototype, {
     array[ offset + 1 ] = this.y;
     array[ offset + 2 ] = this.z;
     return array;
-  },
-
-  fromBufferAttribute: function (attribute, index, offset) {
-    if (offset !== undefined) {
-      console.warn('THREE.Vector3: offset has been removed from .fromBufferAttribute().');
-    }
-    this.x = attribute.getX(index);
-    this.y = attribute.getY(index);
-    this.z = attribute.getZ(index);
-    return this;
   }
 });
 
