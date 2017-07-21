@@ -17,7 +17,7 @@ var mocha = new Mocha({
 var testDir = path.join(__dirname, '/specs');
 
 // Add each .js file to the mocha instance
-const jsFiles = fs.readdirSync(testDir).filter(file => file.substr(-3) === '.js');
+const jsFiles = fs.readdirSync(testDir).filter(file => file.substr(-7) === 'spec.js');
 jsFiles.forEach(file => {
   mocha.addFile(path.join(testDir, file));
 });
