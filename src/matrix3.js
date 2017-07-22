@@ -4,20 +4,19 @@
  *   Base code from THREE.js authors below.
  *   Additions by Tim Bright
  */
-
-const _Math = require('./stdMath.js');
-const Polynomial = require('./polynomial.js');
-const Vector3 = require('./vector3.js');
-
-const Compare = require('./compare.js');
-const EPSILON = Compare.DEFAULT_TOLERANCE;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  * @author WestLangley / http://github.com/WestLangley
  * @author bhouston / http://clara.io
  * @author tschw
  */
+
+const Utils = require('./utils.js');
+const Vector3 = require('./vector3.js');
+const _Math = require('./stdMath.js');
+const Polynomial = require('./polynomial.js');
+
+const Compare = require('./compare.js');
 
 // function assumes row and column numbering from 0-2.
 const helpers = {
@@ -66,11 +65,10 @@ const helpers = {
     me[i + 3] += me[j + 3] * alpha;
     me[i + 6] += me[j + 6] * alpha;
   },
-  thresholdToZero: function thresholdToZero (m, TOL) {
+  thresholdToZero: function thresholdToZero (m, TOL = 1e-14) {
     const me = m.elements;
-    const TOLERANCE = TOL || EPSILON;
     for (let i = 0; i < 9; ++i) {
-      if (Compare.isZero(me[i], TOLERANCE)) {
+      if (Compare.isZero(me[i], TOL)) {
         me[i] = 0;
       }
     }
@@ -129,9 +127,9 @@ const helpers = {
       return [c, s, r];
     }
   },
-  qrDecomposition: function qrDecomposition (A) {
+  qrDecomposition: function qrDecomposition (A, TOL = 1e-14) {
     const Q = new Matrix3();
-    const R = (new Matrix3()).copy(A).thresholdEntriesToZero(EPSILON);
+    const R = (new Matrix3()).copy(A).thresholdEntriesToZero(TOL);
     const qe = Q.elements;
     const re = R.elements;
 
@@ -172,7 +170,7 @@ const helpers = {
     }
     return { Q, R };
   },
-  rrefInPlace: function (m) {
+  rrefInPlace: function (m, TOL = 1e-14) {
     const me = m.elements;
     // iterate through all rows to get to REF
     for (let i = 0; i < 3; ++i) {
@@ -183,11 +181,11 @@ const helpers = {
       }
       // scale and add current row to all rows underneath
       const largestElem = me[(i * 3) + i];
-      if (!Compare.isZero(largestElem, EPSILON)) {
+      if (!Compare.isZero(largestElem, TOL)) {
         helpers.scaleRow(m, i, 1.0 / largestElem);
         for (let j = i + 1; j < 3; ++j) {
           const scaleElem = me[(i * 3) + j];
-          if (!Compare.isZero(scaleElem, EPSILON)) {
+          if (!Compare.isZero(scaleElem, TOL)) {
             helpers.scaleAndAddRow(m, i, j, -scaleElem);
           }
         }
@@ -196,10 +194,10 @@ const helpers = {
     // iterate back through to get RREF since everything on diagonals should be 1 or 0
     for (let i = 2; i >= 0; --i) {
       const val = me[(i * 3) + i];
-      if (!Compare.isZero(val, EPSILON)) {
+      if (!Compare.isZero(val, TOL)) {
         for (let j = i - 1; j >= 0; --j) {
           const scaleElem = me[(i * 3) + j];
-          if (!Compare.isZero(scaleElem, EPSILON)) {
+          if (!Compare.isZero(scaleElem, TOL)) {
             helpers.scaleAndAddRow(m, i, j, -scaleElem);
           }
         }
@@ -207,11 +205,11 @@ const helpers = {
     }
     return m;
   },
-  isRowNonzero: function isRowNonzero (m, i) {
+  isRowNonzero: function isRowNonzero (m, i, TOL = 1e-14) {
     const me = m.elements;
-    return !(Compare.isZero(me[i], EPSILON) &&
-              Compare.isZero(me[i + 3], EPSILON) &&
-              Compare.isZero(me[i + 6], EPSILON));
+    return !(Compare.isZero(me[i], TOL) &&
+              Compare.isZero(me[i + 3], TOL) &&
+              Compare.isZero(me[i + 6], TOL));
   }
 };
 
@@ -627,18 +625,18 @@ Object.assign(Matrix3.prototype, {
     }
   },
 
-  findFirstNonvanishing: function () {
+  findFirstNonvanishing: function (TOL = 1e-14) {
     const te = this.elements;
     let rowCol = {
       row: 0,
       column: 0,
       value: te[0]
     };
-    if (Compare.isZero(te[0], EPSILON)) {
+    if (Compare.isZero(te[0], TOL)) {
       for (let i = 0; i < 3; ++i) {
         for (let j = 0; j < 3; ++j) {
           const val = te[i * 3 + j];
-          if (!Compare.isZero(val, EPSILON)) {
+          if (!Compare.isZero(val, TOL)) {
             rowCol.row = j;
             rowCol.column = i;
             rowCol.value = val;
@@ -650,7 +648,7 @@ Object.assign(Matrix3.prototype, {
     return rowCol;
   },
 
-  thresholdEntriesToZero: function (TOL) {
+  thresholdEntriesToZero: function (TOL = 1e-14) {
     return helpers.thresholdToZero(this, TOL);
   },
 
@@ -669,6 +667,10 @@ Object.assign(Matrix3.prototype, {
 
   decomposeQR: function () {
     return helpers.qrDecomposition(this);
+  },
+
+  prettyPrint: function () {
+    return Utils.printMatrix3(this);
   }
 });
 

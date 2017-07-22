@@ -169,5 +169,10 @@ describe('Matrix2', () => {
       expect(c.elements[2]).to.be.eql(13 * 23 + 5);
       expect(c.elements[3]).to.be.eql(17 * 23 + 11);
     });
+    it('should print the matrix', () => {
+      const a = new Matrix2();
+      a.set(3.123456789, 1102345.123456789, 7.123456789e-15, 11.123456789);
+      console.log(a.prettyPrint());
+    });
   });
 });

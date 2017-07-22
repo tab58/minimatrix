@@ -1,18 +1,17 @@
 'use strict';
 
-const Utils = require('./utils.js');
-
 /*
  *   Base code from THREE.js authors below.
  *   Additions by Tim Bright
  */
-
 /**
  * @author alteredq / http://alteredqualia.com/
  * @author WestLangley / http://github.com/WestLangley
  * @author bhouston / http://clara.io
  * @author tschw
  */
+
+const Utils = require('./utils.js');
 
 function Matrix2 () {
   this.elements = [
@@ -232,7 +231,7 @@ Object.assign(Matrix2.prototype, {
   },
 
   prettyPrint: function () {
-    return Utils.printMatrix2;
+    return Utils.printMatrix2(this);
   }
 });
 

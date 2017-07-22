@@ -7,8 +7,7 @@ const AssembleMath = {
   Vector3: require('./vector3.js'),
   Compare: require('./compare.js'),
   Polynomial: require('./polynomial.js'),
-  RootFinders: require('./rootFinders.js'),
-  Optimization: require('./optimization.js')
+  Utils: require('./utils.js')
 };
 Object.assign(AssembleMath, require('./stdMath.js'));
 

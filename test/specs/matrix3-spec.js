@@ -3,7 +3,7 @@
 
 // const expect = require('chai').expect;
 // const Minimatrix = require('../../src/index.js');
-describe('Matrix2', () => {
+describe('Matrix3', () => {
   const Vector3 = Minimatrix.Vector3;
   const Matrix3 = Minimatrix.Matrix3;
   const EPS = 1e-14;
@@ -129,6 +129,11 @@ describe('Matrix2', () => {
       expect(a.getColumn(0)).to.be.eql(new Vector3(2, 5, 8));
       expect(a.getColumn(1)).to.be.eql(new Vector3(3, 6, 9));
       expect(a.getColumn(2)).to.be.eql(new Vector3(4, 7, 10));
+    });
+    it('should print the matrix', () => {
+      const a = new Matrix3();
+      a.set(3.123456789, 1102345.123456789, 7.123456789e-15, 11.123456789, 1, 12, 123, 1234, 12345);
+      console.log(a.prettyPrint());
     });
   });
   describe('Computational Helper Functions', () => {
