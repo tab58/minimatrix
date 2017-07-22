@@ -21,47 +21,6 @@ const EPSILON = Compare.DEFAULT_TOLERANCE;
 
 // function assumes row and column numbering from 0-2.
 const helpers = {
-  prettyPrint: function () {
-    const formatNumber = function formatNumber (x) {
-      const maxLen = 6;
-      let rawStr = '' + x;
-      let str = rawStr.substring(0, maxLen);
-      //let str = Utils.isZero(x, Utils.DEFAULT_TOLERANCE) ? '  0   ' : rawStr.substring(0, maxLen);
-      let padding1 = '';
-      let padding2 = '';
-      const initStrLen = str.length;
-      for (let i = initStrLen; i <= maxLen; i += 2) {
-        padding1 += ' ';
-        padding2 += ' ';
-      }
-      const extra = ((maxLen > initStrLen) && ((maxLen - initStrLen) % 2 === 1) ? ' ' : '');
-      // format string with sci-notation
-      const eIdx = rawStr.indexOf('e');
-      if (eIdx > -1) {
-        const expStr = rawStr.substring(eIdx);
-        const expStrLen = expStr.length;
-
-        // if (str.trim() !== '0') {
-        str = str.substring(0, maxLen - expStrLen) + expStr;
-        // }
-      }
-      const formatted = padding1 + str + padding2 + extra;
-      return formatted;
-    };
-    const te = this.elements;
-    const cap = '+-                        -+';
-    let matString = '\n' + cap + '\n';
-    for (let i = 0; i < 3; ++i) {
-      let rowString = '| ';
-      for (let j = 0; j < 3; ++j) {
-        const val = te[(j * 3) + i];
-        const valStr = formatNumber(val);
-        rowString += valStr;
-      }
-      matString += rowString + ' |\n';
-    }
-    return matString + cap;
-  },
   findLargestInCol: function (m, i, startAtRow) {
     let me = m.elements;
     let offset = i * 3;
@@ -121,7 +80,7 @@ const helpers = {
     const v0 = m.getColumn(0);
     const v1 = m.getColumn(1);
     const v2 = m.getColumn(2);
-    function proj(u, v) {
+    function proj (u, v) {
       return u.clone().multiplyScalar(u.dot(v) / u.dot(u));
     }
     const u0 = v0;
@@ -211,7 +170,7 @@ const helpers = {
         }
       }
     }
-    return { Q, R }
+    return { Q, R };
   },
   rrefInPlace: function (m) {
     const me = m.elements;
@@ -551,20 +510,6 @@ Object.assign(Matrix3.prototype, {
     return n11 + n22 + n33;
   },
 
-  transposeIntoArray: function (r) {
-    const m = this.elements;
-    r[ 0 ] = m[ 0 ];
-    r[ 1 ] = m[ 3 ];
-    r[ 2 ] = m[ 6 ];
-    r[ 3 ] = m[ 1 ];
-    r[ 4 ] = m[ 4 ];
-    r[ 5 ] = m[ 7 ];
-    r[ 6 ] = m[ 2 ];
-    r[ 7 ] = m[ 5 ];
-    r[ 8 ] = m[ 8 ];
-    return this;
-  },
-
   equals: function (matrix) {
     const te = this.elements;
     const me = matrix.elements;
@@ -709,15 +654,11 @@ Object.assign(Matrix3.prototype, {
     return helpers.thresholdToZero(this, TOL);
   },
 
-  prettyPrint: function () {
-    return helpers.prettyPrint.call(this);
-  },
-
-  getRank: function () {
-    const { Q, R } = helpers.qrDecomposition(this);
-    R.thresholdEntriesToZero(100 * EPSILON);
+  getRank: function (EPS = 1e-14) {
+    const { R } = helpers.qrDecomposition(this);
+    R.thresholdEntriesToZero(100 * EPS);
     let rank = 0;
-    const test = helpers.rrefInPlace(R);
+    helpers.rrefInPlace(R);
     for (let i = 0; i < 3; ++i) {
       if (helpers.isRowNonzero(R, i)) {
         rank++;
@@ -728,15 +669,6 @@ Object.assign(Matrix3.prototype, {
 
   decomposeQR: function () {
     return helpers.qrDecomposition(this);
-  },
-
-  thresholdToLowerRank: function () {
-    // computes a QR decomposition and thresholds the R matrix values
-    // so that the true rank will be reflected
-    const { Q, R } = helpers.qrDecomposition(this);
-    R.thresholdEntriesToZero(10 * EPSILON);
-    this.copy(Q.multiply(R));
-    return this;
   }
 });
 
