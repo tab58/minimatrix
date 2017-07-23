@@ -57,7 +57,7 @@ const helpers = {
 const Polynomial = {
   getRealQuadraticRoots: function (a, b, c) {
     const disc = b * b - 4 * a * c;
-    const Q =  -b / (2 * a);
+    const Q = -b / (2 * a);
     if (Compare.isZero(disc, TOLERANCE)) {
       return [ Q ];
     } else if (Compare.isLTZero(disc, TOLERANCE)) {

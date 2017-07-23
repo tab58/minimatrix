@@ -136,6 +136,84 @@ describe('Matrix3', () => {
       console.log(a.prettyPrint());
     });
   });
+  describe('Arithmetic Operations', () => {
+    it('should add a matrix to another', () => {
+      const a = new Matrix3();
+      a.set(3, 5, 7, 11, 13, 17, 19, 23, 29);
+      const b = new Matrix3();
+      b.set(31, 37, 41, 43, 47, 53, 59, 61, 67);
+      const c = a.clone().add(b);
+      expect(c.elements[0]).to.be.eql(3 + 31);
+      expect(c.elements[3]).to.be.eql(5 + 37);
+      expect(c.elements[6]).to.be.eql(7 + 41);
+      expect(c.elements[1]).to.be.eql(11 + 43);
+      expect(c.elements[4]).to.be.eql(13 + 47);
+      expect(c.elements[7]).to.be.eql(17 + 53);
+      expect(c.elements[2]).to.be.eql(19 + 59);
+      expect(c.elements[5]).to.be.eql(23 + 61);
+      expect(c.elements[8]).to.be.eql(29 + 67);
+      const d = (new Matrix3()).addMatrices(a, b);
+      expect(d.elements[0]).to.be.eql(3 + 31);
+      expect(d.elements[3]).to.be.eql(5 + 37);
+      expect(d.elements[6]).to.be.eql(7 + 41);
+      expect(d.elements[1]).to.be.eql(11 + 43);
+      expect(d.elements[4]).to.be.eql(13 + 47);
+      expect(d.elements[7]).to.be.eql(17 + 53);
+      expect(d.elements[2]).to.be.eql(19 + 59);
+      expect(d.elements[5]).to.be.eql(23 + 61);
+      expect(d.elements[8]).to.be.eql(29 + 67);
+    });
+    it('should add a scaled matrix to another', () => {
+      const a = new Matrix3();
+      a.set(3, 5, 7, 11, 13, 17, 19, 23, 29);
+      const b = new Matrix3();
+      b.set(31, 37, 41, 43, 47, 53, 59, 61, 67);
+      const d = (new Matrix3()).addMatrices(a, b, 3);
+      expect(d.elements[0]).to.be.eql(3 + 31 * 3);
+      expect(d.elements[3]).to.be.eql(5 + 37 * 3);
+      expect(d.elements[6]).to.be.eql(7 + 41 * 3);
+      expect(d.elements[1]).to.be.eql(11 + 43 * 3);
+      expect(d.elements[4]).to.be.eql(13 + 47 * 3);
+      expect(d.elements[7]).to.be.eql(17 + 53 * 3);
+      expect(d.elements[2]).to.be.eql(19 + 59 * 3);
+      expect(d.elements[5]).to.be.eql(23 + 61 * 3);
+      expect(d.elements[8]).to.be.eql(29 + 67 * 3);
+    });
+    it('should scale a matrix', () => {
+      const a = new Matrix3();
+      a.set(3, 5, 7, 11, 13, 17, 19, 23, 29);
+      a.multiplyScalar(31);
+      expect(a.elements[0]).to.be.eql(3 * 31);
+      expect(a.elements[3]).to.be.eql(5 * 31);
+      expect(a.elements[6]).to.be.eql(7 * 31);
+      expect(a.elements[1]).to.be.eql(11 * 31);
+      expect(a.elements[4]).to.be.eql(13 * 31);
+      expect(a.elements[7]).to.be.eql(17 * 31);
+      expect(a.elements[2]).to.be.eql(19 * 31);
+      expect(a.elements[5]).to.be.eql(23 * 31);
+      expect(a.elements[8]).to.be.eql(29 * 31);
+    });
+    it('should multiply 2 matrices together', () => {
+      const a = new Matrix3();
+      a.set(3, 5, 7, 11, 13, 17, 19, 23, 29);
+      const b = new Matrix3();
+      b.set(31, 37, 41, 43, 47, 53, 59, 61, 67);
+      const c = (new Matrix3()).multiplyMatrices(a, b);
+      expect(c.elements[0]).to.be.eql(3 * 31 + 5 * 43 + 7 * 59);
+      expect(c.elements[3]).to.be.eql(3 * 37 + 5 * 47 + 7 * 61);
+      expect(c.elements[6]).to.be.eql(3 * 41 + 5 * 53 + 7 * 67);
+      expect(c.elements[1]).to.be.eql(11 * 31 + 13 * 43 + 17 * 59);
+      expect(c.elements[4]).to.be.eql(11 * 37 + 13 * 47 + 17 * 61);
+      expect(c.elements[7]).to.be.eql(11 * 41 + 13 * 53 + 17 * 67);
+      expect(c.elements[2]).to.be.eql(19 * 31 + 23 * 43 + 29 * 59);
+      expect(c.elements[5]).to.be.eql(19 * 37 + 23 * 47 + 29 * 61);
+      expect(c.elements[8]).to.be.eql(19 * 41 + 23 * 53 + 29 * 67);
+      const d = a.clone().multiply(b);
+      expect(d).to.be.eql(c);
+      const f = b.clone().premultiply(a);
+      expect(f).to.be.eql(c);
+    });
+  });
   describe('Computational Helper Functions', () => {
     it('should find largest element', () => {
       const a = new Matrix3();
