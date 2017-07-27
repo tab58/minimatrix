@@ -58,7 +58,7 @@ const CompareFunctions = {
       if (arg.isVector2 === undefined) {
         throw new Error('selectDistinctVector2: argument not a Vector2.');
       }
-      const vec2AreEqual = Utils.vector2AreEqual;
+      const vec2AreEqual = CompareFunctions.vector2AreEqual;
       if (!uniqueValues.reduce((acc, uniqueVal) => acc || vec2AreEqual(arg, uniqueVal, TOLERANCE), false)) {
         uniqueValues.push(arg);
       }
