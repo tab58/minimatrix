@@ -46,6 +46,15 @@ Object.assign(Vector2.prototype, {
     return this;
   },
 
+  setComponent: function (index, value) {
+    switch (index) {
+      case 0: this.x = value; break;
+      case 1: this.y = value; break;
+      default: throw new Error('index is out of range: ' + index);
+    }
+    return this;
+  },
+
   clone: function () {
     return new this.constructor(this.x, this.y);
   },
