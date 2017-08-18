@@ -23,6 +23,8 @@ function Matrix2 () {
 Object.assign(Matrix2.prototype, {
   isMatrix2: true,
 
+  dimension: 2,
+
   // column-major
   set: function (n11, n12, n21, n22) {
     const te = this.elements;

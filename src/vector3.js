@@ -28,6 +28,8 @@ function Vector3 (x, y, z) {
 Object.assign(Vector3.prototype, {
   isVector3: true,
 
+  dimension: 3,
+
   set: function (x, y, z) {
     this.x = x;
     this.y = y;
