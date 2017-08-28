@@ -237,6 +237,23 @@ Object.assign(Matrix3.prototype, {
     return this;
   },
 
+  setRow: function (i, row) {
+    const te = this.elements;
+    te[ i + 0 ] = row.x;
+    te[ i + 3 ] = row.y;
+    te[ i + 6 ] = row.z;
+    return this;
+  },
+
+  setColumn: function (i, col) {
+    const te = this.elements;
+    const to = i * 3;
+    te[ to + 0 ] = col.x;
+    te[ to + 1 ] = col.y;
+    te[ to + 2 ] = col.z;
+    return this;
+  },
+
   setColumns: function (c0, c1, c2) {
     const te = this.elements;
     te[ 0 ] = c0.x; te[ 1 ] = c0.y; te[ 2 ] = c0.z;

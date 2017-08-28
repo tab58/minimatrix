@@ -12,6 +12,7 @@
  */
 
 const Utils = require('./utils.js');
+const Vector2 = require('./vector2.js');
 
 function Matrix2 () {
   this.elements = [
@@ -31,6 +32,59 @@ Object.assign(Matrix2.prototype, {
     te[ 0 ] = n11; te[ 1 ] = n21;
     te[ 2 ] = n12; te[ 3 ] = n22;
     return this;
+  },
+
+  setRow: function (i, row) {
+    const te = this.elements;
+    te[ i + 0 ] = row.x;
+    te[ i + 2 ] = row.y;
+    return this;
+  },
+
+  setColumn: function (i, col) {
+    const te = this.elements;
+    const to = i * 2;
+    te[ to + 0 ] = col.x;
+    te[ to + 1 ] = col.y;
+    return this;
+  },
+
+  setColumns: function (c0, c1) {
+    const te = this.elements;
+    te[ 0 ] = c0.x; te[ 1 ] = c0.y;
+    te[ 2 ] = c1.x; te[ 3 ] = c1.y;
+    return this;
+  },
+
+  setRows: function (r0, r1) {
+    const te = this.elements;
+    te[ 0 ] = r0.x; te[ 1 ] = r1.x;
+    te[ 2 ] = r0.y; te[ 3 ] = r1.y;
+    return this;
+  },
+
+  getRow: function (i) {
+    const te = this.elements;
+    switch (i) {
+      case 0:
+        return new Vector2(te[0], te[2]);
+      case 1:
+        return new Vector2(te[1], te[3]);
+      default:
+        throw new Error('No row defined at ' + i + '.');
+    }
+  },
+
+  getColumn: function (i) {
+    const te = this.elements;
+    switch (i) {
+      case 0:
+        return new Vector2(te[0], te[1]);
+      case 1:
+        return new Vector2(te[2], te[3]);
+      default:
+        throw new Error('No column defined at ' + i + '.');
+    }
   },
 
   identity: function () {
