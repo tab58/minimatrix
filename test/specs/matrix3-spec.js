@@ -294,8 +294,20 @@ describe('Matrix3', () => {
     it('should compute the eigenvalues', () => {
       const a = new Matrix3();
       a.set(3, 2, 4, 2, 0, 2, 4, 2, 3);
-      const eigen = a.getEigenvalues().sort();
-      expect(eigen).to.be.eql([-1, 8]);
+      const eigenInfo = a.getEigenvalues();
+      // returns 1 real and 2 (possibly) complex roots
+      // eigenvalues are A0, A1 + B1*i, A2 + B2*i
+      const realEigens = [];
+      if (eigenInfo.A0) {
+        realEigens.push(eigenInfo.A0);
+      }
+      if (eigenInfo.B1 === 0) {
+        realEigens.push(eigenInfo.A1);
+      }
+      if (eigenInfo.B2 === 0) {
+        realEigens.push(eigenInfo.A2);
+      }
+      expect(realEigens.sort()).to.be.eql([-1, -1, 8]);
     });
     it('should compute the rank of a matrix', () => {
       const a = new Matrix3();

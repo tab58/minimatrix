@@ -14,7 +14,7 @@
 const Utils = require('./utils.js');
 const Vector3 = require('./vector3.js');
 const _Math = require('./stdMath.js');
-const Polynomial = require('./polynomial.js');
+const PolyRoots = require('cubic-roots');
 
 const Compare = require('./compare.js');
 
@@ -590,7 +590,7 @@ Object.assign(Matrix3.prototype, {
     const C = a * e + a * i - d * b - g * c + e * i - h * f;
     const D = -(a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g);
 
-    return Polynomial.getRealCubicRoots(A, B, C, D);
+    return PolyRoots.getCubicRoots(A, B, C, D);
   },
 
   findLargestAbsElement: function () {
