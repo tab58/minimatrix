@@ -20,10 +20,28 @@ const Compare = require('./compare.js');
 
 // function assumes row and column numbering from 0-2.
 const helpers = {
-  findLargestInCol: function (m, i, startAtRow) {
+  findLargestInRow: (M, i) => {
+    // get the row:
+    const m = M.elements;
+    const n = Math.sqrt(m.length); // assuming M is square because it's a minimatrix
+    const offset = i;
+
+    let j = 0;
+    let lrgElem = Math.abs(m[offset]);
+    let lrgCol = j;
+    for (j = 1; j < n; ++j) {
+      const val = Math.abs(m[offset + j * n]);
+      if (val > lrgElem) {
+        lrgCol = j;
+        lrgElem = val;
+      }
+    }
+    return lrgCol;
+  },
+  findLargestInCol: function (m, i, startAtRow = 0) {
     let me = m.elements;
     let offset = i * 3;
-    let maxIdx = (startAtRow === undefined ? 0 : startAtRow);
+    let maxIdx = startAtRow;
     let maxVal = _Math.abs(me[offset + maxIdx]);
     for (let i = maxIdx + 1; i < 3; ++i) {
       let val = _Math.abs(me[offset + i]);
@@ -33,6 +51,14 @@ const helpers = {
       }
     }
     return maxIdx;
+  },
+  swapValuesInArray: (A, i, j) => {
+    if (i !== j) {
+      const tmp = A[i];
+      A[i] = A[j];
+      A[j] = tmp;
+    }
+    return A;
   },
   swapRowsInPlace: function swapRowsInPlace (m, i, j) {
     const me = m.elements;
@@ -170,6 +196,93 @@ const helpers = {
     }
     return { Q, R };
   },
+  luDecomposition: function luDecomposition (AA, inPlace, TOL = 1e-14) {
+    const A = inPlace ? AA : AA.clone();
+    const a = A.elements; // indexed via a_ij = a[i + j * n]
+    const n = 3;
+    const P = [0, 1, 2];
+    const rowScalers = [0, 0, 0];
+    for (let i = 0; i < n; ++i) {
+      const col = helpers.findLargestInRow(A, i);
+      const scaler = a[col * n + i]; // row scaling
+      if (scaler === 0) {
+        throw new Error('luDecompAndSolve(): matrix is singular and cannot be LU factorized.');
+      }
+      rowScalers[i] = scaler; // don't actually want to scale the matrix or else (PA != LU).
+    }
+    // iterate over columns to reduce the matrix
+    // implicitly reduce the matrix
+    for (let j = 0; j < n; ++j) {
+      for (let i = 0; i < j; ++i) {
+        // compute upper tri, computes values across the row
+        let sum = 0;
+        for (let k = 0; k < i; ++k) {
+          sum += a[i + k * n] * a[k + j * n]; // avoid big + small roundoffs
+        }
+        a[i + j * n] = a[i + j * n] - sum;
+      }
+      let pivotLrgElem = 0;
+      let pivotIndex = j;
+      for (let i = j; i < n; ++i) {
+        // compute lower tri and diagonal, computes values down the column
+        let sum = 0;
+        for (let k = 0; k < j; ++k) {
+          sum += a[i + k * n] * a[k + j * n]; // avoid big + small roundoffs
+        }
+        a[i + j * n] = a[i + j * n] - sum;
+
+        // find the pivot element
+        const pivotTest = rowScalers[i] * Math.abs(a[i + j * n]);
+        if (pivotTest > pivotLrgElem) {
+          pivotLrgElem = pivotTest;
+          pivotIndex = i;
+        }
+      }
+      helpers.swapRowsInPlace(A, j, pivotIndex);
+      helpers.swapValuesInArray(P, j, pivotIndex);
+      helpers.swapValuesInArray(rowScalers, j, pivotIndex);
+      if (j < n - 1) {
+        const pivotScale = a[j + j * n];
+        for (let i = j + 1; i < n; ++i) {
+          a[i + j * n] /= pivotScale;
+        }
+      }
+    }
+    return {
+      P,
+      A
+    };
+  },
+  luSolve: function luSolve (A, P, b, x) {
+    // Since PA = LU, then L(U x) = Pb
+    const a = A.elements;
+    const n = Math.floor(Math.sqrt(a.length));
+    const X = (x !== undefined ? x.setScalar(0) : b.clone().setScalar(0));
+    // L * y  = P * b, solve for y.
+    // Implicit 1's on the diagonal.
+    for (let i = 0; i < n; ++i) {
+      let sum = 0;
+      for (let j = 0; j < i; ++j) {
+        sum += a[i + j * n] * X.getComponent(j);
+      }
+      const xi = b.getComponent(P[i]) - sum;
+      X.setComponent(i, xi);
+    }
+
+    // U * x = y  ==> i = n-1 -> 0, j = 0
+    for (let i = n - 1; i >= 0; --i) {
+      let sum = 0;
+      for (let j = i + 1; j < n; ++j) {
+        sum += a[i + j * n] * X.getComponent(j);
+      }
+      const scale = a[i + i * n];
+      // if (scale === 0) {
+      //   consoleWarning(`luSolve(): x[${i}] is free.`);
+      // }
+      X.setComponent(i, (X.getComponent(i) - sum) / scale);
+    }
+    return X;
+  },
   rrefInPlace: function (m, TOL = 1e-14) {
     const me = m.elements;
     // iterate through all rows to get to REF
@@ -228,6 +341,12 @@ Object.assign(Matrix3.prototype, {
   isMatrix3: true,
 
   dimension: 3,
+
+  E0: new Vector3(1, 0, 0),
+
+  E1: new Vector3(0, 1, 0),
+
+  E2: new Vector3(0, 0, 1),
 
   set: function (n11, n12, n13, n21, n22, n23, n31, n32, n33) {
     const te = this.elements;
@@ -464,49 +583,55 @@ Object.assign(Matrix3.prototype, {
   },
 
   getInverse: function (matrix, throwOnDegenerate) {
-    const me = matrix.elements;
-    const te = this.elements;
-    const n11 = me[ 0 ];
-    const n21 = me[ 1 ];
-    const n31 = me[ 2 ];
-    const n12 = me[ 3 ];
-    const n22 = me[ 4 ];
-    const n32 = me[ 5 ];
-    const n13 = me[ 6 ];
-    const n23 = me[ 7 ];
-    const n33 = me[ 8 ];
+    const { P, A } = helpers.luDecomposition(matrix, true);
+    matrix.setRow(0, helpers.luSolve(A, P, matrix.E0));
+    matrix.setRow(1, helpers.luSolve(A, P, matrix.E1));
+    matrix.setRow(2, helpers.luSolve(A, P, matrix.E2));
+    // const C1 = helpers.luSolve(A, P, matrix.E1);
+    // const C2 = helpers.luSolve(A, P, matrix.E2);
+    // const me = matrix.elements;
+    // const te = this.elements;
+    // const n11 = me[ 0 ];
+    // const n21 = me[ 1 ];
+    // const n31 = me[ 2 ];
+    // const n12 = me[ 3 ];
+    // const n22 = me[ 4 ];
+    // const n32 = me[ 5 ];
+    // const n13 = me[ 6 ];
+    // const n23 = me[ 7 ];
+    // const n33 = me[ 8 ];
 
-    const t11 = n33 * n22 - n32 * n23;
-    const t12 = n32 * n13 - n33 * n12;
-    const t13 = n23 * n12 - n22 * n13;
+    // const t11 = n33 * n22 - n32 * n23;
+    // const t12 = n32 * n13 - n33 * n12;
+    // const t13 = n23 * n12 - n22 * n13;
 
-    const det = n11 * t11 + n21 * t12 + n31 * t13;
+    // const det = n11 * t11 + n21 * t12 + n31 * t13;
 
-    if (det === 0) {
-      const msg = 'Matrix3.getInverse(): cannot invert matrix, determinant is 0';
+    // if (det === 0) {
+    //   const msg = 'Matrix3.getInverse(): cannot invert matrix, determinant is 0';
 
-      if (throwOnDegenerate === true) {
-        throw new Error(msg);
-      } else {
-        console.warn(msg);
-      }
-      return this.identity();
-    }
+    //   if (throwOnDegenerate === true) {
+    //     throw new Error(msg);
+    //   } else {
+    //     console.warn(msg);
+    //   }
+    //   return this.identity();
+    // }
 
-    const detInv = 1.0 / det;
-    te[ 0 ] = t11 * detInv;
-    te[ 1 ] = (n31 * n23 - n33 * n21) * detInv;
-    te[ 2 ] = (n32 * n21 - n31 * n22) * detInv;
+    // const detInv = 1.0 / det;
+    // te[ 0 ] = t11 * detInv;
+    // te[ 1 ] = (n31 * n23 - n33 * n21) * detInv;
+    // te[ 2 ] = (n32 * n21 - n31 * n22) * detInv;
 
-    te[ 3 ] = t12 * detInv;
-    te[ 4 ] = (n33 * n11 - n31 * n13) * detInv;
-    te[ 5 ] = (n31 * n12 - n32 * n11) * detInv;
+    // te[ 3 ] = t12 * detInv;
+    // te[ 4 ] = (n33 * n11 - n31 * n13) * detInv;
+    // te[ 5 ] = (n31 * n12 - n32 * n11) * detInv;
 
-    te[ 6 ] = t13 * detInv;
-    te[ 7 ] = (n21 * n13 - n23 * n11) * detInv;
-    te[ 8 ] = (n22 * n11 - n21 * n12) * detInv;
+    // te[ 6 ] = t13 * detInv;
+    // te[ 7 ] = (n21 * n13 - n23 * n11) * detInv;
+    // te[ 8 ] = (n22 * n11 - n21 * n12) * detInv;
 
-    return this;
+    return matrix;
   },
 
   transpose: function () {
@@ -686,6 +811,14 @@ Object.assign(Matrix3.prototype, {
 
   decomposeQR: function () {
     return helpers.qrDecomposition(this);
+  },
+
+  decomposeLU: function (inPlace = true) {
+    return helpers.luDecomposition(this, inPlace);
+  },
+
+  solveLU: function (A, P, b, x) {
+    return helpers.luSolve(A, P, b, x);
   },
 
   prettyPrint: function () {
