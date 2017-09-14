@@ -13,6 +13,8 @@
 
 const Utils = require('./utils.js');
 const Vector2 = require('./vector2.js');
+const MathHelpers = require('./math-helpers.js');
+const PolyRoots = require('cubic-roots');
 
 function Matrix2 () {
   this.elements = [
@@ -25,6 +27,10 @@ Object.assign(Matrix2.prototype, {
   isMatrix2: true,
 
   dimension: 2,
+
+  E0: new Vector2(1, 0),
+
+  E1: new Vector2(0, 1),
 
   // column-major
   set: function (n11, n12, n21, n22) {
@@ -196,6 +202,30 @@ Object.assign(Matrix2.prototype, {
     return this;
   },
 
+  adjugate: function () {
+    return this.getAdjugate(this);
+  },
+
+  getAdjugate: function (matrix) {
+    const me = matrix.elements;
+    const a = me[ 0 ];
+    const c = me[ 1 ];
+    const b = me[ 2 ];
+    const d = me[ 3 ];
+
+    const te = this.elements;
+    te[0] = d;
+    te[1] = -c;
+    te[2] = -b;
+    te[3] = a;
+    return this;
+  },
+
+  trace: function () {
+    const te = this.elements();
+    return te[0] + te[3];
+  },
+
   equals: function (matrix) {
     const te = this.elements;
     const me = matrix.elements;
@@ -288,6 +318,49 @@ Object.assign(Matrix2.prototype, {
 
   prettyPrint: function () {
     return Utils.printMatrix2(this);
+  },
+
+  findLargestAbsElement: function () {
+    return MathHelpers.findLargestAbsElement(this);
+  },
+
+  findFirstNonvanishing: function (TOL = 1e-14) {
+    return MathHelpers.findFirstNonvanishing(this, TOL);
+  },
+
+  thresholdEntriesToZero: function (TOL = 1e-14) {
+    return MathHelpers.thresholdToZero(this, TOL);
+  },
+
+  decomposeQR: function (inPlace = false) {
+    return MathHelpers.qrDecomposition(this, inPlace);
+  },
+
+  decomposeLU: function (inPlace = true) {
+    return MathHelpers.luDecomposition(this, inPlace);
+  },
+
+  solveLU: function (P, b, X) {
+    return MathHelpers.luSolve(this, P, b, X);
+  },
+
+  getRank: function (TOL = 1e-14) {
+    return MathHelpers.getRank(this, TOL);
+  },
+
+  getEigenvalues: function () {
+    // Bad way of doing this!
+    // TODO: Find better way
+    const je = this.elements;
+    const a = je[ 0 ];
+    const b = je[ 2 ];
+    const c = je[ 1 ];
+    const d = je[ 3 ];
+
+    const A = 1;
+    const B = -(a + d);
+    const C = -b * c;
+    return PolyRoots.getQuadraticRoots(A, B, C);
   }
 });
 

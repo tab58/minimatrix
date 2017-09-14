@@ -13,316 +13,19 @@
 
 const Utils = require('./utils.js');
 const Vector3 = require('./vector3.js');
-const _Math = require('./stdMath.js');
 const PolyRoots = require('cubic-roots');
-
-const Compare = require('./compare.js');
+// const _Math = require('./stdMath.js');
+// const Compare = require('./compare.js');
+const MathHelpers = require('./math-helpers.js');
 
 // function assumes row and column numbering from 0-2.
 const helpers = {
-  findLargestInRow: (M, i) => {
-    // get the row:
-    const m = M.elements;
-    const n = Math.sqrt(m.length); // assuming M is square because it's a minimatrix
-    const offset = i;
-
-    let j = 0;
-    let lrgElem = Math.abs(m[offset]);
-    let lrgCol = j;
-    for (j = 1; j < n; ++j) {
-      const val = Math.abs(m[offset + j * n]);
-      if (val > lrgElem) {
-        lrgCol = j;
-        lrgElem = val;
-      }
-    }
-    return lrgCol;
-  },
-  findLargestInCol: function (m, i, startAtRow = 0) {
-    let me = m.elements;
-    let offset = i * 3;
-    let maxIdx = startAtRow;
-    let maxVal = _Math.abs(me[offset + maxIdx]);
-    for (let i = maxIdx + 1; i < 3; ++i) {
-      let val = _Math.abs(me[offset + i]);
-      if (val > maxVal) {
-        maxIdx = i;
-        maxVal = val;
-      }
-    }
-    return maxIdx;
-  },
-  swapValuesInArray: (A, i, j) => {
-    if (i !== j) {
-      const tmp = A[i];
-      A[i] = A[j];
-      A[j] = tmp;
-    }
-    return A;
-  },
-  swapRowsInPlace: function swapRowsInPlace (m, i, j) {
-    const me = m.elements;
-    let a1 = me[i];
-    let a2 = me[i + 3];
-    let a3 = me[i + 6];
-
-    me[i] = me[j];
-    me[i + 3] = me[j + 3];
-    me[i + 6] = me[j + 6];
-
-    me[j] = a1;
-    me[j + 3] = a2;
-    me[j + 6] = a3;
-  },
-  scaleRow: function scaleAndAddRow (m, row, scale) {
-    const me = m.elements;
-    let i = row;
-    let alpha = (scale === undefined ? 1.0 : scale);
-    me[i] *= alpha;
-    me[i + 3] *= alpha;
-    me[i + 6] *= alpha;
-  },
-  scaleAndAddRow: function scaleAndAddRow (m, srcRow, destRow, scale) {
-    const me = m.elements;
-    let i = destRow;
-    let j = srcRow;
-    let alpha = (scale === undefined ? 1.0 : scale);
-    me[i] += me[j] * alpha;
-    me[i + 3] += me[j + 3] * alpha;
-    me[i + 6] += me[j + 6] * alpha;
-  },
-  thresholdToZero: function thresholdToZero (m, TOL = 1e-14) {
-    const me = m.elements;
-    for (let i = 0; i < 9; ++i) {
-      if (Compare.isZero(me[i], TOL)) {
-        me[i] = 0;
-      }
-    }
-    return m;
-  },
   modifiedGramSchmidt: function modifiedGramSchmidt (m) {
-    const v0 = m.getColumn(0);
-    const v1 = m.getColumn(1);
-    const v2 = m.getColumn(2);
-    function proj (u, v) {
-      return u.clone().multiplyScalar(u.dot(v) / u.dot(u));
-    }
-    const u0 = v0;
-    const u1 = v1.clone().sub(proj(u0, v1));
-    const u2t = v2.clone().sub(proj(u0, v2));
-    const u2 = u2t.sub(proj(u1, u2t));
-    m.setColumns(u0, u1, u2);
-  },
-  rotg: function rotg (a, b, csr) {
-    // Based on Algorithm 4 from "Discontinuous Plane
-    // Rotations and the Symmetric Eigenvalue Problem"
-    // by Anderson, 2000.
-    let c = 0;
-    let s = 0;
-    let r = 0;
-    let t = 0;
-    let u = 0;
-
-    if (b === 0) {
-      c = _Math.sign(a);
-      s = 0;
-      r = _Math.abs(a);
-    } else if (a === 0) {
-      c = 0;
-      s = _Math.sign(b);
-      r = _Math.abs(b);
-    } else if (_Math.abs(a) > _Math.abs(b)) {
-      t = b / a;
-      u = _Math.sign(a) * _Math.sqrt(1 + t * t);
-      c = 1 / u;
-      s = t * c;
-      r = a * u;
-    } else {
-      t = a / b;
-      u = _Math.sign(a) * _Math.sqrt(1 + t * t);
-      s = 1 / u;
-      c = t * s;
-      r = b * u;
-    }
-    // try to save some unnecessary object creation
-    if (csr !== undefined && csr.length > 2) {
-      csr[0] = c;
-      csr[1] = s;
-      csr[2] = r;
-    } else {
-      return [c, s, r];
-    }
-  },
-  qrDecomposition: function qrDecomposition (A, TOL = 1e-14) {
-    const Q = new Matrix3();
-    const R = (new Matrix3()).copy(A).thresholdEntriesToZero(TOL);
-    const qe = Q.elements;
-    const re = R.elements;
-
-    const csr = [0, 0, 0];
-    const m = 3;
-    const n = 3;
-    for (let j = 0; j < n; ++j) {
-      for (let i = m - 1; i >= j + 1; --i) {
-        const a = re[n * j + (i - 1)]; // R.get(i - 1, j);
-        const b = re[n * j + i]; // R.get(i, j);
-        if (a === 0 && b === 0) {
-          continue;
-        }
-        helpers.rotg(a, b, csr);
-        const c = csr[0];
-        const s = csr[1];
-        let tmp1 = 0;
-        let tmp2 = 0;
-
-        // R' = G * R
-        for (let x = 0; x < n; ++x) {
-          tmp1 = re[n * x + (i - 1)]; // R.get(i - 1, x);
-          tmp2 = re[n * x + i]; // R.get(i, x);
-          re[n * x + (i - 1)] = tmp1 * c + tmp2 * s; // R.set(i - 1, x, tmp1 * c + tmp2 * s);
-          re[n * x + i] = -tmp1 * s + tmp2 * c; // R.set(i, x, -tmp1 * s + tmp2 * c);
-        }
-        re[n * j + (i - 1)] = csr[2]; // R.set(i - 1, j, csr[2]);
-        re[n * j + i] = 0; // R.set(i, j, 0);
-
-        // Q' = Q * G^T
-        for (let x = 0; x < m; ++x) {
-          tmp1 = qe[n * (i - 1) + x]; // Q.get(x, i - 1);
-          tmp2 = qe[n * i + x]; // Q.get(x, i);
-          qe[n * (i - 1) + x] = tmp1 * c + tmp2 * s; // Q.set(x, i - 1, tmp1 * c + tmp2 * s);
-          qe[n * i + x] = -tmp1 * s + tmp2 * c; // Q.set(x, i, -tmp1 * s + tmp2 * c);
-        }
-      }
-    }
-    return { Q, R };
-  },
-  luDecomposition: function luDecomposition (AA, inPlace, TOL = 1e-14) {
-    const A = inPlace ? AA : AA.clone();
-    const a = A.elements; // indexed via a_ij = a[i + j * n]
-    const n = 3;
-    const P = [0, 1, 2];
-    const rowScalers = [0, 0, 0];
-    for (let i = 0; i < n; ++i) {
-      const col = helpers.findLargestInRow(A, i);
-      const scaler = a[col * n + i]; // row scaling
-      if (scaler === 0) {
-        throw new Error('luDecompAndSolve(): matrix is singular and cannot be LU factorized.');
-      }
-      rowScalers[i] = scaler; // don't actually want to scale the matrix or else (PA != LU).
-    }
-    // iterate over columns to reduce the matrix
-    // implicitly reduce the matrix
-    for (let j = 0; j < n; ++j) {
-      for (let i = 0; i < j; ++i) {
-        // compute upper tri, computes values across the row
-        let sum = 0;
-        for (let k = 0; k < i; ++k) {
-          sum += a[i + k * n] * a[k + j * n]; // avoid big + small roundoffs
-        }
-        a[i + j * n] = a[i + j * n] - sum;
-      }
-      let pivotLrgElem = 0;
-      let pivotIndex = j;
-      for (let i = j; i < n; ++i) {
-        // compute lower tri and diagonal, computes values down the column
-        let sum = 0;
-        for (let k = 0; k < j; ++k) {
-          sum += a[i + k * n] * a[k + j * n]; // avoid big + small roundoffs
-        }
-        a[i + j * n] = a[i + j * n] - sum;
-
-        // find the pivot element
-        const pivotTest = rowScalers[i] * Math.abs(a[i + j * n]);
-        if (pivotTest > pivotLrgElem) {
-          pivotLrgElem = pivotTest;
-          pivotIndex = i;
-        }
-      }
-      helpers.swapRowsInPlace(A, j, pivotIndex);
-      helpers.swapValuesInArray(P, j, pivotIndex);
-      helpers.swapValuesInArray(rowScalers, j, pivotIndex);
-      if (j < n - 1) {
-        const pivotScale = a[j + j * n];
-        for (let i = j + 1; i < n; ++i) {
-          a[i + j * n] /= pivotScale;
-        }
-      }
-    }
-    return {
-      P,
-      A
-    };
+    return MathHelpers.modifiedGramSchmidt(m);
   },
   luSolve: function luSolve (A, P, b, x) {
-    // Since PA = LU, then L(U x) = Pb
-    const a = A.elements;
-    const n = Math.floor(Math.sqrt(a.length));
     const X = (x !== undefined ? x.setScalar(0) : b.clone().setScalar(0));
-    // L * y  = P * b, solve for y.
-    // Implicit 1's on the diagonal.
-    for (let i = 0; i < n; ++i) {
-      let sum = 0;
-      for (let j = 0; j < i; ++j) {
-        sum += a[i + j * n] * X.getComponent(j);
-      }
-      const xi = b.getComponent(P[i]) - sum;
-      X.setComponent(i, xi);
-    }
-
-    // U * x = y  ==> i = n-1 -> 0, j = 0
-    for (let i = n - 1; i >= 0; --i) {
-      let sum = 0;
-      for (let j = i + 1; j < n; ++j) {
-        sum += a[i + j * n] * X.getComponent(j);
-      }
-      const scale = a[i + i * n];
-      // if (scale === 0) {
-      //   consoleWarning(`luSolve(): x[${i}] is free.`);
-      // }
-      X.setComponent(i, (X.getComponent(i) - sum) / scale);
-    }
-    return X;
-  },
-  rrefInPlace: function (m, TOL = 1e-14) {
-    const me = m.elements;
-    // iterate through all rows to get to REF
-    for (let i = 0; i < 3; ++i) {
-      // search for largest in col and swap
-      const k = helpers.findLargestInCol(m, i, i);
-      if (k !== i) {
-        helpers.swapRowsInPlace(m, i, k);
-      }
-      // scale and add current row to all rows underneath
-      const largestElem = me[(i * 3) + i];
-      if (!Compare.isZero(largestElem, TOL)) {
-        helpers.scaleRow(m, i, 1.0 / largestElem);
-        for (let j = i + 1; j < 3; ++j) {
-          const scaleElem = me[(i * 3) + j];
-          if (!Compare.isZero(scaleElem, TOL)) {
-            helpers.scaleAndAddRow(m, i, j, -scaleElem);
-          }
-        }
-      }
-    }
-    // iterate back through to get RREF since everything on diagonals should be 1 or 0
-    for (let i = 2; i >= 0; --i) {
-      const val = me[(i * 3) + i];
-      if (!Compare.isZero(val, TOL)) {
-        for (let j = i - 1; j >= 0; --j) {
-          const scaleElem = me[(i * 3) + j];
-          if (!Compare.isZero(scaleElem, TOL)) {
-            helpers.scaleAndAddRow(m, i, j, -scaleElem);
-          }
-        }
-      }
-    }
-    return m;
-  },
-  isRowNonzero: function isRowNonzero (m, i, TOL = 1e-14) {
-    const me = m.elements;
-    return !(Compare.isZero(me[i], TOL) &&
-              Compare.isZero(me[i + 3], TOL) &&
-              Compare.isZero(me[i + 6], TOL));
+    return MathHelpers.luSolve(A, P, b, X);
   }
 };
 
@@ -333,7 +36,7 @@ function Matrix3 () {
     0, 0, 1
   ];
   if (arguments.length > 0) {
-    console.error('THREE.Matrix3: the constructor no longer reads arguments. use .set() instead.');
+    console.error('Matrix3: the constructor no longer reads arguments. use .set() instead.');
   }
 }
 
@@ -583,54 +286,10 @@ Object.assign(Matrix3.prototype, {
   },
 
   getInverse: function (matrix, throwOnDegenerate) {
-    const { P, A } = helpers.luDecomposition(matrix, true);
+    const { P, A } = MathHelpers.luDecomposition(matrix, true);
     matrix.setRow(0, helpers.luSolve(A, P, matrix.E0));
     matrix.setRow(1, helpers.luSolve(A, P, matrix.E1));
     matrix.setRow(2, helpers.luSolve(A, P, matrix.E2));
-    // const C1 = helpers.luSolve(A, P, matrix.E1);
-    // const C2 = helpers.luSolve(A, P, matrix.E2);
-    // const me = matrix.elements;
-    // const te = this.elements;
-    // const n11 = me[ 0 ];
-    // const n21 = me[ 1 ];
-    // const n31 = me[ 2 ];
-    // const n12 = me[ 3 ];
-    // const n22 = me[ 4 ];
-    // const n32 = me[ 5 ];
-    // const n13 = me[ 6 ];
-    // const n23 = me[ 7 ];
-    // const n33 = me[ 8 ];
-
-    // const t11 = n33 * n22 - n32 * n23;
-    // const t12 = n32 * n13 - n33 * n12;
-    // const t13 = n23 * n12 - n22 * n13;
-
-    // const det = n11 * t11 + n21 * t12 + n31 * t13;
-
-    // if (det === 0) {
-    //   const msg = 'Matrix3.getInverse(): cannot invert matrix, determinant is 0';
-
-    //   if (throwOnDegenerate === true) {
-    //     throw new Error(msg);
-    //   } else {
-    //     console.warn(msg);
-    //   }
-    //   return this.identity();
-    // }
-
-    // const detInv = 1.0 / det;
-    // te[ 0 ] = t11 * detInv;
-    // te[ 1 ] = (n31 * n23 - n33 * n21) * detInv;
-    // te[ 2 ] = (n32 * n21 - n31 * n22) * detInv;
-
-    // te[ 3 ] = t12 * detInv;
-    // te[ 4 ] = (n33 * n11 - n31 * n13) * detInv;
-    // te[ 5 ] = (n31 * n12 - n32 * n11) * detInv;
-
-    // te[ 6 ] = t13 * detInv;
-    // te[ 7 ] = (n21 * n13 - n23 * n11) * detInv;
-    // te[ 8 ] = (n22 * n11 - n21 * n12) * detInv;
-
     return matrix;
   },
 
@@ -699,6 +358,8 @@ Object.assign(Matrix3.prototype, {
   },
 
   getEigenvalues: function () {
+    // Bad way of doing this!
+    // TODO: Find better way
     const je = this.elements;
     const a = je[ 0 ];
     const b = je[ 1 ];
@@ -718,27 +379,48 @@ Object.assign(Matrix3.prototype, {
     return PolyRoots.getCubicRoots(A, B, C, D);
   },
 
-  findLargestAbsElement: function () {
+  getOuterProduct: function (a, b, scalar) {
+    // computes alpha * (ab^T)
+    const alpha = (scalar === undefined ? 1 : scalar);
+    const n11 = alpha * a.x * b.x;
+    const n12 = alpha * a.x * b.y;
+    const n13 = alpha * a.x * b.z;
+    const n21 = alpha * a.y * b.x;
+    const n22 = alpha * a.y * b.y;
+    const n23 = alpha * a.y * b.z;
+    const n31 = alpha * a.z * b.x;
+    const n32 = alpha * a.z * b.y;
+    const n33 = alpha * a.z * b.z;
+    return this.set(n11, n12, n13, n21, n22, n23, n31, n32, n33);
+  },
+
+  addOuterProduct: function (a, b, scalar) {
+    // computes [this + alpha * (ab^T)]
     const te = this.elements;
-    let max = _Math.abs(te[0]);
-    let rowCol = {
-      row: 0,
-      column: 0,
-      value: te[0]
-    };
-    for (let i = 0; i < 3; ++i) {
-      for (let j = 0; j < 3; ++j) {
-        const val = te[i * 3 + j];
-        const ti = _Math.abs(val);
-        if (ti > max) {
-          max = ti;
-          rowCol.row = j;
-          rowCol.column = i;
-          rowCol.value = val;
-        }
-      }
-    }
-    return rowCol;
+    const alpha = (scalar === undefined ? 1 : scalar);
+    const n11 = alpha * a.x * b.x;
+    const n12 = alpha * a.x * b.y;
+    const n13 = alpha * a.x * b.z;
+    const n21 = alpha * a.y * b.x;
+    const n22 = alpha * a.y * b.y;
+    const n23 = alpha * a.y * b.z;
+    const n31 = alpha * a.z * b.x;
+    const n32 = alpha * a.z * b.y;
+    const n33 = alpha * a.z * b.z;
+    te[ 0 ] += n11;
+    te[ 1 ] += n21;
+    te[ 2 ] += n31;
+    te[ 3 ] += n12;
+    te[ 4 ] += n22;
+    te[ 5 ] += n32;
+    te[ 6 ] += n13;
+    te[ 7 ] += n23;
+    te[ 8 ] += n33;
+    return this;
+  },
+
+  findLargestAbsElement: function () {
+    return MathHelpers.findLargestAbsElement(this);
   },
 
   getRow: function (i) {
@@ -770,55 +452,27 @@ Object.assign(Matrix3.prototype, {
   },
 
   findFirstNonvanishing: function (TOL = 1e-14) {
-    const te = this.elements;
-    let rowCol = {
-      row: 0,
-      column: 0,
-      value: te[0]
-    };
-    if (Compare.isZero(te[0], TOL)) {
-      for (let i = 0; i < 3; ++i) {
-        for (let j = 0; j < 3; ++j) {
-          const val = te[i * 3 + j];
-          if (!Compare.isZero(val, TOL)) {
-            rowCol.row = j;
-            rowCol.column = i;
-            rowCol.value = val;
-            return rowCol;
-          }
-        }
-      }
-    }
-    return rowCol;
+    return MathHelpers.findFirstNonvanishing(this, TOL);
   },
 
   thresholdEntriesToZero: function (TOL = 1e-14) {
-    return helpers.thresholdToZero(this, TOL);
+    return MathHelpers.thresholdToZero(this, TOL);
   },
 
-  getRank: function (EPS = 1e-14) {
-    const { R } = helpers.qrDecomposition(this);
-    R.thresholdEntriesToZero(100 * EPS);
-    let rank = 0;
-    helpers.rrefInPlace(R);
-    for (let i = 0; i < 3; ++i) {
-      if (helpers.isRowNonzero(R, i)) {
-        rank++;
-      }
-    }
-    return rank;
+  getRank: function (TOL = 1e-14) {
+    return MathHelpers.getRank(this, TOL);
   },
 
-  decomposeQR: function () {
-    return helpers.qrDecomposition(this);
+  decomposeQR: function (inPlace = false) {
+    return MathHelpers.qrDecomposition(this);
   },
 
   decomposeLU: function (inPlace = true) {
-    return helpers.luDecomposition(this, inPlace);
+    return MathHelpers.luDecomposition(this, inPlace);
   },
 
-  solveLU: function (A, P, b, x) {
-    return helpers.luSolve(A, P, b, x);
+  solveLU: function (P, b, x) {
+    return helpers.luSolve(this, P, b, x);
   },
 
   prettyPrint: function () {

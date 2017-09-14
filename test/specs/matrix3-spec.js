@@ -341,5 +341,35 @@ describe('Matrix3', () => {
         expect(Math.abs(b.elements[i] - B.elements[i]) < EPS);
       }
     });
+    it('should compute the LU decomposition of a matrix in place', () => {
+      const A = new Matrix3();
+      A.set(0, 0, 0, 0, 0, 0, 0, 0, 0);
+      expect(() => A.decomposeLU(true)).to.throw();
+
+      A.set(3, -0.1, -0.2, 0.1, 7, -0.3, 0.3, -0.2, 10);
+      const { A: B } = A.decomposeLU(true);
+      expect(A).to.be.eql(B);
+    });
+    it('should compute the LU decomposition of a matrix as a copy', () => {
+      const A = new Matrix3();
+      A.set(0, 0, 0, 0, 0, 0, 0, 0, 0);
+      expect(() => A.decomposeLU(false)).to.throw();
+
+      A.set(3, -0.1, -0.2, 0.1, 7, -0.3, 0.3, -0.2, 10);
+      const { A: B } = A.decomposeLU(false);
+      expect(A.equals(B)).to.be.eql(true);
+    });
+    it('should solve Ax=b using the LU decomposition method', () => {
+      const A = new Matrix3();
+      A.set(3, -0.1, -0.2, 0.1, 7, -0.3, 0.3, -0.2, 10);
+      const { P } = A.decomposeLU(true);
+      const b = new Vector3(7.85, -19.3, 71.4);
+      const X = A.solveLU(P, b, new Vector3());
+      const X0 = new Vector3(3, -2.5, 7);
+      const TOL = 1e-14;
+      expect(Math.abs(X.x - X0.x) < TOL).to.be.eql(true);
+      expect(Math.abs(X.y - X0.y) < TOL).to.be.eql(true);
+      expect(Math.abs(X.z - X0.z) < TOL).to.be.eql(true);
+    });
   });
 });
