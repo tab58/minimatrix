@@ -83,6 +83,10 @@ Object.assign(Complex.prototype, {
     this.imag = (b * c - a * d) / den;
     return this;
   },
+  addReal: function (a) {
+    this.real += a;
+    return this;
+  },
   scale: function (s) {
     this.real *= s;
     this.imag *= s;
