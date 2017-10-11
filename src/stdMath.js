@@ -11,9 +11,24 @@ mathProps.forEach((prop) => { _Math[prop] = Math[prop]; });
 Object.assign(_Math, {
   DEG2RAD: _Math.PI / 180,
   RAD2DEG: 180 / _Math.PI,
+  PI2: 2 * Math.PI,
 
   clamp: function (value, min, max) {
     return _Math.max(min, _Math.min(max, value));
+  },
+
+  hypot: function (w, z) {
+    // rewritten to deal with overflow/underflow
+    const a = w;
+    const b = z;
+    if (a === 0 && b === 0) {
+      return 0;
+    }
+    const x = _Math.abs(a);
+    const y = _Math.abs(b);
+    const u = _Math.max(x, y);
+    const t = _Math.min(x, y) / u;
+    return u * _Math.sqrt(1 + t * t);
   },
 
   // compute euclidian modulo of m % n

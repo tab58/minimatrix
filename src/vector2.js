@@ -6,6 +6,7 @@
  */
 
 const _Math = require('./stdMath.js');
+const MathHelpers = require('./math-helpers.js');
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -53,6 +54,14 @@ Object.assign(Vector2.prototype, {
       default: throw new Error('index is out of range: ' + index);
     }
     return this;
+  },
+
+  getComponent: function (index) {
+    switch (index) {
+      case 0: return this.x;
+      case 1: return this.y;
+      default: throw new Error('index is out of range: ' + index);
+    }
   },
 
   clone: function () {
@@ -321,6 +330,10 @@ Object.assign(Vector2.prototype, {
     this.x = x * c - y * s + center.x;
     this.y = x * s + y * c + center.y;
     return this;
+  },
+
+  getHouseholderVector: function () {
+    return MathHelpers.householderTransform(this);
   }
 });
 

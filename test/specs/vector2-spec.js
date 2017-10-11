@@ -263,5 +263,19 @@ describe('Vector2', () => {
       expect(Math.abs(a.x - 0) < EPS);
       expect(Math.abs(a.y - 1) < EPS);
     });
+    it('should calculate a Householder transformation', () => {
+      const TOL = 1e-14;
+      const x = new Vector2(3, 5);
+      const { v, beta } = x.getHouseholderVector();
+      expect(Math.abs(beta - 2 / v.dot(v))).to.be.below(TOL);
+      // construct P * x
+      const P = new Matrix2();
+      P.addOuterProduct(v, v, -beta);
+      const V = x.clone().multiplyMatrix2(P);
+      expect(Math.abs(V.x - x.length())).to.be.below(TOL);
+      for (let i = 1; i < V.dimension; ++i) {
+        expect(Math.abs(V.getComponent(i))).to.be.below(TOL);
+      }
+    });
   });
 });

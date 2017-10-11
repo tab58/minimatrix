@@ -371,5 +371,28 @@ describe('Matrix3', () => {
       expect(Math.abs(X.y - X0.y) < TOL).to.be.eql(true);
       expect(Math.abs(X.z - X0.z) < TOL).to.be.eql(true);
     });
+    it('should be able to convert to Hessenberg form', () => {
+      const A = new Matrix3();
+      A.set(4, 1, -2, 1, 2, 0, -2, 0, 3);
+      const B = A.clone().convertToHessenberg();
+      const A0 = new Matrix3();
+      A0.set(4, 2.2360679774997894, 0, 2.2360679774997894, 2.8, 0.4, 0, 0.4, 2.2);
+      for (let i = 0; i < 9; ++i) {
+        const a0 = A0.elements[i];
+        const b = B.elements[i];
+        expect(Math.abs(a0 - b)).to.be.below(EPS);
+      }
+    });
+    it('should be able to take Hessenberg QR step', () => {
+      const A = new Matrix3();
+      A.set(3, 1, 2, 4, 2, 3, 0, 0.01, 1);
+      const A0 = A.clone();
+      A0.takeHessenbergQRStep();
+      const { Q: Q0, R: R0 } = A.decomposeQR();
+      const B0 = R0.clone().multiply(Q0);
+      for (let i = 0; i < 9; ++i) {
+        expect(Math.abs(A0.elements[i] - B0.elements[i]) < EPS).to.be.eql(true);
+      }
+    });
   });
 });

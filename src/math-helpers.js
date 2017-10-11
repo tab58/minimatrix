@@ -378,6 +378,70 @@ const helpers = {
       }
     }
     return rank;
+  },
+  householderTransform: function (x) {
+    // Based on "Matrix Computations" by Golub, Van Loan
+    const n = x.dimension;
+    const v = x.clone();
+    v.x = 1;
+    let sigma = 0;
+    for (let i = 1; i < n; ++i) {
+      const vi = v.getComponent(i);
+      sigma += vi * vi;
+    }
+    let beta = 0;
+    if (sigma !== 0) {
+      const x1 = x.x;
+      const mu = _Math.sqrt(x1 * x1 + sigma);
+      const v1 = (x1 <= 0 ? x1 - mu : -sigma / (x1 + mu));
+      v.x = v1;
+      beta = 2 * v1 * v1 / (sigma + v1 * v1);
+      v.multiplyScalar(1.0 / v1);
+    }
+    return {
+      v,
+      beta
+    };
+  },
+  hessenbergQRStep: function (M) {
+    const n = M.dimension;
+    const me = M.elements;
+    const csr = [0, 0, 0];
+    const cs = [];
+    for (let k = 0; k < n - 1; ++k) {
+      const row1 = k;
+      const row2 = k + 1;
+      const colK = k * n;
+      const a = me[row1 + colK];
+      const b = me[row2 + colK];
+      helpers.rotg(a, b, csr);
+      const c = csr[0];
+      const s = csr[1];
+      const r = csr[2];
+      cs[k] = [c, s];
+      for (let x = k; x < n; ++x) {
+        const colX = x * n;
+        const tmp1 = me[row1 + colX];
+        const tmp2 = me[row2 + colX];
+        me[row1 + colX] = c * tmp1 + s * tmp2;
+        me[row2 + colX] = -s * tmp1 + c * tmp2;
+      }
+      me[row1 + colK] = r;
+      me[row2 + colK] = 0;
+    }
+    for (let k = 0; k < n - 1; ++k) {
+      const col1 = k * n;
+      const col2 = (k + 1) * n;
+      const [c, s] = cs[k];
+      for (let x = 0; x <= k + 1; ++x) {
+        const rowX = x;
+        const tmp1 = me[rowX + col1];
+        const tmp2 = me[rowX + col2];
+        me[rowX + col1] = tmp1 * c + tmp2 * s;
+        me[rowX + col2] = -tmp1 * s + tmp2 * c;
+      }
+    }
+    return M;
   }
 };
 

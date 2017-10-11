@@ -12,6 +12,7 @@
  */
 
 const Utils = require('./utils.js');
+const Vector2 = require('./vector2.js');
 const Vector3 = require('./vector3.js');
 const PolyRoots = require('cubic-roots');
 // const _Math = require('./stdMath.js');
@@ -477,6 +478,33 @@ Object.assign(Matrix3.prototype, {
 
   prettyPrint: function () {
     return Utils.printMatrix3(this);
+  },
+
+  multiplyHouseholderMatrix: function (v, beta) {
+    if (!v.isVector3) {
+      throw new Error('multiplyHouseholderMatrix(): expected a Vector3.');
+    }
+    const BETA = beta || 2 / (v.dot(v));
+    const w = v.multiplyMatrix3(this);
+    return this.addOuterProduct(w, v, -BETA);
+  },
+
+  convertToHessenberg: function () {
+    const te = this.elements;
+    const x0 = new Vector2(te[1], te[2]);
+    const { v, beta } = x0.getHouseholderVector();
+    const n11 = beta * v.x * v.x;
+    const n12 = beta * v.x * v.y;
+    const n21 = beta * v.y * v.x;
+    const n22 = beta * v.y * v.y;
+    // TODO: unroll this multiplication
+    const P = new Matrix3();
+    P.set(1, 0, 0, 0, 1 - n11, -n12, 0, -n21, 1 - n22);
+    return this.multiply(P).premultiply(P);
+  },
+
+  takeHessenbergQRStep: function () {
+    return MathHelpers.hessenbergQRStep(this);
   }
 });
 

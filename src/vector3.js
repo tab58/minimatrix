@@ -6,9 +6,7 @@
  */
 
 const _Math = require('./stdMath.js');
-const Compare = require('./compare.js');
-// const Matrix3 = require('./matrix3.js');
-// const Quaternion = require('./quaternion.js');
+const MathHelpers = require('./math-helpers.js');
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -420,6 +418,10 @@ Object.assign(Vector3.prototype, {
     array[ offset + 1 ] = this.y;
     array[ offset + 2 ] = this.z;
     return array;
+  },
+
+  getHouseholderVector: function () {
+    return MathHelpers.householderTransform(this);
   }
 });
 

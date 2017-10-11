@@ -361,6 +361,24 @@ Object.assign(Matrix2.prototype, {
     const B = -(a + d);
     const C = -b * c;
     return PolyRoots.getQuadraticRoots(A, B, C);
+  },
+
+  multiplyHouseholderMatrix: function (v, beta) {
+    if (!v.isVector2) {
+      throw new Error('multiplyHouseholderMatrix(): expected a Vector2.');
+    }
+    const BETA = beta || 2 / (v.dot(v));
+    const w = v.multiplyMatrix3(this);
+    return this.addOuterProduct(w, v, -BETA);
+  },
+
+  convertToHessenberg: function () {
+    // 2x2 matrices are Hessenberg
+    return this;
+  },
+
+  takeHessenbergQRStep: function () {
+    return MathHelpers.hessenbergQRStep(this);
   }
 });
 
