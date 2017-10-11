@@ -69,6 +69,14 @@ describe('Complex Numbers', () => {
       const calcRoots = A.sqrt();
       expect(calcRoots[0].equal(roots[0], EPS)).to.be.eql(true);
       expect(calcRoots[1].equal(roots[1], EPS)).to.be.eql(true);
+      const B = new Complex(-1, 0);
+      const calcBRoots = B.sqrt();
+      const bRoots = [
+        new Complex(0, 1),
+        new Complex(0, -1)
+      ];
+      expect(calcBRoots[0].equal(bRoots[0], EPS)).to.be.eql(true);
+      expect(calcBRoots[1].equal(bRoots[1], EPS)).to.be.eql(true);
     });
     it('should compute the cube roots', () => {
       const A = new Complex(1, 1);

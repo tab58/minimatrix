@@ -102,14 +102,14 @@ Object.assign(Complex.prototype, {
     return _Math.hypot(x, y) <= tol;
   },
   sqrt: function () {
-    if (this.imag === 0) {
-      return _Math.sqrt(this.real);
+    if (this.imag === 0 && this.real > 0) {
+      return new Complex(_Math.sqrt(this.real), 0);
     } else {
       const a = this.real;
       const b = this.imag;
       const mod = _Math.hypot(a, b);
       const u = _Math.sqrt((a + mod) / 2);
-      const v = _Math.sign(b) * _Math.sqrt((-a + mod) / 2);
+      const v = (b < 0 ? -1 : 1) * _Math.sqrt((-a + mod) / 2);
       return [new Complex(u, v), new Complex(-u, -v)];
     }
   },
