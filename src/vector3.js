@@ -1,14 +1,8 @@
 'use strict';
 
 /*
- *   Base code from THREE.js authors below.
- *   Additions by Tim Bright
- */
-
-const _Math = require('./stdMath.js');
-const MathHelpers = require('./math-helpers.js');
-
-/**
+ * Base code from THREE.js authors below.
+ * Additions by Tim Bright
  * @author mrdoob / http://mrdoob.com/
  * @author *kile / http://kile.stravaganza.org/
  * @author philogb / http://blog.thejit.org/
@@ -17,47 +11,76 @@ const MathHelpers = require('./math-helpers.js');
  * @author WestLangley / http://github.com/WestLangley
  */
 
-function Vector3 (x, y, z) {
-  this.x = x || 0;
-  this.y = y || 0;
-  this.z = z || 0;
-}
+const _Math = require('./stdMath.js');
+const MathHelpers = require('./math-helpers.js');
 
-Object.assign(Vector3.prototype, {
-  isVector3: true,
+/**
+ * A 2-dimensional vector.
+ */
+class Vector3 {
+  constructor (x, y, z) {
+    this.x = x || 0;
+    this.y = y || 0;
+    this.z = z || 0;
+  }
 
-  dimension: 3,
-
-  set: function (x, y, z) {
+  /**
+   * Sets the components of the vector.
+   * @param {number} x The x-component.
+   * @param {number} y The y-component.
+   * @param {number} z The z-component.
+   */
+  set (x, y, z) {
     this.x = x;
     this.y = y;
     this.z = z;
     return this;
-  },
+  }
 
-  setScalar: function (scalar) {
+  /**
+   * Sets the vector components to a scalar.
+   * @param {number} scalar The scalar.
+   */
+  setScalar (scalar) {
     this.x = scalar;
     this.y = scalar;
     this.z = scalar;
     return this;
-  },
+  }
 
-  setX: function (x) {
+  /**
+   * Sets the X component of the vector.
+   * @param {number} x The x-component.
+   */
+  setX (x) {
     this.x = x;
     return this;
-  },
+  }
 
-  setY: function (y) {
+  /**
+   * Sets the Y component of the vector.
+   * @param {number} y The y-component.
+   */
+  setY (y) {
     this.y = y;
     return this;
-  },
+  }
 
-  setZ: function (z) {
+  /**
+   * Sets the Z component of the vector.
+   * @param {number} z The z-component.
+   */
+  setZ (z) {
     this.z = z;
     return this;
-  },
+  }
 
-  setComponent: function (index, value) {
+  /**
+   * Sets the vector component by index: [X, Y, Z]
+   * @param {number} idx The index of the component (0-1).
+   * @param {number} val The value to set the component to.
+   */
+  setComponent (index, value) {
     switch (index) {
       case 0: this.x = value; break;
       case 1: this.y = value; break;
@@ -65,29 +88,46 @@ Object.assign(Vector3.prototype, {
       default: throw new Error('index is out of range: ' + index);
     }
     return this;
-  },
+  }
 
-  getComponent: function (index) {
+  /**
+   * Gets the vector component by index: [X, Y, Z]
+   * @param {number} index The index of the component (0-1).
+   * @returns {number} The component value.
+   */
+  getComponent (index) {
     switch (index) {
       case 0: return this.x;
       case 1: return this.y;
       case 2: return this.z;
       default: throw new Error('index is out of range: ' + index);
     }
-  },
+  }
 
-  clone: function () {
+  /**
+   * Clones the vector.
+   * @returns {Vector3} A new vector with the same components.
+   */
+  clone () {
     return new this.constructor(this.x, this.y, this.z);
-  },
+  }
 
-  copy: function (v) {
+  /**
+   * Copies the component values of a vector to this vector.
+   * @param {Vector3} v The vector to copy.
+   */
+  copy (v) {
     this.x = v.x;
     this.y = v.y;
     this.z = v.z;
     return this;
-  },
+  }
 
-  add: function (v, w) {
+  /**
+   * Adds a vector to this vector.
+   * @param {Vector3} v The vector to add.
+   */
+  add (v, w) {
     if (w !== undefined) {
       console.warn('THREE.Vector3: .add() now only accepts one argument. Use .addVectors( a, b ) instead.');
       return this.addVectors(v, w);
@@ -96,30 +136,48 @@ Object.assign(Vector3.prototype, {
     this.y += v.y;
     this.z += v.z;
     return this;
-  },
+  }
 
-  addScalar: function (s) {
+  /**
+   * Adds a scalar to every component of this vector.
+   * @param {number} s The scalar to add.
+   */
+  addScalar (s) {
     this.x += s;
     this.y += s;
     this.z += s;
     return this;
-  },
+  }
 
-  addVectors: function (a, b) {
+  /**
+   * Adds 2 vectors and assigns the result to this vector.
+   * @param {Vector3} a The first addend.
+   * @param {Vector3} b The second addend.
+   */
+  addVectors (a, b) {
     this.x = a.x + b.x;
     this.y = a.y + b.y;
     this.z = a.z + b.z;
     return this;
-  },
+  }
 
-  addScaledVector: function (v, s) {
+  /**
+   * Scales a vector by a scalar and adds the result to this vector.
+   * @param {Vector3} v The vector.
+   * @param {number} s The scalar to scale by.
+   */
+  addScaledVector (v, s) {
     this.x += v.x * s;
     this.y += v.y * s;
     this.z += v.z * s;
     return this;
-  },
+  }
 
-  sub: function (v, w) {
+  /**
+   * Subtracts a vector from this vector.
+   * @param {Vector3} v The vector to subtract.
+   */
+  sub (v, w) {
     if (w !== undefined) {
       console.warn('THREE.Vector3: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.');
       return this.subVectors(v, w);
@@ -128,34 +186,47 @@ Object.assign(Vector3.prototype, {
     this.y -= v.y;
     this.z -= v.z;
     return this;
-  },
+  }
 
-  subScalar: function (s) {
+  /**
+   * Subtracts a scalar from each component of this vector.
+   * @param {number} s The scalar to subtract.
+   */
+  subScalar (s) {
     this.x -= s;
     this.y -= s;
     this.z -= s;
     return this;
-  },
+  }
 
-  subVectors: function (a, b) {
+  /**
+   * Subtracts 2 vectors and assigns the value to this vector.
+   * @param {Vector3} a The minuend.
+   * @param {Vector3} b The subtrahend.
+   */
+  subVectors (a, b) {
     this.x = a.x - b.x;
     this.y = a.y - b.y;
     this.z = a.z - b.z;
     return this;
-  },
+  }
 
-  multiply: function (v, w) {
-    if (w !== undefined) {
-      console.warn('Vector3: .multiply() now only accepts one argument. Use .multiplyVectors( a, b ) instead.');
-      return this.multiplyVectors(v, w);
-    }
+  /**
+   * Multiplies element-wise a vector with this one.
+   * @param {Vector3} v The vector.
+   */
+  multiply (v, w) {
     this.x *= v.x;
     this.y *= v.y;
     this.z *= v.z;
     return this;
-  },
+  }
 
-  multiplyMatrix3: function (a) {
+  /**
+   * Multiplies this vector by a 3x3 matrix.
+   * @param {Matrix3} a The matrix to scale by.
+   */
+  multiplyMatrix3 (a) {
     if (!a || !a.isMatrix3) {
       console.warn('Vector3: Matrix is not a Matrix3 in .multiplyMatrix3().');
     }
@@ -179,152 +250,215 @@ Object.assign(Vector3.prototype, {
     a3 = ae[ 8 ];
     this.z = a1 * x + a2 * y + a3 * z;
     return this;
-  },
+  }
 
-  multiplyScalar: function (scalar) {
+  /**
+   * Scales this vector by a number.
+   * @param {number} scalar The number to scale by.
+   */
+  multiplyScalar (scalar) {
     this.x *= scalar;
     this.y *= scalar;
     this.z *= scalar;
     return this;
-  },
+  }
 
-  multiplyVectors: function (a, b) {
+  /**
+   * Multiplies the vector components element-wise.
+   * @param {Vector3} a The first vector.
+   * @param {Vector3} b The second vector.
+   */
+  multiplyVectors (a, b) {
     this.x = a.x * b.x;
     this.y = a.y * b.y;
     this.z = a.z * b.z;
     return this;
-  },
+  }
 
-  applyMatrix3: function (m) {
-    const x = this.x;
-    const y = this.y;
-    const z = this.z;
-    const e = m.elements;
-    this.x = e[ 0 ] * x + e[ 3 ] * y + e[ 6 ] * z;
-    this.y = e[ 1 ] * x + e[ 4 ] * y + e[ 7 ] * z;
-    this.z = e[ 2 ] * x + e[ 5 ] * y + e[ 8 ] * z;
-    return this;
-  },
-
-  divide: function (v) {
+  /**
+   * Divides element-wise this vector by a vector.
+   * @param {Vector3} v The vector to divide by.
+   */
+  divide (v) {
     this.x /= v.x;
     this.y /= v.y;
     this.z /= v.z;
     return this;
-  },
+  }
 
-  divideScalar: function (scalar) {
+  /**
+   * Scales this vector by the inverse of the given scalar.
+   * Doesn't check for divide by zero.
+   * @param {number} scalar The scalar to divide by.
+   */
+  divideScalar (scalar) {
     return this.multiplyScalar(1.0 / scalar);
-  },
+  }
 
-  min: function (v) {
+  /**
+   * Takes the minimum of each component of this vector and the given vector.
+   * @param {Vector3} v The given vector.
+   */
+  min (v) {
     this.x = _Math.min(this.x, v.x);
     this.y = _Math.min(this.y, v.y);
     this.z = _Math.min(this.z, v.z);
     return this;
-  },
+  }
 
-  max: function (v) {
+  /**
+   * Takes the maximum of each component of this vector and the given vector.
+   * @param {Vector3} v The given vector.
+   */
+  max (v) {
     this.x = _Math.max(this.x, v.x);
     this.y = _Math.max(this.y, v.y);
     this.z = _Math.max(this.z, v.z);
     return this;
-  },
+  }
 
-  clamp: function (min, max) {
+  /**
+   * Clamps this vector between the values of the minimum and maximum vectors.
+   * This function assumes min < max, if this assumption isn't true it will not operate correctly.
+   * @param {Vector3} min The minimum value vector.
+   * @param {Vector3} max The maximum value vector.
+   */
+  clamp (min, max) {
     // This function assumes min < max, if this assumption isn't true it will not operate correctly
     this.x = _Math.max(min.x, _Math.min(max.x, this.x));
     this.y = _Math.max(min.y, _Math.min(max.y, this.y));
     this.z = _Math.max(min.z, _Math.min(max.z, this.z));
     return this;
-  },
+  }
 
-  clampScalar: (function () {
-    const min = new Vector3();
-    const max = new Vector3();
-    return function clampScalar (minVal, maxVal) {
-      min.set(minVal, minVal, minVal);
-      max.set(maxVal, maxVal, maxVal);
-      return this.clamp(min, max);
-    };
-  }()),
-
-  clampLength: function (min, max) {
+  /**
+   * Clamps this vector's length between the minimum and maximum values.
+   * @param {number} min The minimum length.
+   * @param {number} max The maximum length.
+   */
+  clampLength (min, max) {
     const length = this.length();
     return this.multiplyScalar(_Math.max(min, _Math.min(max, length)) / length);
-  },
+  }
 
-  floor: function () {
+  /**
+   * Rounds each component of the vector to the lowest integer.
+   */
+  floor () {
     this.x = _Math.floor(this.x);
     this.y = _Math.floor(this.y);
     this.z = _Math.floor(this.z);
     return this;
-  },
+  }
 
-  ceil: function () {
+  /**
+   * Rounds each component of the vector to the highest integer.
+   */
+  ceil () {
     this.x = _Math.ceil(this.x);
     this.y = _Math.ceil(this.y);
     this.z = _Math.ceil(this.z);
     return this;
-  },
+  }
 
-  round: function () {
+  /**
+   * Rounds each component of the vector via Math.round().
+   */
+  round () {
     this.x = _Math.round(this.x);
     this.y = _Math.round(this.y);
     this.z = _Math.round(this.z);
     return this;
-  },
+  }
 
-  roundToZero: function () {
+  /**
+   * Rounds each component of the vector toward zero (down if positive, up if negative).
+   */
+  roundToZero () {
     this.x = (this.x < 0) ? _Math.ceil(this.x) : _Math.floor(this.x);
     this.y = (this.y < 0) ? _Math.ceil(this.y) : _Math.floor(this.y);
     this.z = (this.z < 0) ? _Math.ceil(this.z) : _Math.floor(this.z);
     return this;
-  },
+  }
 
-  negate: function () {
+  /**
+   * Negates each component of the vector.
+   */
+  negate () {
     this.x = -this.x;
     this.y = -this.y;
     this.z = -this.z;
     return this;
-  },
+  }
 
-  dot: function (v) {
+  /**
+   * Computes the dot product between this vector and the given vector.
+   * @param {Vector3} v The given vector.
+   * @returns {number} The dot product.
+   */
+  dot (v) {
     return this.x * v.x + this.y * v.y + this.z * v.z;
-  },
+  }
 
-  lengthSq: function () {
+  /**
+   * Computes the square of the length of the vector,
+   * i.e. the dot product of this vector with itself.
+   * @returns {number} The squared length of the vector.
+   */
+  lengthSq () {
     return this.x * this.x + this.y * this.y + this.z * this.z;
-  },
+  }
 
-  length: function () {
+  /**
+   * Computes the length of the vector. Compensates for over/underflow.
+   * @returns {number} The length of the vector.
+   */
+  length () {
     return _Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
-  },
+  }
 
-  lengthManhattan: function () {
-    return _Math.abs(this.x) + _Math.abs(this.y) + _Math.abs(this.z);
-  },
-
-  normalize: function () {
+  /**
+   * Normalizes the vector, i.e. makes it unit length.
+   */
+  normalize () {
     return this.divideScalar(this.length());
-  },
+  }
 
-  setLength: function (length) {
+  /**
+   * Sets the length of this vector/
+   * @param {number} length The new length of the vector.
+   */
+  setLength (length) {
     return this.multiplyScalar(length / this.length());
-  },
+  }
 
-  lerp: function (v, alpha) {
+  /**
+   * Computes a linear interpolation between this vector and the given vector.
+   * @param {Vector3} v The vector at alpha = 1.
+   * @param {number} alpha The linear interpolation factor.
+   */
+  lerp (v, alpha) {
     this.x += (v.x - this.x) * alpha;
     this.y += (v.y - this.y) * alpha;
     this.z += (v.z - this.z) * alpha;
     return this;
-  },
+  }
 
-  lerpVectors: function (v1, v2, alpha) {
+  /**
+   * Computes the linear interpolation between two vectors.
+   * @param {Vector3} v1 The vector at alpha = 0.
+   * @param {Vector3} v2 The vector at alpha = 1.
+   * @param {number} alpha The linear interpolation factor.
+   */
+  lerpVectors (v1, v2, alpha) {
     return this.subVectors(v2, v1).multiplyScalar(alpha).add(v1);
-  },
+  }
 
-  cross: function (v) {
+  /**
+   * Computes the cross product between this vector and the given vector.
+   * @param {Vector3} v The given vector.
+   */
+  cross (v) {
     const x = this.x;
     const y = this.y;
     const z = this.z;
@@ -332,9 +466,14 @@ Object.assign(Vector3.prototype, {
     this.y = z * v.x - x * v.z;
     this.z = x * v.y - y * v.x;
     return this;
-  },
+  }
 
-  crossVectors: function (a, b) {
+  /**
+   * Computes the cross product (a x b).
+   * @param {Vector3} a The first vector.
+   * @param {Vector3} b The second vector.
+   */
+  crossVectors (a, b) {
     const ax = a.x;
     const ay = a.y;
     const az = a.z;
@@ -345,59 +484,71 @@ Object.assign(Vector3.prototype, {
     this.y = az * bx - ax * bz;
     this.z = ax * by - ay * bx;
     return this;
-  },
+  }
 
-  projectOnVector: function (vector) {
+  /**
+   * Calculates the projection of this vector onto the given vector.
+   * @param {Vector3} vector The given vector.
+   */
+  projectOnVector (vector) {
     const scalar = vector.dot(this) / vector.lengthSq();
     return this.copy(vector).multiplyScalar(scalar);
-  },
+  }
 
-  projectOnPlane: (function () {
-    const v1 = new Vector3();
-    return function projectOnPlane (planeNormal) {
-      v1.copy(this).projectOnVector(planeNormal);
-      return this.sub(v1);
-    };
-  }()),
-
-  thresholdValuesToZero: function (tol) {
+  /**
+   * Assigns zero to component values below the numerical tolerance.
+   * @param {number} tol The numerical tolerance.
+   */
+  thresholdValuesToZero (tol) {
     this.x = (_Math.abs(this.x) < tol ? 0 : this.x);
     this.y = (_Math.abs(this.y) < tol ? 0 : this.y);
     this.z = (_Math.abs(this.z) < tol ? 0 : this.z);
     return this;
-  },
+  }
 
-  reflect: (function () {
-    // reflect incident vector off plane orthogonal to normal
-    // normal is assumed to have unit length
-    const v1 = new Vector3();
-    return function reflect (normal) {
-      return this.sub(v1.copy(normal).multiplyScalar(2 * this.dot(normal)));
-    };
-  }()),
-
-  angleTo: function (v) {
+  /**
+   * Calculates the angle between this vector and the given vector.
+   * @param {Vector3} v The given vector.
+   */
+  angleTo (v) {
     const theta = this.dot(v) / (_Math.sqrt(this.lengthSq() * v.lengthSq()));
     // clamp, to handle numerical problems
     return _Math.acos(Math.max(-1, Math.min(theta, 1)));
-  },
+  }
 
-  distanceTo: function (v) {
+  /**
+   * Computes the distance from a point measured from the origin to the point
+   * this vector points to when the base translated to the origin.
+   * @param {number} v The point as measured from the origin.
+   * @returns {number} The distance from point to point.
+   */
+  distanceTo (v) {
     return _Math.sqrt(this.distanceToSquared(v));
-  },
+  }
 
-  distanceToSquared: function (v) {
+  /**
+   * Computes the squared distance from a point measured from the origin to the point
+   * this vector points to when the base translated to the origin.
+   * @param {number} v The point as measured from the origin.
+   * @returns {number} The distance from point to point.
+   */
+  distanceToSquared (v) {
     const dx = this.x - v.x;
     const dy = this.y - v.y;
     const dz = this.z - v.z;
     return dx * dx + dy * dy + dz * dz;
-  },
+  }
 
-  equals: function (v) {
+  equals (v) {
     return ((v.x === this.x) && (v.y === this.y) && (v.z === this.z));
-  },
+  }
 
-  fromArray: function (array, offset) {
+  /**
+   * Loads a vector from an array.
+   * @param {number} array The array with values.
+   * @param {number} offset The offset to start from in the array. Default is zero.
+   */
+  fromArray (array, offset) {
     if (offset === undefined) {
       offset = 0;
     }
@@ -405,9 +556,14 @@ Object.assign(Vector3.prototype, {
     this.y = array[ offset + 1 ];
     this.z = array[ offset + 2 ];
     return this;
-  },
+  }
 
-  toArray: function (array, offset) {
+  /**
+   * Loads an array from this vector.
+   * @param {number} array The array to put the values in.
+   * @param {number} offset The offset to start from in the array. Default is zero.
+   */
+  toArray (array, offset) {
     if (array === undefined) {
       array = [];
     }
@@ -418,11 +574,51 @@ Object.assign(Vector3.prototype, {
     array[ offset + 1 ] = this.y;
     array[ offset + 2 ] = this.z;
     return array;
-  },
+  }
 
-  getHouseholderVector: function () {
+  /**
+   * Computes the Householder transform on this vector.
+   */
+  getHouseholderVector () {
     return MathHelpers.householderTransform(this);
   }
-});
+}
+
+Vector3.prototype.clampScalar = (function () {
+  const min = new Vector3();
+  const max = new Vector3();
+  return function clampScalar (minVal, maxVal) {
+    min.set(minVal, minVal, minVal);
+    max.set(maxVal, maxVal, maxVal);
+    return this.clamp(min, max);
+  };
+}());
+
+Vector3.prototype.projectOnPlane = (function () {
+  const v1 = new Vector3();
+  return function projectOnPlane (planeNormal) {
+    v1.copy(this).projectOnVector(planeNormal);
+    return this.sub(v1);
+  };
+}());
+
+Vector3.prototype.reflect = (function () {
+  // reflect incident vector off plane orthogonal to normal
+  // normal is assumed to have unit length
+  const v1 = new Vector3();
+  return function reflect (normal) {
+    return this.sub(v1.copy(normal).multiplyScalar(2 * this.dot(normal)));
+  };
+}());
+
+/**
+* Boolean to determine if vector is a Vector2.
+*/
+Vector3.prototype.isVector3 = true;
+
+/**
+* The dimension of the vector.
+*/
+Vector3.prototype.dimension = 3;
 
 module.exports = Vector3;

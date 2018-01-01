@@ -23,48 +23,95 @@ function newtonsCube (A, x0) {
   return xn1;
 }
 
-function Complex (a = 0, b = 0) {
-  this.real = a;
-  this.imag = b;
-}
+/**
+ * Class for complex arithmetic.
+ */
+class Complex {
+  constructor (a = 0, b = 0) {
+    this.real = a;
+    this.imag = b;
+  }
 
-Object.assign(Complex.prototype, {
-  I: new Complex(0, 1),
-  clone: function () {
+  /**
+   * Clones a complex number.
+   * @returns {Complex} The cloned complex number.
+   */
+  clone () {
     return new Complex(this.real, this.imag);
-  },
-  fromVector2: function (v) {
+  }
+
+  /**
+   * Creates a Complex number from a given vector in the complex plane.
+   * @param {Vector2} v The given vector.
+   */
+  fromVector2 (v) {
     return new Complex(v.x, v.y);
-  },
-  copy: function (C) {
+  }
+
+  /**
+   * Copies a complex number.
+   * @param {Complex} C The given complex number.
+   */
+  copy (C) {
     this.real = C.real;
     this.imag = C.imag;
     return this;
-  },
-  set: function (real, imag) {
+  }
+
+  /**
+   * Sets the coefficients of the complex number.
+   * @param {number} real The real coefficient.
+   * @param {number} imag The imaginary coefficient.
+   */
+  set (real, imag) {
     this.real = real;
     this.imag = imag;
     return this;
-  },
-  setReal: function (a) {
+  }
+
+  /**
+   * Sets the real coefficient of the complex number.
+   * @param {number} a The real coefficient.
+   */
+  setReal (a) {
     this.real = a;
     return this;
-  },
-  setImag: function (b) {
+  }
+
+  /**
+   * Sets the imaginary coefficient of the complex number.
+   * @param {number} b The imaginary coefficient.
+   */
+  setImag (b) {
     this.imag = b;
     return this;
-  },
-  add: function (C) {
+  }
+
+  /**
+   * Adds the given complex number with this one.
+   * @param {Complex} C The given complex number.
+   */
+  add (C) {
     this.real += C.real;
     this.imag += C.imag;
     return this;
-  },
-  sub: function (C) {
+  }
+
+  /**
+   * Subtracts the given complex number with this one.
+   * @param {Complex} C The given complex number.
+   */
+  sub (C) {
     this.real -= C.real;
     this.imag -= C.imag;
     return this;
-  },
-  multiply: function (C) {
+  }
+
+  /**
+   * Multiplies the given complex number with this one.
+   * @param {Complex} C The given complex number.
+   */
+  multiply (C) {
     const a = this.real;
     const b = this.imag;
     const c = C.real;
@@ -72,8 +119,13 @@ Object.assign(Complex.prototype, {
     this.real = a * c - b * d;
     this.imag = b * c + a * d;
     return this;
-  },
-  divide: function (C) {
+  }
+
+  /**
+   * Divides this complex number with the given complex number.
+   * @param {Complex} C The given complex number.
+   */
+  divide (C) {
     const a = this.real;
     const b = this.imag;
     const c = C.real;
@@ -82,26 +134,51 @@ Object.assign(Complex.prototype, {
     this.real = (a * c + b * d) / den;
     this.imag = (b * c - a * d) / den;
     return this;
-  },
-  addReal: function (a) {
+  }
+
+  /**
+   * Adds a real number to this complex number.
+   * @param {number} a The real number to add.
+   */
+  addReal (a) {
     this.real += a;
     return this;
-  },
-  scale: function (s) {
+  }
+
+  /**
+   * Scales a Complex number.
+   * @param {number} s The number to scale by.
+   */
+  scale (s) {
     this.real *= s;
     this.imag *= s;
     return this;
-  },
-  conjugate: function () {
+  }
+
+  /**
+   * Sets this Complex number to the complex conjugate.
+   */
+  conjugate () {
     this.imag = -this.imag;
     return this;
-  },
-  equal: function (C, tol = 0) {
+  }
+
+  /**
+   * Determines if this complex number is equal to the given complex number.
+   * @param {Complex} C The given complex number.
+   * @param {number} tol The numerical tolerance.
+   * @returns {boolean} True if the magnitudes are within the numerical tolerance of each other, false if not.
+   */
+  equal (C, tol = 0) {
     const x = this.real - C.real;
     const y = this.imag - C.imag;
     return _Math.hypot(x, y) <= tol;
-  },
-  sqrt: function () {
+  }
+
+  /**
+   * Calculates the square root of the complex number.
+   */
+  sqrt () {
     if (this.imag === 0 && this.real > 0) {
       return new Complex(_Math.sqrt(this.real), 0);
     } else {
@@ -112,8 +189,12 @@ Object.assign(Complex.prototype, {
       const v = (b < 0 ? -1 : 1) * _Math.sqrt((-a + mod) / 2);
       return [new Complex(u, v), new Complex(-u, -v)];
     }
-  },
-  cbrt: function () {
+  }
+
+  /**
+   * Calculates the cube root of the complex number.
+   */
+  cbrt () {
     const a = this.real;
     const b = this.imag;
     const r = _Math.hypot(a, b);
@@ -128,6 +209,16 @@ Object.assign(Complex.prototype, {
       const y = cbrtR * _Math.sin(expn);
       return newtonsCube(this, new Complex(x, y));
     });
+  }
+}
+
+Object.defineProperties(Complex.prototype, {
+  /**
+   * @memberOf Complex#I
+   */
+  I: {
+    value: Object.freeze(new Complex(0, 1)),
+    writable: false
   }
 });
 

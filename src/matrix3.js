@@ -1,10 +1,8 @@
 'use strict';
 
 /*
- *   Base code from THREE.js authors below.
- *   Additions by Tim Bright
- */
-/**
+ * Base code from THREE.js authors below.
+ * Additions by Tim Bright
  * @author alteredq / http://alteredqualia.com/
  * @author WestLangley / http://github.com/WestLangley
  * @author bhouston / http://clara.io
@@ -15,8 +13,6 @@ const Utils = require('./utils.js');
 const Vector2 = require('./vector2.js');
 const Vector3 = require('./vector3.js');
 const PolyRoots = require('cubic-roots');
-// const _Math = require('./stdMath.js');
-// const Compare = require('./compare.js');
 const MathHelpers = require('./math-helpers.js');
 
 // function assumes row and column numbering from 0-2.
@@ -30,79 +26,114 @@ const helpers = {
   }
 };
 
-function Matrix3 () {
-  this.elements = [
-    1, 0, 0,
-    0, 1, 0,
-    0, 0, 1
-  ];
-  if (arguments.length > 0) {
-    console.error('Matrix3: the constructor no longer reads arguments. use .set() instead.');
+/**
+ * A 3x3 matrix stored in column-major order.
+ * @class Matrix3
+ */
+class Matrix3 {
+  constructor () {
+    this.elements = [
+      1, 0, 0,
+      0, 1, 0,
+      0, 0, 1
+    ];
+    if (arguments.length > 0) {
+      console.error('Matrix3: the constructor no longer reads arguments. use .set() instead.');
+    }
   }
-}
 
-Object.assign(Matrix3.prototype, {
-  isMatrix3: true,
-
-  dimension: 3,
-
-  E0: new Vector3(1, 0, 0),
-
-  E1: new Vector3(0, 1, 0),
-
-  E2: new Vector3(0, 0, 1),
-
-  set: function (n11, n12, n13, n21, n22, n23, n31, n32, n33) {
+  /**
+   * Sets the values of the matrix elements.
+   * @param {number} n11 Element a11.
+   * @param {number} n12 Element a12.
+   * @param {number} n13 Element a13.
+   * @param {number} n21 Element a21.
+   * @param {number} n22 Element a22.
+   * @param {number} n23 Element a23.
+   * @param {number} n31 Element a31.
+   * @param {number} n32 Element a32.
+   * @param {number} n33 Element a33.
+   */
+  set (n11, n12, n13, n21, n22, n23, n31, n32, n33) {
     const te = this.elements;
     te[ 0 ] = n11; te[ 1 ] = n21; te[ 2 ] = n31;
     te[ 3 ] = n12; te[ 4 ] = n22; te[ 5 ] = n32;
     te[ 6 ] = n13; te[ 7 ] = n23; te[ 8 ] = n33;
     return this;
-  },
+  }
 
-  setRow: function (i, row) {
+  /**
+   * Sets a row of the matrix.
+   * @param {number} i The row index (0-2).
+   * @param {Vector3} row The vector holding the values.
+   */
+  setRow (i, row) {
     const te = this.elements;
     te[ i + 0 ] = row.x;
     te[ i + 3 ] = row.y;
     te[ i + 6 ] = row.z;
     return this;
-  },
+  }
 
-  setColumn: function (i, col) {
+  /**
+   * Sets a column of the matrix.
+   * @param {number} i The row index (0-2).
+   * @param {Vector3} col The vector holding the values.
+   */
+  setColumn (i, col) {
     const te = this.elements;
     const to = i * 3;
     te[ to + 0 ] = col.x;
     te[ to + 1 ] = col.y;
     te[ to + 2 ] = col.z;
     return this;
-  },
+  }
 
-  setColumns: function (c0, c1, c2) {
+  /**
+   * Sets the columns of the matrix.
+   * @param {Vector3} c0 The first column.
+   * @param {Vector3} c1 The second column.
+   * @param {Vector3} c2 The third column.
+   */
+  setColumns (c0, c1, c2) {
     const te = this.elements;
     te[ 0 ] = c0.x; te[ 1 ] = c0.y; te[ 2 ] = c0.z;
     te[ 3 ] = c1.x; te[ 4 ] = c1.y; te[ 5 ] = c1.z;
     te[ 6 ] = c2.x; te[ 7 ] = c2.y; te[ 8 ] = c2.z;
     return this;
-  },
+  }
 
-  setRows: function (r0, r1, r2) {
+  /**
+   * Sets the rows of the matrix.
+   * @param {Vector3} r0 The first row.
+   * @param {Vector3} r1 The second row.
+   * @param {Vector3} r2 The third row.
+   */
+  setRows (r0, r1, r2) {
     const te = this.elements;
     te[ 0 ] = r0.x; te[ 1 ] = r1.x; te[ 2 ] = r2.x;
     te[ 3 ] = r0.y; te[ 4 ] = r1.y; te[ 5 ] = r2.y;
     te[ 6 ] = r0.z; te[ 7 ] = r1.z; te[ 8 ] = r2.z;
     return this;
-  },
+  }
 
-  identity: function () {
+  /**
+   * Sets the matrix as the identity matrix.
+   */
+  identity () {
     this.set(
       1, 0, 0,
       0, 1, 0,
       0, 0, 1
     );
     return this;
-  },
+  }
 
-  setSkewSymmetric: function (v) {
+  /**
+   * Sets this matrix as skew-symmetric based on a given vector.
+   * @param {Vector3} v The given vector.
+   */
+  setSkewSymmetric (v) {
     const te = this.elements;
     te[0] = 0;
     te[3] = -v.z;
@@ -114,22 +145,36 @@ Object.assign(Matrix3.prototype, {
     te[5] = v.x;
     te[8] = 0;
     return this;
-  },
+  }
 
-  clone: function () {
+  /**
+   * Clones the matrix.
+   * @returns {Matrix3} A new matrix with the same element values.
+   */
+  clone () {
     return new this.constructor().fromArray(this.elements);
-  },
+  }
 
-  copy: function (m) {
+  /**
+   * Copies the element values of the given matrix.
+   * @param {Matrix3} m The given matrix.
+   */
+  copy (m) {
     const te = this.elements;
     const me = m.elements;
     te[ 0 ] = me[ 0 ]; te[ 1 ] = me[ 1 ]; te[ 2 ] = me[ 2 ];
     te[ 3 ] = me[ 3 ]; te[ 4 ] = me[ 4 ]; te[ 5 ] = me[ 5 ];
     te[ 6 ] = me[ 6 ]; te[ 7 ] = me[ 7 ]; te[ 8 ] = me[ 8 ];
     return this;
-  },
+  }
 
-  addMatrices: function (a, b, scalar) {
+  /**
+   * Adds 2 matrices together and optionally scales the result.
+   * @param {Matrix3} a The first matrix.
+   * @param {Matrix3} b The second matrix.
+   * @param {number} scalar The number to scale the result by.
+   */
+  addMatrices (a, b, scalar) {
     const alpha = (scalar === undefined ? 1 : scalar);
     const ae = a.elements;
     const be = b.elements;
@@ -166,21 +211,38 @@ Object.assign(Matrix3.prototype, {
     te[ 8 ] = a33 + (b33 * alpha);
 
     return this;
-  },
+  }
 
-  add: function (m, scalar) {
+  /**
+   * Adds a given matrix to this matrix.
+   * @param {Matrix3} m The given matrix.
+   */
+  add (m, scalar) {
     return this.addMatrices(this, m, scalar);
-  },
+  }
 
-  multiply: function (m) {
+  /**
+   * Right-multiplies the given matrix with this one (this * m).
+   * @param {Matrix3} m The given matrix.
+   */
+  multiply (m) {
     return this.multiplyMatrices(this, m);
-  },
+  }
 
-  premultiply: function (m) {
+  /**
+   * Left-multiplies the given matrix with this one (m * this).
+   * @param {Matrix3} m The given matrix.
+   */
+  premultiply (m) {
     return this.multiplyMatrices(m, this);
-  },
+  }
 
-  multiplyMatrices: function (a, b) {
+  /**
+   * Multiplies two 3x3 matrices (A * B).
+   * @param {Matrix3} a The A matrix.
+   * @param {Matrix3} b The B matrix.
+   */
+  multiplyMatrices (a, b) {
     const ae = a.elements;
     const be = b.elements;
     const te = this.elements;
@@ -218,17 +280,25 @@ Object.assign(Matrix3.prototype, {
     te[ 8 ] = a31 * b13 + a32 * b23 + a33 * b33;
 
     return this;
-  },
+  }
 
-  multiplyScalar: function (s) {
+  /**
+   * Scales a matrix.
+   * @param {number} s The number to scale by.
+   */
+  multiplyScalar (s) {
     const te = this.elements;
     te[ 0 ] *= s; te[ 3 ] *= s; te[ 6 ] *= s;
     te[ 1 ] *= s; te[ 4 ] *= s; te[ 7 ] *= s;
     te[ 2 ] *= s; te[ 5 ] *= s; te[ 8 ] *= s;
     return this;
-  },
+  }
 
-  determinant: function () {
+  /**
+   * Computes the determinant of the matrix.
+   * @returns {number} The determinant.
+   */
+  determinant () {
     const te = this.elements;
     const a = te[ 0 ];
     const b = te[ 1 ];
@@ -240,17 +310,28 @@ Object.assign(Matrix3.prototype, {
     const h = te[ 7 ];
     const i = te[ 8 ];
     return a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
-  },
+  }
 
-  invert: function (throwOnDegenerate) {
+  /**
+   * Inverts this matrix.
+   * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
+   */
+  invert (throwOnDegenerate) {
     return this.getInverse(this, throwOnDegenerate);
-  },
+  }
 
-  adjugate: function () {
+  /**
+   * Computes the adjugates of this matrix in-place.
+   */
+  adjugate () {
     return this.getAdjugate(this);
-  },
+  }
 
-  getAdjugate: function (matrix) {
+  /**
+   * Computes the adjugate of the given matrix and assigns it to this matrix.
+   * @param {Matrix3} matrix The given matrix.
+   */
+  getAdjugate (matrix) {
     const me = matrix.elements;
     const a11 = me[ 0 ];
     const a21 = me[ 1 ];
@@ -284,17 +365,25 @@ Object.assign(Matrix3.prototype, {
     te[8] = t33;
 
     return this;
-  },
+  }
 
-  getInverse: function (matrix, throwOnDegenerate) {
+  /**
+   * Computes the inverse of the given matrix and assigns it to this matrix.
+   * @param {Matrix3} matrix The given matrix.
+   * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
+   */
+  getInverse (matrix, throwOnDegenerate) {
     const { P, A } = MathHelpers.luDecomposition(matrix, true);
     matrix.setRow(0, helpers.luSolve(A, P, matrix.E0));
     matrix.setRow(1, helpers.luSolve(A, P, matrix.E1));
     matrix.setRow(2, helpers.luSolve(A, P, matrix.E2));
     return matrix;
-  },
+  }
 
-  transpose: function () {
+  /**
+   * Transposes this matrix in-place.
+   */
+  transpose () {
     let tmp;
     const m = this.elements;
 
@@ -302,17 +391,25 @@ Object.assign(Matrix3.prototype, {
     tmp = m[ 2 ]; m[ 2 ] = m[ 6 ]; m[ 6 ] = tmp;
     tmp = m[ 5 ]; m[ 5 ] = m[ 7 ]; m[ 7 ] = tmp;
     return this;
-  },
+  }
 
-  trace: function () {
+  /**
+   * Computes the trace of this matrix.
+   * @returns {number} The matrix trace.
+   */
+  trace () {
     const me = this.elements;
     const n11 = me[ 0 ];
     const n22 = me[ 4 ];
     const n33 = me[ 8 ];
     return n11 + n22 + n33;
-  },
+  }
 
-  equals: function (matrix) {
+  /**
+   * Compares the equality with a given matrix (strict).
+   * @param {Matrix3} matrix The given matrix.
+   */
+  equals (matrix) {
     const te = this.elements;
     const me = matrix.elements;
     for (let i = 0; i < 9; i++) {
@@ -321,9 +418,14 @@ Object.assign(Matrix3.prototype, {
       }
     }
     return true;
-  },
+  }
 
-  fromArray: function (array, offset) {
+  /**
+   * Loads values from an array into a matrix.
+   * @param {number[]} array The array to populate the matrix from.
+   * @param {number} offset The numeric array offset.
+   */
+  fromArray (array, offset) {
     if (offset === undefined) {
       offset = 0;
     }
@@ -331,9 +433,14 @@ Object.assign(Matrix3.prototype, {
       this.elements[ i ] = array[i + offset];
     }
     return this;
-  },
+  }
 
-  toArray: function (array, offset) {
+  /**
+   * Loads values into an array into a matrix.
+   * @param {number[]} array The array to populate the matrix values into.
+   * @param {number} offset The numeric array offset.
+   */
+  toArray (array, offset) {
     if (array === undefined) {
       array = [];
     }
@@ -356,9 +463,13 @@ Object.assign(Matrix3.prototype, {
     array[ offset + 8 ] = te[ 8 ];
 
     return array;
-  },
+  }
 
-  getEigenvalues: function () {
+  /**
+   * Gets the eigenvalues of the matrix.
+   * @returns {Object} A0 is the real eigenvalue, A1 and A2 are real coefficients, B1 and B2 are complex coefficients.
+   */
+  getEigenvalues () {
     // Bad way of doing this!
     // TODO: Find better way
     const je = this.elements;
@@ -378,9 +489,15 @@ Object.assign(Matrix3.prototype, {
     const D = -(a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g);
 
     return PolyRoots.getCubicRoots(A, B, C, D);
-  },
+  }
 
-  getOuterProduct: function (a, b, scalar) {
+  /**
+   * Computes the outer product of two vectors (a*b^T).
+   * @param {Vector3} a The first vector.
+   * @param {Vector3} b The second vector.
+   * @param {number} scalar The number to scale the matrix by (defaults to 1).
+   */
+  getOuterProduct (a, b, scalar) {
     // computes alpha * (ab^T)
     const alpha = (scalar === undefined ? 1 : scalar);
     const n11 = alpha * a.x * b.x;
@@ -393,9 +510,15 @@ Object.assign(Matrix3.prototype, {
     const n32 = alpha * a.z * b.y;
     const n33 = alpha * a.z * b.z;
     return this.set(n11, n12, n13, n21, n22, n23, n31, n32, n33);
-  },
+  }
 
-  addOuterProduct: function (a, b, scalar) {
+  /**
+   * Adds the outer product of two vectors (a*b^T) to this matrix.
+   * @param {Vector3} a The first vector.
+   * @param {Vector3} b The second vector.
+   * @param {number} scalar The number to scale the matrix by (defaults to 1).
+   */
+  addOuterProduct (a, b, scalar) {
     // computes [this + alpha * (ab^T)]
     const te = this.elements;
     const alpha = (scalar === undefined ? 1 : scalar);
@@ -418,13 +541,21 @@ Object.assign(Matrix3.prototype, {
     te[ 7 ] += n23;
     te[ 8 ] += n33;
     return this;
-  },
+  }
 
-  findLargestAbsElement: function () {
+  /**
+   * Finds the largest element of the matrix.
+   */
+  findLargestAbsElement () {
     return MathHelpers.findLargestAbsElement(this);
-  },
+  }
 
-  getRow: function (i) {
+  /**
+   * Gets the row at the specified index of the matrix.
+   * @param {number} i The index of the row (0-2).
+   * @returns {Vector3} The vector with the row values.
+   */
+  getRow (i) {
     const te = this.elements;
     switch (i) {
       case 0:
@@ -436,9 +567,14 @@ Object.assign(Matrix3.prototype, {
       default:
         throw new Error('No row defined at ' + i + '.');
     }
-  },
+  }
 
-  getColumn: function (i) {
+  /**
+   * Gets the column at the specified index of the matrix.
+   * @param {number} i The index of the column (0-2).
+   * @returns {Vector3} The vector with the column values.
+   */
+  getColumn (i) {
     const te = this.elements;
     switch (i) {
       case 0:
@@ -450,46 +586,83 @@ Object.assign(Matrix3.prototype, {
       default:
         throw new Error('No column defined at ' + i + '.');
     }
-  },
+  }
 
-  findFirstNonvanishing: function (TOL = 1e-14) {
+  /**
+   * Finds the first number below the specified numerical tolerance.
+   * @param {number} TOL The numerical tolerance.
+   */
+  findFirstNonvanishing (TOL = 1e-14) {
     return MathHelpers.findFirstNonvanishing(this, TOL);
-  },
+  }
 
-  thresholdEntriesToZero: function (TOL = 1e-14) {
+  /**
+   * Rounds every element below the numerical tolerance to zero.
+   * @param {number} TOL The numerical tolerance.
+   */
+  thresholdEntriesToZero (TOL = 1e-14) {
     return MathHelpers.thresholdToZero(this, TOL);
-  },
+  }
 
-  getRank: function (TOL = 1e-14) {
+  /**
+   * Gets the rank of this matrix.
+   * @param {number} TOL The numerical tolerance (defaults to 1e-14).
+   */
+  getRank (TOL = 1e-14) {
     return MathHelpers.getRank(this, TOL);
-  },
+  }
 
-  decomposeQR: function (inPlace = false) {
+  /**
+   * Computes the QR decomposition.
+   * @param {boolean} inPlace Replaces this matrix with the R matrix.
+   */
+  decomposeQR (inPlace = false) {
     return MathHelpers.qrDecomposition(this);
-  },
+  }
 
-  decomposeLU: function (inPlace = true) {
+  /**
+   * Computes the Crout LU decomposition.
+   * @param {boolean} inPlace Replaces this matrix with the LU decomposition.
+   */
+  decomposeLU (inPlace = true) {
     return MathHelpers.luDecomposition(this, inPlace);
-  },
+  }
 
-  solveLU: function (P, b, x) {
+  /**
+   * Solves an Ax=b problem using the LU decomposition computed earlier.
+   * @param {Matrix3} P The permutation matrix.
+   * @param {Vector3} b The result row vector.
+   * @param {Vector3} X The solution vector.
+   */
+  solveLU (P, b, x) {
     return helpers.luSolve(this, P, b, x);
-  },
+  }
 
-  prettyPrint: function () {
+  /**
+   * Pretty prints this matrix.
+   */
+  prettyPrint () {
     return Utils.printMatrix3(this);
-  },
+  }
 
-  multiplyHouseholderMatrix: function (v, beta) {
+  /**
+   * Creates a Householder matrix from this vector.
+   * @param {Vector3} v The vector.
+   * @param {number} beta Optional. Scales the outer product, defaults to 2/(v *v).
+   */
+  multiplyHouseholderMatrix (v, beta) {
     if (!v.isVector3) {
       throw new Error('multiplyHouseholderMatrix(): expected a Vector3.');
     }
     const BETA = beta || 2 / (v.dot(v));
     const w = v.multiplyMatrix3(this);
     return this.addOuterProduct(w, v, -BETA);
-  },
+  }
 
-  convertToHessenberg: function () {
+  /**
+   * Converts the matrix to Hessenberg form.
+   */
+  convertToHessenberg () {
     const te = this.elements;
     const x0 = new Vector2(te[1], te[2]);
     const { v, beta } = x0.getHouseholderVector();
@@ -501,10 +674,51 @@ Object.assign(Matrix3.prototype, {
     const P = new Matrix3();
     P.set(1, 0, 0, 0, 1 - n11, -n12, 0, -n21, 1 - n22);
     return this.multiply(P).premultiply(P);
-  },
+  }
 
-  takeHessenbergQRStep: function () {
+  /**
+   * Takes a QR step in Hessenberg form.
+   */
+  takeHessenbergQRStep () {
     return MathHelpers.hessenbergQRStep(this);
+  }
+}
+
+Object.defineProperties(Matrix3.prototype, {
+  /**
+   * @memberOf Matrix3#isMatrix3
+   */
+  isMatrix3: {
+    value: true,
+    writable: false
+  },
+  /**
+   * @memberOf Matrix3#dimension
+   */
+  dimension: {
+    value: 3,
+    writable: false
+  },
+  /**
+   * @memberOf Matrix3#E0
+   */
+  E0: {
+    value: Object.freeze(new Vector3(1, 0, 0)),
+    writable: false
+  },
+  /**
+   * @memberOf Matrix3#E1
+   */
+  E1: {
+    value: Object.freeze(new Vector3(0, 1, 0)),
+    writable: false
+  },
+  /**
+   * @memberOf Matrix3#E2
+   */
+  E2: {
+    value: Object.freeze(new Vector3(0, 0, 1)),
+    writable: false
   }
 });
 
