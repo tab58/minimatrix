@@ -1,7 +1,12 @@
 'use strict';
 
 /**
+ * @namespace Utils
+ */
+
+/**
  * Formats a number for pretty printing.
+ * @memberof Utils
  * @param {number} x The number to format.
  * @returns {string} The formatted string.
  */
@@ -35,6 +40,7 @@ function formatPrintNumber (x) {
 
 /**
  * Pretty prints a Matrix2.
+ * @memberof Utils
  * @param {Matrix2} m The 2x2 matrix.
  * @returns {string} The formatted string.
  */
@@ -50,6 +56,7 @@ function printMatrix2 (m) {
 
 /**
  * Pretty prints a Matrix3.
+ * @memberof Utils
  * @param {Matrix2} m The 3x3 matrix.
  * @returns {string} The formatted string.
  */

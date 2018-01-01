@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>vector2.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Complex.html">Complex</a><ul class='methods'><li data-type='method'><a href="Complex.html#add">add</a></li><li data-type='method'><a href="Complex.html#addReal">addReal</a></li><li data-type='method'><a href="Complex.html#cbrt">cbrt</a></li><li data-type='method'><a href="Complex.html#clone">clone</a></li><li data-type='method'><a href="Complex.html#conjugate">conjugate</a></li><li data-type='method'><a href="Complex.html#copy">copy</a></li><li data-type='method'><a href="Complex.html#divide">divide</a></li><li data-type='method'><a href="Complex.html#equal">equal</a></li><li data-type='method'><a href="Complex.html#fromVector2">fromVector2</a></li><li data-type='method'><a href="Complex.html#multiply">multiply</a></li><li data-type='method'><a href="Complex.html#scale">scale</a></li><li data-type='method'><a href="Complex.html#set">set</a></li><li data-type='method'><a href="Complex.html#setImag">setImag</a></li><li data-type='method'><a href="Complex.html#setReal">setReal</a></li><li data-type='method'><a href="Complex.html#sqrt">sqrt</a></li><li data-type='method'><a href="Complex.html#sub">sub</a></li></ul></li><li><a href="Matrix2.html">Matrix2</a><ul class='methods'><li data-type='method'><a href="Matrix2.html#add">add</a></li><li data-type='method'><a href="Matrix2.html#addMatrices">addMatrices</a></li><li data-type='method'><a href="Matrix2.html#addOuterProduct">addOuterProduct</a></li><li data-type='method'><a href="Matrix2.html#adjugate">adjugate</a></li><li data-type='method'><a href="Matrix2.html#clone">clone</a></li><li data-type='method'><a href="Matrix2.html#convertToHessenberg">convertToHessenberg</a></li><li data-type='method'><a href="Matrix2.html#copy">copy</a></li><li data-type='method'><a href="Matrix2.html#decomposeLU">decomposeLU</a></li><li data-type='method'><a href="Matrix2.html#decomposeQR">decomposeQR</a></li><li data-type='method'><a href="Matrix2.html#determinant">determinant</a></li><li data-type='method'><a href="Matrix2.html#equals">equals</a></li><li data-type='method'><a href="Matrix2.html#findFirstNonvanishing">findFirstNonvanishing</a></li><li data-type='method'><a href="Matrix2.html#findLargestAbsElement">findLargestAbsElement</a></li><li data-type='method'><a href="Matrix2.html#fromArray">fromArray</a></li><li data-type='method'><a href="Matrix2.html#getAdjugate">getAdjugate</a></li><li data-type='method'><a href="Matrix2.html#getColumn">getColumn</a></li><li data-type='method'><a href="Matrix2.html#getEigenvalues">getEigenvalues</a></li><li data-type='method'><a href="Matrix2.html#getInverse">getInverse</a></li><li data-type='method'><a href="Matrix2.html#getOuterProduct">getOuterProduct</a></li><li data-type='method'><a href="Matrix2.html#getRank">getRank</a></li><li data-type='method'><a href="Matrix2.html#getRow">getRow</a></li><li data-type='method'><a href="Matrix2.html#identity">identity</a></li><li data-type='method'><a href="Matrix2.html#invert">invert</a></li><li data-type='method'><a href="Matrix2.html#multiply">multiply</a></li><li data-type='method'><a href="Matrix2.html#multiplyHouseholderMatrix">multiplyHouseholderMatrix</a></li><li data-type='method'><a href="Matrix2.html#multiplyMatrices">multiplyMatrices</a></li><li data-type='method'><a href="Matrix2.html#multiplyScalar">multiplyScalar</a></li><li data-type='method'><a href="Matrix2.html#premultiply">premultiply</a></li><li data-type='method'><a href="Matrix2.html#prettyPrint">prettyPrint</a></li><li data-type='method'><a href="Matrix2.html#set">set</a></li><li data-type='method'><a href="Matrix2.html#setColumn">setColumn</a></li><li data-type='method'><a href="Matrix2.html#setColumns">setColumns</a></li><li data-type='method'><a href="Matrix2.html#setRow">setRow</a></li><li data-type='method'><a href="Matrix2.html#setRows">setRows</a></li><li data-type='method'><a href="Matrix2.html#solveLU">solveLU</a></li><li data-type='method'><a href="Matrix2.html#takeHessenbergQRStep">takeHessenbergQRStep</a></li><li data-type='method'><a href="Matrix2.html#thresholdEntriesToZero">thresholdEntriesToZero</a></li><li data-type='method'><a href="Matrix2.html#toArray">toArray</a></li><li data-type='method'><a href="Matrix2.html#trace">trace</a></li><li data-type='method'><a href="Matrix2.html#transpose">transpose</a></li></ul></li><li><a href="Matrix3.html">Matrix3</a><ul class='methods'><li data-type='method'><a href="Matrix3.html#add">add</a></li><li data-type='method'><a href="Matrix3.html#addMatrices">addMatrices</a></li><li data-type='method'><a href="Matrix3.html#addOuterProduct">addOuterProduct</a></li><li data-type='method'><a href="Matrix3.html#adjugate">adjugate</a></li><li data-type='method'><a href="Matrix3.html#clone">clone</a></li><li data-type='method'><a href="Matrix3.html#convertToHessenberg">convertToHessenberg</a></li><li data-type='method'><a href="Matrix3.html#copy">copy</a></li><li data-type='method'><a href="Matrix3.html#decomposeLU">decomposeLU</a></li><li data-type='method'><a href="Matrix3.html#decomposeQR">decomposeQR</a></li><li data-type='method'><a href="Matrix3.html#determinant">determinant</a></li><li data-type='method'><a href="Matrix3.html#equals">equals</a></li><li data-type='method'><a href="Matrix3.html#findFirstNonvanishing">findFirstNonvanishing</a></li><li data-type='method'><a href="Matrix3.html#findLargestAbsElement">findLargestAbsElement</a></li><li data-type='method'><a href="Matrix3.html#fromArray">fromArray</a></li><li data-type='method'><a href="Matrix3.html#getAdjugate">getAdjugate</a></li><li data-type='method'><a href="Matrix3.html#getColumn">getColumn</a></li><li data-type='method'><a href="Matrix3.html#getEigenvalues">getEigenvalues</a></li><li data-type='method'><a href="Matrix3.html#getInverse">getInverse</a></li><li data-type='method'><a href="Matrix3.html#getOuterProduct">getOuterProduct</a></li><li data-type='method'><a href="Matrix3.html#getRank">getRank</a></li><li data-type='method'><a href="Matrix3.html#getRow">getRow</a></li><li data-type='method'><a href="Matrix3.html#identity">identity</a></li><li data-type='method'><a href="Matrix3.html#invert">invert</a></li><li data-type='method'><a href="Matrix3.html#multiply">multiply</a></li><li data-type='method'><a href="Matrix3.html#multiplyHouseholderMatrix">multiplyHouseholderMatrix</a></li><li data-type='method'><a href="Matrix3.html#multiplyMatrices">multiplyMatrices</a></li><li data-type='method'><a href="Matrix3.html#multiplyScalar">multiplyScalar</a></li><li data-type='method'><a href="Matrix3.html#premultiply">premultiply</a></li><li data-type='method'><a href="Matrix3.html#prettyPrint">prettyPrint</a></li><li data-type='method'><a href="Matrix3.html#set">set</a></li><li data-type='method'><a href="Matrix3.html#setColumn">setColumn</a></li><li data-type='method'><a href="Matrix3.html#setColumns">setColumns</a></li><li data-type='method'><a href="Matrix3.html#setRow">setRow</a></li><li data-type='method'><a href="Matrix3.html#setRows">setRows</a></li><li data-type='method'><a href="Matrix3.html#setSkewSymmetric">setSkewSymmetric</a></li><li data-type='method'><a href="Matrix3.html#solveLU">solveLU</a></li><li data-type='method'><a href="Matrix3.html#takeHessenbergQRStep">takeHessenbergQRStep</a></li><li data-type='method'><a href="Matrix3.html#thresholdEntriesToZero">thresholdEntriesToZero</a></li><li data-type='method'><a href="Matrix3.html#toArray">toArray</a></li><li data-type='method'><a href="Matrix3.html#trace">trace</a></li><li data-type='method'><a href="Matrix3.html#transpose">transpose</a></li></ul></li><li><a href="Vector2.html">Vector2</a><ul class='methods'><li data-type='method'><a href="Vector2.html#add">add</a></li><li data-type='method'><a href="Vector2.html#addScalar">addScalar</a></li><li data-type='method'><a href="Vector2.html#addScaledVector">addScaledVector</a></li><li data-type='method'><a href="Vector2.html#addVectors">addVectors</a></li><li data-type='method'><a href="Vector2.html#angle">angle</a></li><li data-type='method'><a href="Vector2.html#ceil">ceil</a></li><li data-type='method'><a href="Vector2.html#clamp">clamp</a></li><li data-type='method'><a href="Vector2.html#clone">clone</a></li><li data-type='method'><a href="Vector2.html#copy">copy</a></li><li data-type='method'><a href="Vector2.html#cross">cross</a></li><li data-type='method'><a href="Vector2.html#distanceTo">distanceTo</a></li><li data-type='method'><a href="Vector2.html#distanceToSquared">distanceToSquared</a></li><li data-type='method'><a href="Vector2.html#divide">divide</a></li><li data-type='method'><a href="Vector2.html#divideScalar">divideScalar</a></li><li data-type='method'><a href="Vector2.html#dot">dot</a></li><li data-type='method'><a href="Vector2.html#floor">floor</a></li><li data-type='method'><a href="Vector2.html#fromArray">fromArray</a></li><li data-type='method'><a href="Vector2.html#getComponent">getComponent</a></li><li data-type='method'><a href="Vector2.html#getHouseholderVector">getHouseholderVector</a></li><li data-type='method'><a href="Vector2.html#length">length</a></li><li data-type='method'><a href="Vector2.html#lengthSq">lengthSq</a></li><li data-type='method'><a href="Vector2.html#lerp">lerp</a></li><li data-type='method'><a href="Vector2.html#lerpVectors">lerpVectors</a></li><li data-type='method'><a href="Vector2.html#max">max</a></li><li data-type='method'><a href="Vector2.html#min">min</a></li><li data-type='method'><a href="Vector2.html#multiply">multiply</a></li><li data-type='method'><a href="Vector2.html#multiplyMatrix2">multiplyMatrix2</a></li><li data-type='method'><a href="Vector2.html#multiplyMatrix3">multiplyMatrix3</a></li><li data-type='method'><a href="Vector2.html#multiplyScalar">multiplyScalar</a></li><li data-type='method'><a href="Vector2.html#multiplyVectors">multiplyVectors</a></li><li data-type='method'><a href="Vector2.html#negate">negate</a></li><li data-type='method'><a href="Vector2.html#normalize">normalize</a></li><li data-type='method'><a href="Vector2.html#rotate">rotate</a></li><li data-type='method'><a href="Vector2.html#rotateAround">rotateAround</a></li><li data-type='method'><a href="Vector2.html#round">round</a></li><li data-type='method'><a href="Vector2.html#roundToZero">roundToZero</a></li><li data-type='method'><a href="Vector2.html#set">set</a></li><li data-type='method'><a href="Vector2.html#setComponent">setComponent</a></li><li data-type='method'><a href="Vector2.html#setLength">setLength</a></li><li data-type='method'><a href="Vector2.html#setScalar">setScalar</a></li><li data-type='method'><a href="Vector2.html#setX">setX</a></li><li data-type='method'><a href="Vector2.html#setY">setY</a></li><li data-type='method'><a href="Vector2.html#sub">sub</a></li><li data-type='method'><a href="Vector2.html#subScalar">subScalar</a></li><li data-type='method'><a href="Vector2.html#subVectors">subVectors</a></li><li data-type='method'><a href="Vector2.html#toArray">toArray</a></li></ul></li><li><a href="Vector3.html">Vector3</a><ul class='methods'><li data-type='method'><a href="Vector3.html#add">add</a></li><li data-type='method'><a href="Vector3.html#addScalar">addScalar</a></li><li data-type='method'><a href="Vector3.html#addScaledVector">addScaledVector</a></li><li data-type='method'><a href="Vector3.html#addVectors">addVectors</a></li><li data-type='method'><a href="Vector3.html#angleTo">angleTo</a></li><li data-type='method'><a href="Vector3.html#ceil">ceil</a></li><li data-type='method'><a href="Vector3.html#clamp">clamp</a></li><li data-type='method'><a href="Vector3.html#clampLength">clampLength</a></li><li data-type='method'><a href="Vector3.html#clone">clone</a></li><li data-type='method'><a href="Vector3.html#copy">copy</a></li><li data-type='method'><a href="Vector3.html#cross">cross</a></li><li data-type='method'><a href="Vector3.html#crossVectors">crossVectors</a></li><li data-type='method'><a href="Vector3.html#distanceTo">distanceTo</a></li><li data-type='method'><a href="Vector3.html#distanceToSquared">distanceToSquared</a></li><li data-type='method'><a href="Vector3.html#divide">divide</a></li><li data-type='method'><a href="Vector3.html#divideScalar">divideScalar</a></li><li data-type='method'><a href="Vector3.html#dot">dot</a></li><li data-type='method'><a href="Vector3.html#floor">floor</a></li><li data-type='method'><a href="Vector3.html#fromArray">fromArray</a></li><li data-type='method'><a href="Vector3.html#getComponent">getComponent</a></li><li data-type='method'><a href="Vector3.html#getHouseholderVector">getHouseholderVector</a></li><li data-type='method'><a href="Vector3.html#length">length</a></li><li data-type='method'><a href="Vector3.html#lengthSq">lengthSq</a></li><li data-type='method'><a href="Vector3.html#lerp">lerp</a></li><li data-type='method'><a href="Vector3.html#lerpVectors">lerpVectors</a></li><li data-type='method'><a href="Vector3.html#max">max</a></li><li data-type='method'><a href="Vector3.html#min">min</a></li><li data-type='method'><a href="Vector3.html#multiply">multiply</a></li><li data-type='method'><a href="Vector3.html#multiplyMatrix3">multiplyMatrix3</a></li><li data-type='method'><a href="Vector3.html#multiplyScalar">multiplyScalar</a></li><li data-type='method'><a href="Vector3.html#multiplyVectors">multiplyVectors</a></li><li data-type='method'><a href="Vector3.html#negate">negate</a></li><li data-type='method'><a href="Vector3.html#normalize">normalize</a></li><li data-type='method'><a href="Vector3.html#projectOnVector">projectOnVector</a></li><li data-type='method'><a href="Vector3.html#round">round</a></li><li data-type='method'><a href="Vector3.html#roundToZero">roundToZero</a></li><li data-type='method'><a href="Vector3.html#set">set</a></li><li data-type='method'><a href="Vector3.html#setComponent">setComponent</a></li><li data-type='method'><a href="Vector3.html#setLength">setLength</a></li><li data-type='method'><a href="Vector3.html#setScalar">setScalar</a></li><li data-type='method'><a href="Vector3.html#setX">setX</a></li><li data-type='method'><a href="Vector3.html#setY">setY</a></li><li data-type='method'><a href="Vector3.html#setZ">setZ</a></li><li data-type='method'><a href="Vector3.html#sub">sub</a></li><li data-type='method'><a href="Vector3.html#subScalar">subScalar</a></li><li data-type='method'><a href="Vector3.html#subVectors">subVectors</a></li><li data-type='method'><a href="Vector3.html#thresholdValuesToZero">thresholdValuesToZero</a></li><li data-type='method'><a href="Vector3.html#toArray">toArray</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="Compare.html">Compare</a><ul class='methods'><li data-type='method'><a href="Compare.html#.isEqual">isEqual</a></li><li data-type='method'><a href="Compare.html#.isGTZero">isGTZero</a></li><li data-type='method'><a href="Compare.html#.isLTZero">isLTZero</a></li><li data-type='method'><a href="Compare.html#.isZero">isZero</a></li><li data-type='method'><a href="Compare.html#.selectDistinctValues">selectDistinctValues</a></li><li data-type='method'><a href="Compare.html#.selectDistinctVector2">selectDistinctVector2</a></li><li data-type='method'><a href="Compare.html#.selectDistinctVector3">selectDistinctVector3</a></li><li data-type='method'><a href="Compare.html#.vector2AreEqual">vector2AreEqual</a></li><li data-type='method'><a href="Compare.html#.vector3AreEqual">vector3AreEqual</a></li><li data-type='method'><a href="Compare.html#.vectorLengthsAreEqual">vectorLengthsAreEqual</a></li></ul></li><li><a href="Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="Helpers.html#.findFirstNonvanishing">findFirstNonvanishing</a></li><li data-type='method'><a href="Helpers.html#.findLargestAbsElement">findLargestAbsElement</a></li><li data-type='method'><a href="Helpers.html#.findLargestInCol">findLargestInCol</a></li><li data-type='method'><a href="Helpers.html#.findLargestInRow">findLargestInRow</a></li><li data-type='method'><a href="Helpers.html#.getRank">getRank</a></li><li data-type='method'><a href="Helpers.html#.hessenbergQRStep">hessenbergQRStep</a></li><li data-type='method'><a href="Helpers.html#.householderTransform">householderTransform</a></li><li data-type='method'><a href="Helpers.html#.isRowNonzero">isRowNonzero</a></li><li data-type='method'><a href="Helpers.html#.luDecomposition">luDecomposition</a></li><li data-type='method'><a href="Helpers.html#.luSolve">luSolve</a></li><li data-type='method'><a href="Helpers.html#.modifiedGramSchmidt">modifiedGramSchmidt</a></li><li data-type='method'><a href="Helpers.html#.proj">proj</a></li><li data-type='method'><a href="Helpers.html#.qrDecomposition">qrDecomposition</a></li><li data-type='method'><a href="Helpers.html#.rotg">rotg</a></li><li data-type='method'><a href="Helpers.html#.rrefInPlace">rrefInPlace</a></li><li data-type='method'><a href="Helpers.html#.scaleAndAddRow">scaleAndAddRow</a></li><li data-type='method'><a href="Helpers.html#.scaleRow">scaleRow</a></li><li data-type='method'><a href="Helpers.html#.swapRowsInPlace">swapRowsInPlace</a></li><li data-type='method'><a href="Helpers.html#.swapValuesInArray">swapValuesInArray</a></li><li data-type='method'><a href="Helpers.html#.thresholdToZero">thresholdToZero</a></li></ul></li><li><a href="Utils.html">Utils</a><ul class='methods'><li data-type='method'><a href="Utils.html#.formatPrintNumber">formatPrintNumber</a></li><li data-type='method'><a href="Utils.html#.printMatrix2">printMatrix2</a></li><li data-type='method'><a href="Utils.html#.printMatrix3">printMatrix3</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">vector2.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+/*
+ * Base code from THREE.js authors below.
+ * Additions by Tim Bright
+ * @author mrdoob / http://mrdoob.com/
+ * @author philogb / http://blog.thejit.org/
+ * @author egraether / http://egraether.com/
+ * @author zz85 / http://www.lab4games.net/zz85/blog
+ */
+
+const _Math = require('./stdMath.js');
+const MathHelpers = require('./math-helpers.js');
+
+/**
+ * A 2-dimensional vector.
+ */
+class Vector2 {
+  constructor (x, y) {
+    this.x = x || 0;
+    this.y = y || 0;
+  }
+
+  /**
+   * Sets the components of the vector.
+   * @param {number} x The x-component.
+   * @param {number} y The y-component.
+   */
+  set (x, y) {
+    this.x = x;
+    this.y = y;
+    return this;
+  }
+
+  /**
+   * Sets the vector components to a scalar.
+   * @param {number} scalar The scalar.
+   */
+  setScalar (scalar) {
+    this.x = scalar;
+    this.y = scalar;
+    return this;
+  }
+
+  /**
+   * Sets the X component of the vector.
+   * @param {number} X The x-component.
+   */
+  setX (X) {
+    this.x = X;
+    return this;
+  }
+
+  /**
+   * Sets the Y component of the vector.
+   * @param {number} Y The y-component.
+   */
+  setY (Y) {
+    this.y = Y;
+    return this;
+  }
+
+  /**
+   * Sets the vector component by index: [X, Y, Z]
+   * @param {number} idx The index of the component (0-1).
+   * @param {number} val The value to set the component to.
+   */
+  setComponent (idx, val) {
+    switch (idx) {
+      case 0: this.x = val; break;
+      case 1: this.y = val; break;
+      default: throw new Error('index is out of range: ' + idx);
+    }
+    return this;
+  }
+
+  /**
+   * Gets the vector component by index: [X, Y, Z]
+   * @param {number} index The index of the component (0-1).
+   * @returns {number} The component value.
+   */
+  getComponent (index) {
+    switch (index) {
+      case 0: return this.x;
+      case 1: return this.y;
+      default: throw new Error('index is out of range: ' + index);
+    }
+  }
+
+  /**
+   * Clones the vector.
+   * @returns {Vector2} A new vector with the same components.
+   */
+  clone () {
+    return new this.constructor(this.x, this.y);
+  }
+
+  /**
+   * Copies the component values of a vector to this vector.
+   * @param {Vector2} v The vector to copy.
+   */
+  copy (v) {
+    this.x = v.x;
+    this.y = v.y;
+    return this;
+  }
+
+  /**
+   * Adds a vector to this vector.
+   * @param {Vector2} v The vector to add.
+   */
+  add (v) {
+    this.x += v.x;
+    this.y += v.y;
+    return this;
+  }
+
+  /**
+   * Adds a scalar to every component of this vector.
+   * @param {number} s The scalar to add.
+   */
+  addScalar (s) {
+    this.x += s;
+    this.y += s;
+    return this;
+  }
+
+  /**
+   * Adds 2 vectors and assigns the result to this vector.
+   * @param {Vector2} a The first addend.
+   * @param {Vector2} b The second addend.
+   */
+  addVectors (a, b) {
+    this.x = a.x + b.x;
+    this.y = a.y + b.y;
+    return this;
+  }
+
+  /**
+   * Scales a vector by a scalar and adds the result to this vector.
+   * @param {Vector2} v The vector.
+   * @param {number} s The scalar to scale by.
+   */
+  addScaledVector (v, s) {
+    this.x += v.x * s;
+    this.y += v.y * s;
+    return this;
+  }
+
+  /**
+   * Subtracts a vector from this vector.
+   * @param {Vector2} v The vector to subtract.
+   */
+  sub (v) {
+    this.x -= v.x;
+    this.y -= v.y;
+    return this;
+  }
+
+  /**
+   * Subtracts a scalar from each component of this vector.
+   * @param {number} s The scalar to subtract.
+   */
+  subScalar (s) {
+    this.x -= s;
+    this.y -= s;
+    return this;
+  }
+
+  /**
+   * Subtracts 2 vectors and assigns the value to this vector.
+   * @param {Vector2} a The minuend.
+   * @param {Vector2} b The subtrahend.
+   */
+  subVectors (a, b) {
+    this.x = a.x - b.x;
+    this.y = a.y - b.y;
+    return this;
+  }
+
+  /**
+   * Multiplies element-wise a vector with this one.
+   * @param {Vector2} v The vector.
+   */
+  multiply (v) {
+    this.x *= v.x;
+    this.y *= v.y;
+    return this;
+  }
+
+  /**
+   * Multiplies this vector by a 2x2 matrix.
+   * @param {Matrix2} a The matrix to scale by.
+   */
+  multiplyMatrix2 (a) {
+    const ae = a.elements;
+    const a11 = ae[ 0 ];
+    const a12 = ae[ 2 ];
+    const a21 = ae[ 1 ];
+    const a22 = ae[ 3 ];
+    const x = this.x;
+    const y = this.y;
+    this.x = a11 * x + a12 * y;
+    this.y = a21 * x + a22 * y;
+    return this;
+  }
+
+  /**
+   * Scales this vector as a projected vector (x, y, 1) by a 3x3 matrix
+   * @param {Matrix3} a The matrix to scale by.
+   */
+  multiplyMatrix3 (a) {
+    const ae = a.elements;
+    const a11 = ae[ 0 ];
+    const a12 = ae[ 3 ];
+    const a13 = ae[ 6 ];
+    const a21 = ae[ 1 ];
+    const a22 = ae[ 4 ];
+    const a23 = ae[ 7 ];
+    // const a31 = ae[ 2 ];
+    // const a32 = ae[ 5 ];
+    // const a33 = ae[ 8 ];
+    const x = this.x;
+    const y = this.y;
+    this.x = a11 * x + a12 * y + a13;
+    this.y = a21 * x + a22 * y + a23;
+    return this;
+  }
+
+  /**
+   * Scales this vector by a number.
+   * @param {number} scalar The number to scale by.
+   */
+  multiplyScalar (scalar) {
+    this.x *= scalar;
+    this.y *= scalar;
+    return this;
+  }
+
+  /**
+   * Multiplies the vector components element-wise.
+   * @param {Vector2} a The first vector.
+   * @param {Vector2} b The second vector.
+   */
+  multiplyVectors (a, b) {
+    this.x = a.x * b.x;
+    this.y = a.y * b.y;
+    return this;
+  }
+
+  /**
+   * Divides element-wise this vector by a vector.
+   * @param {Vector2} v The vector to divide by.
+   */
+  divide (v) {
+    this.x /= v.x;
+    this.y /= v.y;
+    return this;
+  }
+
+  /**
+   * Scales this vector by the inverse of the given scalar.
+   * Doesn't check for divide by zero.
+   * @param {number} scalar The scalar to divide by.
+   */
+  divideScalar (scalar) {
+    return this.multiplyScalar(1.0 / scalar);
+  }
+
+  /**
+   * Takes the minimum of each component of this vector and the given vector.
+   * @param {Vector2} v The given vector.
+   */
+  min (v) {
+    this.x = _Math.min(this.x, v.x);
+    this.y = _Math.min(this.y, v.y);
+    return this;
+  }
+
+  /**
+   * Takes the maximum of each component of this vector and the given vector.
+   * @param {Vector2} v The given vector.
+   */
+  max (v) {
+    this.x = _Math.max(this.x, v.x);
+    this.y = _Math.max(this.y, v.y);
+    return this;
+  }
+
+  /**
+   * Clamps this vector between the values of the minimum and maximum vectors.
+   * This function assumes min &lt; max, if this assumption isn't true it will not operate correctly.
+   * @param {Vector2} min The minimum value vector.
+   * @param {Vector2} max The maximum value vector.
+   */
+  clamp (min, max) {
+    this.x = _Math.max(min.x, _Math.min(max.x, this.x));
+    this.y = _Math.max(min.y, _Math.min(max.y, this.y));
+    return this;
+  }
+
+  /**
+   * Rounds each component of the vector to the lowest integer.
+   */
+  floor () {
+    this.x = _Math.floor(this.x);
+    this.y = _Math.floor(this.y);
+    return this;
+  }
+
+  /**
+   * Rounds each component of the vector to the highest integer.
+   */
+  ceil () {
+    this.x = _Math.ceil(this.x);
+    this.y = _Math.ceil(this.y);
+    return this;
+  }
+
+  /**
+   * Rounds each component of the vector via Math.round().
+   */
+  round () {
+    this.x = _Math.round(this.x);
+    this.y = _Math.round(this.y);
+    return this;
+  }
+
+  /**
+   * Rounds each component of the vector toward zero (down if positive, up if negative).
+   */
+  roundToZero () {
+    this.x = (this.x &lt; 0) ? _Math.ceil(this.x) : _Math.floor(this.x);
+    this.y = (this.y &lt; 0) ? _Math.ceil(this.y) : _Math.floor(this.y);
+    return this;
+  }
+
+  /**
+   * Negates each component of the vector.
+   */
+  negate () {
+    this.x = -this.x;
+    this.y = -this.y;
+    return this;
+  }
+
+  /**
+   * Computes the dot product between this vector and the given vector.
+   * @param {Vector2} v The given vector.
+   * @returns {number} The dot product.
+   */
+  dot (v) {
+    return this.x * v.x + this.y * v.y;
+  }
+
+  /**
+   * Computes the z-component of the cross product between this vector and the given vector.
+   * @param {Vector2} v The given vector.
+   * @returns {number} The z-component of the cross product.
+   */
+  cross (v) {
+    return this.x * v.y - this.y * v.x;
+  }
+
+  /**
+   * Computes the square of the length of the vector,
+   * i.e. the dot product of this vector with itself.
+   * @returns {number} The squared length of the vector.
+   */
+  lengthSq () {
+    // rewritten to deal with overflow/underflow
+    const a = this.x;
+    const b = this.y;
+    if (a === 0 &amp;&amp; b === 0) {
+      return 0;
+    }
+    const x = _Math.abs(a);
+    const y = _Math.abs(b);
+    const u = _Math.max(x, y);
+    const t = _Math.min(x, y) / u;
+    return u * u * (1 + t * t);
+  }
+
+  /**
+   * Computes the length of the vector. Compensates for over/underflow.
+   * @returns {number} The length of the vector.
+   */
+  length () {
+    const a = this.x;
+    const b = this.y;
+    if (a === 0 &amp;&amp; b === 0) {
+      return 0;
+    }
+    const x = _Math.abs(a);
+    const y = _Math.abs(b);
+    const u = _Math.max(x, y);
+    const t = _Math.min(x, y) / u;
+    return u * _Math.sqrt(1 + t * t);
+  }
+
+  /**
+   * Normalizes the vector, i.e. makes it unit length.
+   */
+  normalize () {
+    return this.divideScalar(this.length());
+  }
+
+  /**
+   * Computes the angle in radians with respect to the positive x-axis.
+   * @returns {number} The angle between 0-2*PI.
+   */
+  angle () {
+    let angle = _Math.atan2(this.y, this.x);
+    if (angle &lt; 0) {
+      angle += 2 * _Math.PI;
+    }
+    return angle;
+  }
+
+  /**
+   * Computes the distance from a point measured from the origin to the point
+   * this vector points to when the base translated to the origin.
+   * @param {number} v The point as measured from the origin.
+   * @returns {number} The distance from point to point.
+   */
+  distanceTo (v) {
+    return _Math.sqrt(this.distanceToSquared(v));
+  }
+
+  /**
+   * Computes the squared distance from a point measured from the origin to the point
+   * this vector points to when the base translated to the origin.
+   * @param {number} v The point as measured from the origin.
+   * @returns {number} The distance from point to point.
+   */
+  distanceToSquared (v) {
+    const dx = this.x - v.x;
+    const dy = this.y - v.y;
+    return dx * dx + dy * dy;
+  }
+
+  /**
+   * Sets the length of this vector/
+   * @param {number} length The new length of the vector.
+   */
+  setLength (length) {
+    return this.multiplyScalar(length / this.length());
+  }
+
+  /**
+   * Computes a linear interpolation between this vector and the given vector.
+   * @param {Vector2} v The vector at alpha = 1.
+   * @param {number} alpha The linear interpolation factor.
+   */
+  lerp (v, alpha) {
+    this.x += (v.x - this.x) * alpha;
+    this.y += (v.y - this.y) * alpha;
+    return this;
+  }
+
+  /**
+   * Linearly interpolates vectors.
+   * @param {Vector2} v1 The vector at alpha = 0.
+   * @param {Vector2} v2 The vector at alpha = 1.
+   * @param {number} alpha The linear interpolation factor.
+   */
+  lerpVectors (v1, v2, alpha) {
+    return this.subVectors(v2, v1).multiplyScalar(alpha).add(v1);
+  }
+
+  /**
+   * Loads a vector from an array.
+   * @param {number} array The array with values.
+   * @param {number} offset The offset to start from in the array. Default is zero.
+   */
+  fromArray (array, offset) {
+    if (offset === undefined) {
+      offset = 0;
+    }
+    this.x = array[offset];
+    this.y = array[offset + 1];
+    return this;
+  }
+
+  /**
+   * Loads an array from this vector.
+   * @param {number} array The array to put the values in.
+   * @param {number} offset The offset to start from in the array. Default is zero.
+   */
+  toArray (array, offset) {
+    if (array === undefined) {
+      array = [];
+    }
+    if (offset === undefined) {
+      offset = 0;
+    }
+    array[offset] = this.x;
+    array[offset + 1] = this.y;
+    return array;
+  }
+
+  /**
+   * Rotates a vector by an angle.
+   * @param {number} angle The angle to rotate the vector by.
+   */
+  rotate (angle) {
+    const c = _Math.cos(angle);
+    const s = _Math.sin(angle);
+    const x = this.x;
+    const y = this.y;
+    this.x = x * c - y * s;
+    this.y = x * s + y * c;
+    return this;
+  }
+
+  /**
+   * Rotates a vector around a point by an angle.
+   * @param {Vector2} center The center of rotation.
+   * @param {number} angle The angle to rotate the vector by.
+   */
+  rotateAround (center, angle) {
+    const c = _Math.cos(angle);
+    const s = _Math.sin(angle);
+    const x = this.x - center.x;
+    const y = this.y - center.y;
+    this.x = x * c - y * s + center.x;
+    this.y = x * s + y * c + center.y;
+    return this;
+  }
+
+  /**
+   * Computes the Householder transform on this vector.
+   */
+  getHouseholderVector () {
+    return MathHelpers.householderTransform(this);
+  }
+}
+
+/**
+* Boolean to determine if vector is a Vector2.
+*/
+Vector2.prototype.isVector2 = true;
+
+/**
+* The dimension of the vector.
+*/
+Vector2.prototype.dimension = 2;
+
+module.exports = Vector2;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jan 01 2018 00:55:56 GMT-0700 (MST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

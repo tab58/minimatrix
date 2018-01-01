@@ -1,10 +1,15 @@
 'use strict';
 
+/**
+ * @namespace Helpers
+ */
+
 const _Math = require('./stdMath.js');
 const Compare = require('./compare.js');
 
 /**
  * Reduces a matrix to reduced row echelon form.
+ * @memberof Helpers
  * @param {Matrix2|Matrix3|Matrix4} M The matrix.
  * @param {number} TOL The numerical tolerance for zero comparison.
  */
@@ -46,6 +51,7 @@ function rrefInPlace (M, TOL = 1e-14) {
 
 /**
  * Tests if a row in a matrix is nonzero.
+ * @memberof Helpers
  * @param {Matrix2|Matrix3|Matrix4} M The matrix.
  * @param {number} i The row index.
  * @param {number} TOL The numerical tolerance.
@@ -59,6 +65,7 @@ function isRowNonzero (M, i, TOL = 1e-14) {
 
 /**
  * Finds the largest absolute valued element in a matrix.
+ * @memberof Helpers
  * @param {Matrix2|Matrix3|Matrix4} M The matrix.
  */
 function findLargestAbsElement (M) {
@@ -87,6 +94,7 @@ function findLargestAbsElement (M) {
 
 /**
  * Finds the largest element in the matrix row.
+ * @memberof Helpers
  * @param {Matrix2|Matrix3|Matrix4} M The matrix.
  * @param {number} i The row index.
  * @returns {number} The column index of the row's largest element.
@@ -112,6 +120,7 @@ function findLargestInRow (M, i) {
 
 /**
  * Finds the largest element in the matrix column.
+ * @memberof Helpers
  * @param {Matrix2|Matrix3|Matrix4} M The matrix.
  * @param {number} i The column index.
  * @returns {number} The row index of the column's largest element.
@@ -134,6 +143,7 @@ function findLargestInCol (M, i, startAtRow = 0) {
 
 /**
  * Finds the first nonvanishing element.
+ * @memberof Helpers
  * @param {Matrix2|Matrix3|Matrix4} M The matrix.
  * @param {number} TOL The numerical tolerance.
  * @returns {Object} The information for the nonvanishing element.
@@ -164,6 +174,7 @@ function findFirstNonvanishing (M, TOL) {
 
 /**
  * Swaps the values in the array.
+ * @memberof Helpers
  * @param {number[]} A The array.
  * @param {number} i The index of the first value.
  * @param {number} j The index of the second value.
@@ -179,6 +190,7 @@ function swapValuesInArray (A, i, j) {
 
 /**
  * Swaps two rows in the matrix.
+ * @memberof Helpers
  * @param {Matrix2|Matrix3|Matrix4} M The matrix.
  * @param {number} i The first row index.
  * @param {number} j The second row index.
@@ -200,6 +212,7 @@ function swapRowsInPlace (M, i, j) {
 
 /**
  * Scales the row in the matrix given by the index.
+ * @memberof Helpers
  * @param {Matrix2|Matrix3|Matrix4} M The matrix.
  * @param {number} row The row index.
  * @param {number} scale The number to scale by.
@@ -215,7 +228,8 @@ function scaleRow (M, row, scale) {
 
 /**
  * Scales and adds the source row to the destination row.
- * @param {Matrix2|Matrix3|Matrix4} m 
+ * @memberof Helpers
+ * @param {Matrix2|Matrix3|Matrix4} m The matrix.
  * @param {number} srcRow The original row index.
  * @param {number} destRow The destination row index for the sum to be in.
  * @param {number} scale The number to scale the source row by.
@@ -232,6 +246,7 @@ function scaleAndAddRow (m, srcRow, destRow, scale) {
 
 /**
  * Thresholds all values of a matrix whose magnitude is less than the numerical tolerance.
+ * @memberof Helpers
  * @param {Matrix2|Matrix3|Matrix4} m The matrix.
  * @param {number} TOL The numerical tolerance.
  */
@@ -247,6 +262,7 @@ function thresholdToZero (m, TOL) {
 
 /**
  * Solves the Ax=b problem with an LU decomposition.
+ * @memberof Helpers
  * @param {Matrix2|Matrix3|Matrix4} A The LU decomposed matrix.
  * @param {number[]} P The permutation array.
  * @param {Vector2|Vector3|Vector4} b The right side vector in the Ax=b problem.
@@ -284,6 +300,7 @@ function luSolve (A, P, b, X) {
 
 /**
  * Computes the LU decomposition.
+ * @memberof Helpers
  * @param {Matrix2|Matrix3|Matrix4} A The matrix to decompose.
  * @param {boolean} inPlace Overwrites the A matrix with the LU decomposition if true, creates a new matrix if false.
  */
@@ -349,6 +366,7 @@ function luDecomposition (A, inPlace) {
 
 /**
  * Computes the projection of one vector against another.
+ * @memberof Helpers
  * @param {Vector2|Vector3|Vector4} u The vector to project.
  * @param {Vector2|Vector3|Vector4} v The vector to be projected against.
  */
@@ -358,6 +376,7 @@ function proj (u, v) {
 
 /**
  * Orthogonalizes a matrix using the modified Gram-Schmidt algorithm.
+ * @memberof Helpers
  * @param {Matrix2|Matrix3|Matrix4} m The matrix.
  */
 function modifiedGramSchmidt (m) {
@@ -382,6 +401,7 @@ function modifiedGramSchmidt (m) {
 
 /**
  * Computes the Givens rotation values for a vector.
+ * @memberof Helpers
  * @param {number} a The x-component of a vector rotated back to a vector on the X-axis.
  * @param {number} b The y-component of a vector rotated back to a vector on the X-axis.
  * @param {array} csr (Optional) An array for the values to saved into, if provided. If not, a new array is created.
@@ -429,6 +449,7 @@ function rotg (a, b, csr) {
 
 /**
  * Computes the QR decomposition of a matrix.
+ * @memberof Helpers
  * @param {Matrix2|Matrix3|Matrix4} A The matrix to decompose.
  * @param {boolean} inPlace Overwrites the A matrix with the R matrix.
  */
@@ -479,6 +500,7 @@ function qrDecomposition (A, inPlace) {
 
 /**
  * Computes the rank of a matrix.
+ * @memberof Helpers
  * @param {Matrix2|Matrix3|Matrix4} M The matrix to get the rank of.
  * @param {number} EPS The numerical tolerance for an element to be zero.
  */
@@ -499,6 +521,7 @@ function getRank (M, EPS) {
 
 /**
  * Computes the Householder transform vector and scale.
+ * @memberof Helpers
  * @param {Vector2|Vector3|Vector4} x The vector to rotate.
  */
 function householderTransform (x) {
@@ -528,6 +551,7 @@ function householderTransform (x) {
 
 /**
  * Computes a Hessenberg step of the QR algorithm.
+ * @memberof Helpers
  * @param {Matrix2|Matrix3|Matrix4} M The matrix to step.
  */
 function hessenbergQRStep (M) {

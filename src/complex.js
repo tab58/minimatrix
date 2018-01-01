@@ -214,7 +214,9 @@ class Complex {
 
 Object.defineProperties(Complex.prototype, {
   /**
-   * @memberOf Complex#I
+   * The imaginary number.
+   * @property I
+   * @memberof Complex
    */
   I: {
     value: Object.freeze(new Complex(0, 1)),
