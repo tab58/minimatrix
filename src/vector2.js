@@ -16,6 +16,11 @@ const MathHelpers = require('./math-helpers.js');
  * A 2-dimensional vector.
  */
 class Vector2 {
+  /**
+   * @constructor
+   * @param {number} x The x-component value.
+   * @param {number} y The y-component value.
+   */
   constructor (x, y) {
     this.x = x || 0;
     this.y = y || 0;
@@ -536,14 +541,23 @@ class Vector2 {
   }
 }
 
-/**
-* Boolean to determine if vector is a Vector2.
-*/
-Vector2.prototype.isVector2 = true;
-
-/**
-* The dimension of the vector.
-*/
-Vector2.prototype.dimension = 2;
+Object.defineProperties(Vector2.prototype, {
+  /**
+   * @property {boolean} isVector2 Boolean to determine if vector is a Vector2.
+   * @memberof Vector2
+   */
+  isVector2: {
+    value: true,
+    writable: false
+  },
+  /**
+   * @property {number} dimension The dimension of the vector.
+   * @memberof Vector2
+   */
+  dimension: {
+    value: 2,
+    writable: false
+  }
+});
 
 module.exports = Vector2;

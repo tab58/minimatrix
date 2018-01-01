@@ -27,6 +27,11 @@ function newtonsCube (A, x0) {
  * Class for complex arithmetic.
  */
 class Complex {
+  /**
+   * @constructor
+   * @param {number} a The real component.
+   * @param {number} b The imaginary component.
+   */
   constructor (a = 0, b = 0) {
     this.real = a;
     this.imag = b;

@@ -18,6 +18,12 @@ const MathHelpers = require('./math-helpers.js');
  * A 2-dimensional vector.
  */
 class Vector3 {
+  /**
+   * @constructor
+   * @param {number} x The x-component value.
+   * @param {number} y The y-component value.
+   * @param {number} z The z-component value.
+   */
   constructor (x, y, z) {
     this.x = x || 0;
     this.y = y || 0;
@@ -584,41 +590,75 @@ class Vector3 {
   }
 }
 
-Vector3.prototype.clampScalar = (function () {
-  const min = new Vector3();
-  const max = new Vector3();
-  return function clampScalar (minVal, maxVal) {
-    min.set(minVal, minVal, minVal);
-    max.set(maxVal, maxVal, maxVal);
-    return this.clamp(min, max);
-  };
-}());
-
-Vector3.prototype.projectOnPlane = (function () {
-  const v1 = new Vector3();
-  return function projectOnPlane (planeNormal) {
-    v1.copy(this).projectOnVector(planeNormal);
-    return this.sub(v1);
-  };
-}());
-
-Vector3.prototype.reflect = (function () {
-  // reflect incident vector off plane orthogonal to normal
-  // normal is assumed to have unit length
-  const v1 = new Vector3();
-  return function reflect (normal) {
-    return this.sub(v1.copy(normal).multiplyScalar(2 * this.dot(normal)));
-  };
-}());
-
-/**
-* Boolean to determine if vector is a Vector2.
-*/
-Vector3.prototype.isVector3 = true;
-
-/**
-* The dimension of the vector.
-*/
-Vector3.prototype.dimension = 3;
+Object.defineProperties(Vector3.prototype, {
+  /**
+   * Clamps the components of this vector between the minimum and maximum values.
+   * @function clampScalar
+   * @memberof Vector3
+   * @param {number} minVal The minimum value.
+   * @param {number} maxVal The maximum value.
+   */
+  clampScalar: {
+    value: (function () {
+      const min = new Vector3();
+      const max = new Vector3();
+      return function clampScalar (minVal, maxVal) {
+        min.set(minVal, minVal, minVal);
+        max.set(maxVal, maxVal, maxVal);
+        return this.clamp(min, max);
+      };
+    }()),
+    writable: false
+  },
+  /**
+   * Projects this vector onto a plane defined by the normal to the plane.
+   * @function projectOnPlane
+   * @memberof Vector3
+   * @param {Vector3} planeNormal The plane normal.
+   */
+  projectOnPlane: {
+    value: (function () {
+      const v1 = new Vector3();
+      return function projectOnPlane (planeNormal) {
+        v1.copy(this).projectOnVector(planeNormal);
+        return this.sub(v1);
+      };
+    }()),
+    writable: false
+  },
+  /**
+   * Reflects this vector through a plane defined by its normal.
+   * @function reflect
+   * @memberof Vector3
+   * @param {Vector3} The plane normal.
+   */
+  reflect: {
+    value: (function () {
+      // reflect incident vector off plane orthogonal to normal
+      // normal is assumed to have unit length
+      const v1 = new Vector3();
+      return function reflect (normal) {
+        return this.sub(v1.copy(normal).multiplyScalar(2 * this.dot(normal)));
+      };
+    }()),
+    writable: false
+  },
+  /**
+   * @property {boolean} isVector3 Boolean to determine if vector is a Vector2.
+   * @memberof Vector3
+   */
+  isVector3: {
+    value: true,
+    writable: false
+  },
+  /**
+   * @property {number} dimension The dimension of the vector.
+   * @memberof Vector3
+   */
+  dimension: {
+    value: 3,
+    writable: false
+  }
+});
 
 module.exports = Vector3;

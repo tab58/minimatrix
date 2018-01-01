@@ -31,6 +31,9 @@ const helpers = {
  * @class Matrix3
  */
 class Matrix3 {
+  /**
+   * @constructor
+   */
   constructor () {
     this.elements = [
       1, 0, 0,
@@ -686,35 +689,40 @@ class Matrix3 {
 
 Object.defineProperties(Matrix3.prototype, {
   /**
-   * @memberOf Matrix3#isMatrix3
+   * @property {boolean} isMatrix3 Boolean to test if argument is Matrix3.
+   * @memberof Matrix3
    */
   isMatrix3: {
     value: true,
     writable: false
   },
   /**
-   * @memberOf Matrix3#dimension
+   * @property {number} dimension The dimension of the matrix.
+   * @memberof Matrix3
    */
   dimension: {
     value: 3,
     writable: false
   },
   /**
-   * @memberOf Matrix3#E0
+   * @property {Vector3} E0 The first standard basis vector (1, 0, 0).
+   * @memberof Matrix3
    */
   E0: {
     value: Object.freeze(new Vector3(1, 0, 0)),
     writable: false
   },
   /**
-   * @memberOf Matrix3#E1
+   * @property {Vector3} E1 The first standard basis vector (0, 1, 0).
+   * @memberof Matrix3
    */
   E1: {
     value: Object.freeze(new Vector3(0, 1, 0)),
     writable: false
   },
   /**
-   * @memberOf Matrix3#E2
+   * @property {Vector3} E2 The first standard basis vector (0, 0, 1).
+   * @memberof Matrix3
    */
   E2: {
     value: Object.freeze(new Vector3(0, 0, 1)),

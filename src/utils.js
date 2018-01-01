@@ -6,7 +6,7 @@
 
 /**
  * Formats a number for pretty printing.
- * @memberof Utils
+ * @memberof UtilsUtils
  * @param {number} x The number to format.
  * @returns {string} The formatted string.
  */

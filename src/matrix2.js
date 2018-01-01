@@ -19,6 +19,9 @@ const PolyRoots = require('cubic-roots');
  * @class Matrix2
  */
 class Matrix2 {
+  /**
+   * @constructor
+   */
   constructor () {
     this.elements = [
       1, 0,
@@ -552,28 +555,32 @@ class Matrix2 {
 
 Object.defineProperties(Matrix2.prototype, {
   /**
-   * @memberOf Matrix2#isMatrix2
+   * @property {boolean} isMatrix2 Boolean to test if argument is Matrix2.
+   * @memberof Matrix2
    */
   isMatrix2: {
     value: true,
     writable: false
   },
   /**
-   * @memberOf Matrix2#dimension
+   * @property {number} dimension The dimension of this matrix.
+   * @memberof Matrix2
    */
   dimension: {
     value: 2,
     writable: false
   },
   /**
-   * @memberOf Matrix2#E0
+   * @property {Vector2} E0 The first standard basis vector (1, 0).
+   * @memberof Matrix2
    */
   E0: {
     value: Object.freeze(new Vector2(1, 0)),
     writable: false
   },
   /**
-   * @memberOf Matrix2#E1
+   * @property {Vector2} E1 The second standard basis vector (0, 1).
+   * @memberof Matrix2
    */
   E1: {
     value: Object.freeze(new Vector2(0, 1)),
