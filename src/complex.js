@@ -48,6 +48,7 @@ class Complex {
   /**
    * Creates a Complex number from a given vector in the complex plane.
    * @param {Vector2} v The given vector.
+   * @returns {Complex} This complex number.
    */
   fromVector2 (v) {
     return new Complex(v.x, v.y);
@@ -56,6 +57,7 @@ class Complex {
   /**
    * Copies a complex number.
    * @param {Complex} C The given complex number.
+   * @returns {Complex} This complex number.
    */
   copy (C) {
     this.real = C.real;
@@ -67,6 +69,7 @@ class Complex {
    * Sets the coefficients of the complex number.
    * @param {number} real The real coefficient.
    * @param {number} imag The imaginary coefficient.
+   * @returns {Complex} This complex number.
    */
   set (real, imag) {
     this.real = real;
@@ -77,6 +80,7 @@ class Complex {
   /**
    * Sets the real coefficient of the complex number.
    * @param {number} a The real coefficient.
+   * @returns {Complex} This complex number.
    */
   setReal (a) {
     this.real = a;
@@ -86,6 +90,7 @@ class Complex {
   /**
    * Sets the imaginary coefficient of the complex number.
    * @param {number} b The imaginary coefficient.
+   * @returns {Complex} This complex number.
    */
   setImag (b) {
     this.imag = b;
@@ -95,6 +100,7 @@ class Complex {
   /**
    * Adds the given complex number with this one.
    * @param {Complex} C The given complex number.
+   * @returns {Complex} This complex number.
    */
   add (C) {
     this.real += C.real;
@@ -105,6 +111,7 @@ class Complex {
   /**
    * Subtracts the given complex number with this one.
    * @param {Complex} C The given complex number.
+   * @returns {Complex} This complex number.
    */
   sub (C) {
     this.real -= C.real;
@@ -115,6 +122,7 @@ class Complex {
   /**
    * Multiplies the given complex number with this one.
    * @param {Complex} C The given complex number.
+   * @returns {Complex} This complex number.
    */
   multiply (C) {
     const a = this.real;
@@ -129,6 +137,7 @@ class Complex {
   /**
    * Divides this complex number with the given complex number.
    * @param {Complex} C The given complex number.
+   * @returns {Complex} This complex number.
    */
   divide (C) {
     const a = this.real;
@@ -144,6 +153,7 @@ class Complex {
   /**
    * Adds a real number to this complex number.
    * @param {number} a The real number to add.
+   * @returns {Complex} This complex number.
    */
   addReal (a) {
     this.real += a;
@@ -153,6 +163,7 @@ class Complex {
   /**
    * Scales a Complex number.
    * @param {number} s The number to scale by.
+   * @returns {Complex} This complex number.
    */
   scale (s) {
     this.real *= s;
@@ -162,6 +173,7 @@ class Complex {
 
   /**
    * Sets this Complex number to the complex conjugate.
+   * @returns {Complex} This complex number.
    */
   conjugate () {
     this.imag = -this.imag;
@@ -182,6 +194,7 @@ class Complex {
 
   /**
    * Calculates the square root of the complex number.
+   * @returns {Complex[]} The array of 2 square roots.
    */
   sqrt () {
     if (this.imag === 0 && this.real > 0) {
@@ -198,6 +211,7 @@ class Complex {
 
   /**
    * Calculates the cube root of the complex number.
+   * @returns {Complex[]} An array of the 3 complex roots.
    */
   cbrt () {
     const a = this.real;
