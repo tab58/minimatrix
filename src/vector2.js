@@ -30,6 +30,7 @@ class Vector2 {
    * Sets the components of the vector.
    * @param {number} x The x-component.
    * @param {number} y The y-component.
+   * @returns {Vector2} This vector.
    */
   set (x, y) {
     this.x = x;
@@ -40,6 +41,7 @@ class Vector2 {
   /**
    * Sets the vector components to a scalar.
    * @param {number} scalar The scalar.
+   * @returns {Vector2} This vector.
    */
   setScalar (scalar) {
     this.x = scalar;
@@ -50,6 +52,7 @@ class Vector2 {
   /**
    * Sets the X component of the vector.
    * @param {number} X The x-component.
+   * @returns {Vector2} This vector.
    */
   setX (X) {
     this.x = X;
@@ -59,6 +62,7 @@ class Vector2 {
   /**
    * Sets the Y component of the vector.
    * @param {number} Y The y-component.
+   * @returns {Vector2} This vector.
    */
   setY (Y) {
     this.y = Y;
@@ -69,6 +73,7 @@ class Vector2 {
    * Sets the vector component by index: [X, Y, Z]
    * @param {number} idx The index of the component (0-1).
    * @param {number} val The value to set the component to.
+   * @returns {Vector2} This vector.
    */
   setComponent (idx, val) {
     switch (idx) {
@@ -103,6 +108,7 @@ class Vector2 {
   /**
    * Copies the component values of a vector to this vector.
    * @param {Vector2} v The vector to copy.
+   * @returns {Vector2} This vector.
    */
   copy (v) {
     this.x = v.x;
@@ -113,6 +119,7 @@ class Vector2 {
   /**
    * Adds a vector to this vector.
    * @param {Vector2} v The vector to add.
+   * @returns {Vector2} This vector.
    */
   add (v) {
     this.x += v.x;
@@ -123,6 +130,7 @@ class Vector2 {
   /**
    * Adds a scalar to every component of this vector.
    * @param {number} s The scalar to add.
+   * @returns {Vector2} This vector.
    */
   addScalar (s) {
     this.x += s;
@@ -134,6 +142,7 @@ class Vector2 {
    * Adds 2 vectors and assigns the result to this vector.
    * @param {Vector2} a The first addend.
    * @param {Vector2} b The second addend.
+   * @returns {Vector2} This vector.
    */
   addVectors (a, b) {
     this.x = a.x + b.x;
@@ -145,6 +154,7 @@ class Vector2 {
    * Scales a vector by a scalar and adds the result to this vector.
    * @param {Vector2} v The vector.
    * @param {number} s The scalar to scale by.
+   * @returns {Vector2} This vector.
    */
   addScaledVector (v, s) {
     this.x += v.x * s;
@@ -155,6 +165,7 @@ class Vector2 {
   /**
    * Subtracts a vector from this vector.
    * @param {Vector2} v The vector to subtract.
+   * @returns {Vector2} This vector.
    */
   sub (v) {
     this.x -= v.x;
@@ -165,6 +176,7 @@ class Vector2 {
   /**
    * Subtracts a scalar from each component of this vector.
    * @param {number} s The scalar to subtract.
+   * @returns {Vector2} This vector.
    */
   subScalar (s) {
     this.x -= s;
@@ -176,6 +188,7 @@ class Vector2 {
    * Subtracts 2 vectors and assigns the value to this vector.
    * @param {Vector2} a The minuend.
    * @param {Vector2} b The subtrahend.
+   * @returns {Vector2} This vector.
    */
   subVectors (a, b) {
     this.x = a.x - b.x;
@@ -186,6 +199,7 @@ class Vector2 {
   /**
    * Multiplies element-wise a vector with this one.
    * @param {Vector2} v The vector.
+   * @returns {Vector2} This vector.
    */
   multiply (v) {
     this.x *= v.x;
@@ -196,6 +210,7 @@ class Vector2 {
   /**
    * Multiplies this vector by a 2x2 matrix.
    * @param {Matrix2} a The matrix to scale by.
+   * @returns {Vector2} This vector.
    */
   multiplyMatrix2 (a) {
     const ae = a.elements;
@@ -213,6 +228,7 @@ class Vector2 {
   /**
    * Scales this vector as a projected vector (x, y, 1) by a 3x3 matrix
    * @param {Matrix3} a The matrix to scale by.
+   * @returns {Vector2} This vector.
    */
   multiplyMatrix3 (a) {
     const ae = a.elements;
@@ -235,6 +251,7 @@ class Vector2 {
   /**
    * Scales this vector by a number.
    * @param {number} scalar The number to scale by.
+   * @returns {Vector2} This vector.
    */
   multiplyScalar (scalar) {
     this.x *= scalar;
@@ -246,6 +263,7 @@ class Vector2 {
    * Multiplies the vector components element-wise.
    * @param {Vector2} a The first vector.
    * @param {Vector2} b The second vector.
+   * @returns {Vector2} This vector.
    */
   multiplyVectors (a, b) {
     this.x = a.x * b.x;
@@ -256,6 +274,7 @@ class Vector2 {
   /**
    * Divides element-wise this vector by a vector.
    * @param {Vector2} v The vector to divide by.
+   * @returns {Vector2} This vector.
    */
   divide (v) {
     this.x /= v.x;
@@ -267,6 +286,7 @@ class Vector2 {
    * Scales this vector by the inverse of the given scalar.
    * Doesn't check for divide by zero.
    * @param {number} scalar The scalar to divide by.
+   * @returns {Vector2} This vector.
    */
   divideScalar (scalar) {
     return this.multiplyScalar(1.0 / scalar);
@@ -275,6 +295,7 @@ class Vector2 {
   /**
    * Takes the minimum of each component of this vector and the given vector.
    * @param {Vector2} v The given vector.
+   * @returns {Vector2} This vector.
    */
   min (v) {
     this.x = _Math.min(this.x, v.x);
@@ -285,6 +306,7 @@ class Vector2 {
   /**
    * Takes the maximum of each component of this vector and the given vector.
    * @param {Vector2} v The given vector.
+   * @returns {Vector2} This vector.
    */
   max (v) {
     this.x = _Math.max(this.x, v.x);
@@ -297,6 +319,7 @@ class Vector2 {
    * This function assumes min < max, if this assumption isn't true it will not operate correctly.
    * @param {Vector2} min The minimum value vector.
    * @param {Vector2} max The maximum value vector.
+   * @returns {Vector2} This vector.
    */
   clamp (min, max) {
     this.x = _Math.max(min.x, _Math.min(max.x, this.x));
@@ -306,6 +329,7 @@ class Vector2 {
 
   /**
    * Rounds each component of the vector to the lowest integer.
+   * @returns {Vector2} This vector.
    */
   floor () {
     this.x = _Math.floor(this.x);
@@ -315,6 +339,7 @@ class Vector2 {
 
   /**
    * Rounds each component of the vector to the highest integer.
+   * @returns {Vector2} This vector.
    */
   ceil () {
     this.x = _Math.ceil(this.x);
@@ -324,6 +349,7 @@ class Vector2 {
 
   /**
    * Rounds each component of the vector via Math.round().
+   * @returns {Vector2} This vector.
    */
   round () {
     this.x = _Math.round(this.x);
@@ -333,6 +359,7 @@ class Vector2 {
 
   /**
    * Rounds each component of the vector toward zero (down if positive, up if negative).
+   * @returns {Vector2} This vector.
    */
   roundToZero () {
     this.x = (this.x < 0) ? _Math.ceil(this.x) : _Math.floor(this.x);
@@ -342,6 +369,7 @@ class Vector2 {
 
   /**
    * Negates each component of the vector.
+   * @returns {Vector2} This vector.
    */
   negate () {
     this.x = -this.x;
@@ -405,6 +433,7 @@ class Vector2 {
 
   /**
    * Normalizes the vector, i.e. makes it unit length.
+   * @returns {Vector2} This vector.
    */
   normalize () {
     return this.divideScalar(this.length());
@@ -420,6 +449,17 @@ class Vector2 {
       angle += 2 * _Math.PI;
     }
     return angle;
+  }
+
+  /**
+   * Computes the angle between this vector and the given vector.
+   * @param {Vector2} v The given vector.
+   * @returns {number} The angle between the vectors.
+   */
+  angleTo (v) {
+    const theta = this.dot(v) / (_Math.sqrt(this.lengthSq() * v.lengthSq()));
+    // clamp, to handle numerical problems
+    return _Math.acos(Math.max(-1, Math.min(theta, 1)));
   }
 
   /**
@@ -445,8 +485,20 @@ class Vector2 {
   }
 
   /**
+   * Determines equality between this vector and the given vector.
+   * @param {Vector2} v The given vector.
+   * @param {number} tol The numerical tolerance.
+   * @returns {boolean} True if all the component value differences are below the numeric tolerance, false if not.
+   */
+  equals (v, tol = 0) {
+    return (_Math.abs(v.x - this.x) < tol &&
+            _Math.abs(v.y - this.y) < tol);
+  }
+
+  /**
    * Sets the length of this vector/
    * @param {number} length The new length of the vector.
+   * @returns {Vector2} This vector.
    */
   setLength (length) {
     return this.multiplyScalar(length / this.length());
@@ -456,6 +508,7 @@ class Vector2 {
    * Computes a linear interpolation between this vector and the given vector.
    * @param {Vector2} v The vector at alpha = 1.
    * @param {number} alpha The linear interpolation factor.
+   * @returns {Vector2} This vector.
    */
   lerp (v, alpha) {
     this.x += (v.x - this.x) * alpha;
@@ -468,6 +521,7 @@ class Vector2 {
    * @param {Vector2} v1 The vector at alpha = 0.
    * @param {Vector2} v2 The vector at alpha = 1.
    * @param {number} alpha The linear interpolation factor.
+   * @returns {Vector2} This vector.
    */
   lerpVectors (v1, v2, alpha) {
     return this.subVectors(v2, v1).multiplyScalar(alpha).add(v1);
@@ -477,6 +531,7 @@ class Vector2 {
    * Loads a vector from an array.
    * @param {number} array The array with values.
    * @param {number} offset The offset to start from in the array. Default is zero.
+   * @returns {Vector2} This vector.
    */
   fromArray (array, offset) {
     if (offset === undefined) {
@@ -491,6 +546,7 @@ class Vector2 {
    * Loads an array from this vector.
    * @param {number} array The array to put the values in.
    * @param {number} offset The offset to start from in the array. Default is zero.
+   * @returns {Vector2} This vector.
    */
   toArray (array, offset) {
     if (array === undefined) {
@@ -507,6 +563,7 @@ class Vector2 {
   /**
    * Rotates a vector by an angle.
    * @param {number} angle The angle to rotate the vector by.
+   * @returns {Vector2} This vector.
    */
   rotate (angle) {
     const c = _Math.cos(angle);
@@ -522,6 +579,7 @@ class Vector2 {
    * Rotates a vector around a point by an angle.
    * @param {Vector2} center The center of rotation.
    * @param {number} angle The angle to rotate the vector by.
+   * @returns {Vector2} This vector.
    */
   rotateAround (center, angle) {
     const c = _Math.cos(angle);
@@ -535,6 +593,7 @@ class Vector2 {
 
   /**
    * Computes the Householder transform on this vector.
+   * @returns {Object} The Householder vector and vector scale.
    */
   getHouseholderVector () {
     return MathHelpers.householderTransform(this);

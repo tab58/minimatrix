@@ -219,8 +219,7 @@ class Complex {
 
 Object.defineProperties(Complex.prototype, {
   /**
-   * The imaginary number.
-   * @property I
+   * @property {Complex} I The imaginary number.
    * @memberof Complex
    */
   I: {
