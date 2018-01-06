@@ -208,6 +208,15 @@ class Vector2 {
   }
 
   /**
+   * Multiplies this vector by a Matrix2.
+   * @param {Matrix2} m The matrix to scale this vector by.
+   * @return {Vector2} This vector.
+   */
+  multiplyMatrix (m) {
+    return this.multiplyMatrix2(m);
+  }
+
+  /**
    * Multiplies this vector by a 2x2 matrix.
    * @param {Matrix2} a The matrix to scale by.
    * @returns {Vector2} This vector.

@@ -244,6 +244,15 @@ class Vector3 {
   }
 
   /**
+   * Multiplies this vector by a Matrix3.
+   * @param {Matrix3} m The matrix to scale this vector by.
+   * @return {Vector3} This vector.
+   */
+  multiplyMatrix (m) {
+    return this.multiplyMatrix3(m);
+  }
+
+  /**
    * Multiplies this vector by a 3x3 matrix.
    * @param {Matrix3} a The matrix to scale by.
    * @returns {Vector3} This vector.
