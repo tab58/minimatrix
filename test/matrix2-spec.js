@@ -1,9 +1,7 @@
-'use strict';
-/* globals describe it Minimatrix expect */
+import { Vector2 } from '../src/vector2';
+import { Matrix2 } from '../src/matrix2';
 
 describe('Matrix2', () => {
-  const Vector2 = Minimatrix.Vector2;
-  const Matrix2 = Minimatrix.Matrix2;
   describe('Basic Manipulations', () => {
     it('should create an identity matrix', () => {
       const a = new Matrix2();

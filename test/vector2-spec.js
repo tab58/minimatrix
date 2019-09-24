@@ -1,10 +1,8 @@
-'use strict';
-/* globals describe it Minimatrix expect */
+import { Vector2 } from '../src/vector2';
+import { Matrix2 } from '../src/matrix2';
+import { Matrix3 } from '../src/matrix3';
 
 describe('Vector2', () => {
-  const Vector2 = Minimatrix.Vector2;
-  const Matrix2 = Minimatrix.Matrix2;
-  const Matrix3 = Minimatrix.Matrix3;
   const EPS = 1e-14;
   describe('Basic Manipulations', () => {
     it('should have the proper coordinates on create', () => {

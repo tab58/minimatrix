@@ -1,23 +1,81 @@
-'use strict';
+import { _Math } from './math';
 
-// make native implementation the default
-const _Math = {};
-const mathProps = Object.getOwnPropertyNames(Math);
-mathProps.forEach((prop) => { _Math[prop] = Math[prop]; });
+interface Math {
+  DEG2RAD: number;
+  RAD2DEG: number;
+  PI2: number;
 
-// and allow for better implementations, like @stdlib-js
-// Object.assign(_Math, { /* something with better math functions */});
+  clamp: (value: number, min: number, max: number) => number;
+  /**
+   * Computes the hypot() function 
+   */
+  khypot: (w: number, z: number) => number;
+  /** 
+   * Computes the Euclidian modulo of m % n.
+   * https://en.wikipedia.org/wiki/Modulo_operation
+  */
+  euclideanModulo: (n: number, m: number) => number;
+  /**
+   * Maps a value from an interval A to another interval B.
+   */
+  mapLinear: (x: number, a1: number, a2: number, b1: number, b2: number) => number;
+  /**
+   * Computes a linear interpolation between two values.
+   * https://en.wikipedia.org/wiki/Linear_interpolation 
+   */
+  lerp: (x: number, y: number, t: number) => number;
+  /**
+   * http://en.wikipedia.org/wiki/Smoothstep
+   */
+  smoothstep: (x: number, min: number, max: number) => number;
+  /**
+   * http://en.wikipedia.org/wiki/Smoothstep
+   */
+  smootherstep: (x: number, min: number, max: number) => number;
+  /**
+   * Random integer from <low, high> interval.
+   */
+  randInt: (low: number, high: number) => number;
+  /**
+   * Random float from <low, high> interval.
+   */
+  randFloat: (low: number, high: number) => number;
+  /**
+   * Random float from <-range/2, range/2> interval.
+   */ 
+  randFloatSpread: (range: number) => number;
+  /**
+   * Converts degrees to radians.
+   */
+  degToRad: (degrees: number) => number;
+  /**
+   * Converts radians to degrees.
+   */
+  radToDeg: (radians: number) => number;
+  /**
+   * Determines if a number is a power of two.
+   */
+  isPowerOfTwo: (value: number) => number;
+  /**
+   * Rounds to the nearest power of two from a value.
+   */
+  nearestPowerOfTwo: (value: number) => number;
+  /**
+   * Rounds up to the next power of two.
+   */
+  nextPowerOfTwo: (value: number) => number;
+}
 
-Object.assign(_Math, {
-  DEG2RAD: _Math.PI / 180,
-  RAD2DEG: 180 / _Math.PI,
+export default {
+  DEG2RAD: Math.PI / 180,
+  RAD2DEG: 180 / Math.PI,
   PI2: 2 * Math.PI,
 
-  clamp: function (value, min, max) {
-    return _Math.max(min, _Math.min(max, value));
+  clamp: function (value: number, min: number, max: number): number {
+    return Math.max(min, _Math.min(max, value));
   },
 
-  hypot: function (w, z) {
+  hypot: function (w: number, z: number) {
     // rewritten to deal with overflow/underflow
     const a = w;
     const b = z;
@@ -34,7 +92,7 @@ Object.assign(_Math, {
   // compute euclidian modulo of m % n
   // https://en.wikipedia.org/wiki/Modulo_operation
 
-  euclideanModulo: function (n, m) {
+  euclideanModulo: function (n: number, m: number): number {
     return ((n % m) + m) % m;
   },
 
@@ -114,5 +172,3 @@ Object.assign(_Math, {
     return value;
   }
 });
-
-module.exports = _Math;

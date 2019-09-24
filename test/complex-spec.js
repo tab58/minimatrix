@@ -1,8 +1,6 @@
-'use strict';
-/* globals describe it Minimatrix expect */
+import { Complex } from '../src/complex';
 
 describe('Complex Numbers', () => {
-  const Complex = Minimatrix.Complex;
   const EPS = 1e-14;
   describe('Creation/Editing', () => {
     it('should clone a complex number', () => {
