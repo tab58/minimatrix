@@ -4,6 +4,7 @@ import { Matrix3 } from './matrix3';
 import { Vector2 } from './vector2';
 import { Vector3 } from './vector3';
 import * as Compare from './compare';
+import { Vector, Matrix } from './interfaces'; 
 
 export {
   Matrix2,
@@ -11,5 +12,7 @@ export {
   Vector2,
   Vector3,
   Complex,
-  Compare
+  Compare,
+  Vector,
+  Matrix
 };
