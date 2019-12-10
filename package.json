@@ -1,12 +1,11 @@
 {
   "name": "minimatrix",
-  "version": "1.8.0",
+  "version": "2.0.0",
   "description": "A linear algebra package for 2x2 and 3x3 matrices and 2D/3D vectors.",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "build-browser-tests": "./node_modules/.bin/webpack --config ./test/webpack.config-tests.js",
-    "test": "./node_modules/.bin/mocha ./test/node-tests.js",
-    "generate-docs": "node_modules/.bin/jsdoc -c ./jsdoc.json"
+    "test": "mocha -r ts-node/register ./test/*.spec.ts",
+    "build": "npx tsc"
   },
   "repository": {
     "type": "git",
@@ -14,7 +13,8 @@
   },
   "keywords": [
     "math",
-    "linear-algebra"
+    "linear",
+    "algebra"
   ],
   "author": "Tim Bright",
   "license": "MIT",
@@ -23,13 +23,14 @@
   },
   "homepage": "https://github.com/tab58/minimatrix#readme",
   "dependencies": {
-    "cubic-roots": "^1.0.0"
+    "minimatrix-polyroots": "^3.0.5"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.6",
+    "@types/mocha": "^5.2.7",
     "chai": "^4.1.0",
-    "docdash": "^0.4.0",
-    "jsdoc": "^3.5.5",
-    "mocha": "^3.4.2",
-    "webpack": "^3.3.0"
+    "mocha": "^6.2.2",
+    "ts-node": "^8.5.4",
+    "webpack": "^4.41.2"
   }
 }
