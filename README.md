@@ -16,11 +16,6 @@ Tests can be run in the terminal:
 
 - Enter `npm test`. 
 
-Tests can also be run in the browser:
-
-- Run `npm run build-browser-tests` to build the library
-- Open `test/specrunner.html` in the browser.
-
 The npm browser script builds the project and wraps it so that the tests can run. For the changes in the project to be reflected in the tests, the browser script must be re-run.
 
 ## Author
