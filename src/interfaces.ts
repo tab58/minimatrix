@@ -1,5 +1,10 @@
 export interface Matrix {
   /**
+   * The elements of the matrix in row-major order.
+   */
+  elements: number[];
+
+  /**
    * Sets the matrix as the identity matrix.
    */
   identity (): this;
