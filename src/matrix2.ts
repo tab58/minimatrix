@@ -127,6 +127,46 @@ export class Matrix2 implements Matrix {
   }
 
   /**
+   * Swaps rows in-place in the matrix. Zero is the first row.
+   */
+  swapRows (i: number, j: number): this {
+    const A = this._elements;
+    if (i > 1 || j > 1) {
+      throw new Error(`swapRows(): row index out of bounds.`);
+    }
+    if (i !== j) {
+      let tmp = A[1];
+      A[1] = A[0];
+      A[0] = tmp;
+      
+      tmp = A[3];
+      A[3] = A[2];
+      A[2] = tmp;
+    }
+    return this;
+  }
+
+  /**
+   * Swaps columns in-place in the matrix. Zero is the first column.
+   */
+  swapColumns (i: number, j: number): this {
+    const A = this._elements;
+    if (i > 1 || j > 1) {
+      throw new Error(`swapRows(): row index out of bounds.`);
+    }
+    if (i !== j) {
+      let tmp = A[2];
+      A[2] = A[0];
+      A[0] = tmp;
+      
+      tmp = A[3];
+      A[3] = A[1];
+      A[1] = tmp;
+    }
+    return this;
+  }
+
+  /**
    * Sets the matrix as the identity matrix.
    */
   identity (): this {

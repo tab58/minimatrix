@@ -108,6 +108,47 @@ export class Matrix3 implements Matrix {
   }
 
   /**
+   * Swaps rows in-place in the matrix. Zero is the first row.
+   */
+  swapRows (i: number, j: number): this {
+    const A = this._elements;
+    const n = 3;
+    if (i > n - 1 || j > n - 1) {
+      throw new Error(`swapRows(): row index out of bounds.`);
+    }
+    if (i !== j) {
+      for (let k = 0; k < n; ++k) {
+        const offset = k * n;
+        const tmp = A[i + offset];
+        A[i + offset] = A[j + offset];
+        A[j + offset] = tmp;
+      }
+    }
+    return this;
+  }
+
+  /**
+   * Swaps columns in-place in the matrix. Zero is the first column.
+   */
+  swapColumns (i: number, j: number): this {
+    const A = this._elements;
+    const n = 3;
+    if (i > 2 || j > 2) {
+      throw new Error(`swapColumns(): column index out of bounds.`);
+    }
+    if (i !== j) {
+      const iOffset = i * n;
+      const jOffset = j * n;
+      for (let k = 0; k < n; ++k) {
+        const tmp = A[iOffset + k];
+        A[iOffset + k] = A[jOffset + k];
+        A[jOffset + k] = tmp;
+      }
+    }
+    return this;
+  }
+
+  /**
    * Sets the matrix as the identity matrix.
    */
   identity (): this {
