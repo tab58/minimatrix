@@ -8,7 +8,7 @@
  * @author bhouston / http://clara.io
  * @author tschw
  */
-
+import _Math from './core';
 import { Matrix } from './interfaces';
 import { Vector3 } from './vector3';
 import { formatPrintNumber } from './utils';
@@ -33,7 +33,7 @@ export class Matrix3 implements Matrix {
   }
 
   /**
-   * Sets the values of the matrix elements.
+   * Sets the matrix values in a row-major ordered fashion.
    * @param {number} n11 Element a11.
    * @param {number} n12 Element a12.
    * @param {number} n13 Element a13.
@@ -133,7 +133,7 @@ export class Matrix3 implements Matrix {
   swapColumns (i: number, j: number): this {
     const A = this._elements;
     const n = 3;
-    if (i > 2 || j > 2) {
+    if (i > n - 1 || j > n - 1) {
       throw new Error(`swapColumns(): column index out of bounds.`);
     }
     if (i !== j) {
@@ -206,7 +206,7 @@ export class Matrix3 implements Matrix {
    * @param {number} scalar The number to scale the result by.
    */
   addMatrices (a: this, b: this, scalar: number = 1): this {
-    const alpha = (scalar === undefined ? 1 : scalar);
+    const alpha = scalar;
     const ae = a._elements;
     const be = b._elements;
     const te = this._elements;
@@ -403,10 +403,15 @@ export class Matrix3 implements Matrix {
    * @param {Matrix3} matrix The given matrix.
    * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
    */
-  getInverse (matrix: this, throwOnDegenerate: boolean): this {
+  getInverse (matrix: this, throwOnDegenerate: boolean, singularTol: number = 1e-14): this {
     const det = matrix.determinant();
-    if (throwOnDegenerate && Math.abs(det) <= 1e-14) {
-      throw new Error(`getInverse(): matrix is degenerate.`);
+    if (_Math.abs(det) <= singularTol) {
+      const msg = `Matrix3.getInverse(): matrix is degenerate.`;
+      if (throwOnDegenerate) {
+        throw new Error(msg);
+      } else {
+        console.warn(msg);
+      }      
     }
     return matrix.adjugate().multiplyScalar(1.0 / det);
   }
@@ -467,7 +472,7 @@ export class Matrix3 implements Matrix {
    * @param {number[]} array The array to populate the matrix values into.
    * @param {number} offset The numeric array offset.
    */
-  toArray (array: number[] = [], offset = 0): number[] {
+  toArray (array: number[] = [], offset: number = 0): number[] {
     const te = this._elements;
 
     array[ offset ] = te[ 0 ];

@@ -355,7 +355,7 @@ export class Vector2 implements Vector {
   }
 
   /**
-   * Rounds each component of the vector via Math.round().
+   * Rounds each component of the vector via _Math.round().
    * @returns {Vector2} This vector.
    */
   round (): this {
@@ -466,7 +466,7 @@ export class Vector2 implements Vector {
   angleTo (v: this): number {
     const theta = this.dot(v) / (_Math.sqrt(this.lengthSq() * v.lengthSq()));
     // clamp, to handle numerical problems
-    return _Math.acos(Math.max(-1, Math.min(theta, 1)));
+    return _Math.acos(_Math.max(-1, _Math.min(theta, 1)));
   }
 
   /**

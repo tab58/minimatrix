@@ -1,3 +1,5 @@
+import _Math from './core';
+
 /**
  * Formats a number for pretty printing.
  * @memberof Utils
@@ -19,7 +21,7 @@ export function formatPrintNumber (x: number): string {
     return str;
   } else {
     const diff = maxLen - rawStr.length;
-    const idx = Math.ceil(diff / 2);
+    const idx = _Math.ceil(diff / 2);
     const strArray = [];
     for (let i = 0; i < idx; ++i) {
       strArray.push('');

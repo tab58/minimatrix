@@ -108,7 +108,7 @@ describe('Vector3', () => {
     it('should subtract 2 vectors properly', () => {
       const a = new Vector3(5, 7, 11);
       const b = new Vector3(13, 17, 19);
-      const c = (new Vector3(0, 0)).subVectors(a, b);
+      const c = (new Vector3(0, 0, 0)).subVectors(a, b);
       expect(c).to.be.eql(new Vector3(5 - 13, 7 - 17, 11 - 19));
     });
     it('should scale by multiplying by a scalar', () => {

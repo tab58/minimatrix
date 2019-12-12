@@ -3,6 +3,7 @@
  * @author alteredq / http://alteredqualia.com/
  * @author mrdoob / http://mrdoob.com/
  */
+import _Math from './core';
 import { Vector2 } from './vector2';
 import { Vector3 } from './vector3';
 
@@ -21,7 +22,7 @@ interface VectorLength {
  * @returns {boolean} True if number absolute value is below numerical tolerance, false if not.
  */
 export function isZero (x: number, eps: number): boolean {
-  return (Math.abs(x) < eps);
+  return (_Math.abs(x) < eps);
 }
 
 /**

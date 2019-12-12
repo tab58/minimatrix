@@ -30,7 +30,7 @@ export class Matrix2 implements Matrix {
   }
 
   /**
-   * Sets the matrix elements.
+   * Sets the matrix values in a row-major ordered fashion.
    * @param {number} n11 Element a11.
    * @param {number} n12 Element a12.
    * @param {number} n21 Element a21.
