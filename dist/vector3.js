@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -375,7 +375,7 @@ class Vector3 {
         return this;
     }
     /**
-     * Rounds each component of the vector via Math.round().
+     * Rounds each component of the vector via _Math.round().
      * @returns {Vector3} This vector.
      */
     round() {
@@ -540,7 +540,7 @@ class Vector3 {
     angleTo(v) {
         const theta = this.dot(v) / (core_1.default.sqrt(this.lengthSq() * v.lengthSq()));
         // clamp, to handle numerical problems
-        return core_1.default.acos(Math.max(-1, Math.min(theta, 1)));
+        return core_1.default.acos(core_1.default.max(-1, core_1.default.min(theta, 1)));
     }
     /**
      * Computes the distance from a point measured from the origin to the point

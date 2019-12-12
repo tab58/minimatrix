@@ -327,7 +327,7 @@ class Vector2 {
         return this;
     }
     /**
-     * Rounds each component of the vector via Math.round().
+     * Rounds each component of the vector via _Math.round().
      * @returns {Vector2} This vector.
      */
     round() {
@@ -429,7 +429,7 @@ class Vector2 {
     angleTo(v) {
         const theta = this.dot(v) / (core_1.default.sqrt(this.lengthSq() * v.lengthSq()));
         // clamp, to handle numerical problems
-        return core_1.default.acos(Math.max(-1, Math.min(theta, 1)));
+        return core_1.default.acos(core_1.default.max(-1, core_1.default.min(theta, 1)));
     }
     /**
      * Computes the distance from a point measured from the origin to the point

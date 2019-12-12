@@ -1,5 +1,17 @@
 'use strict';
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+/*
+ * Base code from THREE.js authors below.
+ * Additions by Tim Bright
+ * @author alteredq / http://alteredqualia.com/
+ * @author WestLangley / http://github.com/WestLangley
+ * @author bhouston / http://clara.io
+ * @author tschw
+ */
+const core_1 = __importDefault(require("./core"));
 const vector3_1 = require("./vector3");
 const utils_1 = require("./utils");
 const minimatrix_polyroots_1 = require("minimatrix-polyroots");
@@ -18,7 +30,7 @@ class Matrix3 {
     }
     get elements() { return this._elements.slice(); }
     /**
-     * Sets the values of the matrix elements.
+     * Sets the matrix values in a row-major ordered fashion.
      * @param {number} n11 Element a11.
      * @param {number} n12 Element a12.
      * @param {number} n13 Element a13.
@@ -106,6 +118,45 @@ class Matrix3 {
         return this;
     }
     /**
+     * Swaps rows in-place in the matrix. Zero is the first row.
+     */
+    swapRows(i, j) {
+        const A = this._elements;
+        const n = 3;
+        if (i > n - 1 || j > n - 1) {
+            throw new Error(`swapRows(): row index out of bounds.`);
+        }
+        if (i !== j) {
+            for (let k = 0; k < n; ++k) {
+                const offset = k * n;
+                const tmp = A[i + offset];
+                A[i + offset] = A[j + offset];
+                A[j + offset] = tmp;
+            }
+        }
+        return this;
+    }
+    /**
+     * Swaps columns in-place in the matrix. Zero is the first column.
+     */
+    swapColumns(i, j) {
+        const A = this._elements;
+        const n = 3;
+        if (i > n - 1 || j > n - 1) {
+            throw new Error(`swapColumns(): column index out of bounds.`);
+        }
+        if (i !== j) {
+            const iOffset = i * n;
+            const jOffset = j * n;
+            for (let k = 0; k < n; ++k) {
+                const tmp = A[iOffset + k];
+                A[iOffset + k] = A[jOffset + k];
+                A[jOffset + k] = tmp;
+            }
+        }
+        return this;
+    }
+    /**
      * Sets the matrix as the identity matrix.
      */
     identity() {
@@ -161,7 +212,7 @@ class Matrix3 {
      * @param {number} scalar The number to scale the result by.
      */
     addMatrices(a, b, scalar = 1) {
-        const alpha = (scalar === undefined ? 1 : scalar);
+        const alpha = scalar;
         const ae = a._elements;
         const be = b._elements;
         const te = this._elements;
@@ -341,10 +392,16 @@ class Matrix3 {
      * @param {Matrix3} matrix The given matrix.
      * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
      */
-    getInverse(matrix, throwOnDegenerate) {
+    getInverse(matrix, throwOnDegenerate, singularTol = 1e-14) {
         const det = matrix.determinant();
-        if (throwOnDegenerate && Math.abs(det) <= 1e-14) {
-            throw new Error(`getInverse(): matrix is degenerate.`);
+        if (core_1.default.abs(det) <= singularTol) {
+            const msg = `Matrix3.getInverse(): matrix is degenerate.`;
+            if (throwOnDegenerate) {
+                throw new Error(msg);
+            }
+            else {
+                console.warn(msg);
+            }
         }
         return matrix.adjugate().multiplyScalar(1.0 / det);
     }

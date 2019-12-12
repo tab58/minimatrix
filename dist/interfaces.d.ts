@@ -1,5 +1,9 @@
 export interface Matrix {
     /**
+     * The elements of the matrix in row-major order.
+     */
+    elements: number[];
+    /**
      * Sets the matrix as the identity matrix.
      */
     identity(): this;
@@ -97,6 +101,14 @@ export interface Matrix {
      * @param {Matrix} m The given matrix.
      */
     add(m: this): this;
+    /**
+     * Swaps rows in-place in the matrix. Zero is the first row.
+     */
+    swapRows(i: number, j: number): this;
+    /**
+     * Swaps columns in-place in the matrix. Zero is the first column.
+     */
+    swapColumns(i: number, j: number): this;
 }
 export interface Vector {
     dimension: number;

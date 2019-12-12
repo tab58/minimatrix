@@ -12,7 +12,7 @@ export declare class Matrix2 implements Matrix {
      */
     constructor();
     /**
-     * Sets the matrix elements.
+     * Sets the matrix values in a row-major ordered fashion.
      * @param {number} n11 Element a11.
      * @param {number} n12 Element a12.
      * @param {number} n21 Element a21.
@@ -55,6 +55,14 @@ export declare class Matrix2 implements Matrix {
      * @returns {Vector2} The vector with the column values.
      */
     getColumn(i: number): Vector2;
+    /**
+     * Swaps rows in-place in the matrix. Zero is the first row.
+     */
+    swapRows(i: number, j: number): this;
+    /**
+     * Swaps columns in-place in the matrix. Zero is the first column.
+     */
+    swapColumns(i: number, j: number): this;
     /**
      * Sets the matrix as the identity matrix.
      */

@@ -1,5 +1,14 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+/*
+ * Base code by authors below, additions by Tim Bright
+ * @author alteredq / http://alteredqualia.com/
+ * @author mrdoob / http://mrdoob.com/
+ */
+const core_1 = __importDefault(require("./core"));
 exports.DEFAULT_TOLERANCE = 1e-14;
 /**
  * Test if a number is close to zero.
@@ -10,7 +19,7 @@ exports.DEFAULT_TOLERANCE = 1e-14;
  * @returns {boolean} True if number absolute value is below numerical tolerance, false if not.
  */
 function isZero(x, eps) {
-    return (Math.abs(x) < eps);
+    return (core_1.default.abs(x) < eps);
 }
 exports.isZero = isZero;
 /**

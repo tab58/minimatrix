@@ -201,7 +201,7 @@ export declare class Vector3 implements Vector {
      */
     ceil(): this;
     /**
-     * Rounds each component of the vector via Math.round().
+     * Rounds each component of the vector via _Math.round().
      * @returns {Vector3} This vector.
      */
     round(): this;

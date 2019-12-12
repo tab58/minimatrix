@@ -1,5 +1,9 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const core_1 = __importDefault(require("./core"));
 /**
  * Formats a number for pretty printing.
  * @memberof Utils
@@ -21,7 +25,7 @@ function formatPrintNumber(x) {
     }
     else {
         const diff = maxLen - rawStr.length;
-        const idx = Math.ceil(diff / 2);
+        const idx = core_1.default.ceil(diff / 2);
         const strArray = [];
         for (let i = 0; i < idx; ++i) {
             strArray.push('');

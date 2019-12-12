@@ -26,7 +26,7 @@ class Matrix2 {
     }
     get elements() { return this._elements.slice(); }
     /**
-     * Sets the matrix elements.
+     * Sets the matrix values in a row-major ordered fashion.
      * @param {number} n11 Element a11.
      * @param {number} n12 Element a12.
      * @param {number} n21 Element a21.
@@ -120,6 +120,42 @@ class Matrix2 {
             default:
                 throw new Error('No column defined at ' + i + '.');
         }
+    }
+    /**
+     * Swaps rows in-place in the matrix. Zero is the first row.
+     */
+    swapRows(i, j) {
+        const A = this._elements;
+        if (i > 1 || j > 1) {
+            throw new Error(`swapRows(): row index out of bounds.`);
+        }
+        if (i !== j) {
+            let tmp = A[1];
+            A[1] = A[0];
+            A[0] = tmp;
+            tmp = A[3];
+            A[3] = A[2];
+            A[2] = tmp;
+        }
+        return this;
+    }
+    /**
+     * Swaps columns in-place in the matrix. Zero is the first column.
+     */
+    swapColumns(i, j) {
+        const A = this._elements;
+        if (i > 1 || j > 1) {
+            throw new Error(`swapRows(): row index out of bounds.`);
+        }
+        if (i !== j) {
+            let tmp = A[2];
+            A[2] = A[0];
+            A[0] = tmp;
+            tmp = A[3];
+            A[3] = A[1];
+            A[1] = tmp;
+        }
+        return this;
     }
     /**
      * Sets the matrix as the identity matrix.

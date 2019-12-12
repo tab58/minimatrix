@@ -10,7 +10,7 @@ export declare class Matrix3 implements Matrix {
     get elements(): number[];
     constructor();
     /**
-     * Sets the values of the matrix elements.
+     * Sets the matrix values in a row-major ordered fashion.
      * @param {number} n11 Element a11.
      * @param {number} n12 Element a12.
      * @param {number} n13 Element a13.
@@ -48,6 +48,14 @@ export declare class Matrix3 implements Matrix {
      * @param {Vector3} r2 The third row.
      */
     setRows(r0: Vector3, r1: Vector3, r2: Vector3): this;
+    /**
+     * Swaps rows in-place in the matrix. Zero is the first row.
+     */
+    swapRows(i: number, j: number): this;
+    /**
+     * Swaps columns in-place in the matrix. Zero is the first column.
+     */
+    swapColumns(i: number, j: number): this;
     /**
      * Sets the matrix as the identity matrix.
      */
@@ -124,7 +132,7 @@ export declare class Matrix3 implements Matrix {
      * @param {Matrix3} matrix The given matrix.
      * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
      */
-    getInverse(matrix: this, throwOnDegenerate: boolean): this;
+    getInverse(matrix: this, throwOnDegenerate: boolean, singularTol?: number): this;
     /**
      * Transposes this matrix in-place.
      */

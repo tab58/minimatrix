@@ -185,7 +185,7 @@ export declare class Vector2 implements Vector {
      */
     ceil(): this;
     /**
-     * Rounds each component of the vector via Math.round().
+     * Rounds each component of the vector via _Math.round().
      * @returns {Vector2} This vector.
      */
     round(): this;
