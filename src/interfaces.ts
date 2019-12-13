@@ -150,6 +150,9 @@ export interface Matrix {
 export interface Vector {
   dimension: number;
 
+  /** Clones the vector. */
+  clone (): this;
+
   /**
    * Sets the vector components to a scalar.
    * @param {number} scalar The scalar.
