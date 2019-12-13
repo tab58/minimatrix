@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Vector4, Matrix4 } from '../src/index';
+import { Vector4 } from '../src/index';
 
 describe('Vector4', () => {
   const EPS = 1e-14;

@@ -198,45 +198,6 @@ class Vector2 {
         return this;
     }
     /**
-     * Multiplies this vector by a 2x2 matrix.
-     * @param {Matrix2} a The matrix to scale by.
-     * @returns {Vector2} This vector.
-     */
-    multiplyMatrix2(a) {
-        const ae = a.elements;
-        const a11 = ae[0];
-        const a12 = ae[2];
-        const a21 = ae[1];
-        const a22 = ae[3];
-        const x = this.x;
-        const y = this.y;
-        this._x = a11 * x + a12 * y;
-        this._y = a21 * x + a22 * y;
-        return this;
-    }
-    /**
-     * Scales this vector as a projected vector (x, y, 1) by a 3x3 matrix
-     * @param {Matrix3} a The matrix to scale by.
-     * @returns {Vector2} This vector.
-     */
-    multiplyMatrix3(a) {
-        const ae = a.elements;
-        const a11 = ae[0];
-        const a12 = ae[3];
-        const a13 = ae[6];
-        const a21 = ae[1];
-        const a22 = ae[4];
-        const a23 = ae[7];
-        // const a31 = ae[ 2 ];
-        // const a32 = ae[ 5 ];
-        // const a33 = ae[ 8 ];
-        const x = this.x;
-        const y = this.y;
-        this._x = a11 * x + a12 * y + a13;
-        this._y = a21 * x + a22 * y + a23;
-        return this;
-    }
-    /**
      * Scales this vector by a number.
      * @param {number} scalar The number to scale by.
      * @returns {Vector2} This vector.
@@ -256,6 +217,21 @@ class Vector2 {
         this._x = a.x * b.x;
         this._y = a.y * b.y;
         return this;
+    }
+    /**
+     * Multiplies the vector by a 2x2 matrix.
+     * @param {Vector2} m The matrix to scale by.
+     * @returns {Vector2} This vector.
+     */
+    multiplyMatrix2(m) {
+        return m.transformVector2(this);
+    }
+    /**
+     * Scales this vector as a projected vector (x, y, 1) by a 3x3 matrix.
+     * @param m The 3x3 matrix.
+     */
+    multiplyMatrix3(m) {
+        return m.transformVector2(this);
     }
     /**
      * Divides element-wise this vector by a vector.

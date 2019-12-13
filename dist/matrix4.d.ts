@@ -1,12 +1,15 @@
 import { Vector3 } from './vector3';
+import { Vector4 } from './vector4';
 import { Matrix } from './interfaces';
 export declare class Matrix4 implements Matrix {
     private _elements;
-    get elements(): number[];
-    readonly dimension: number;
+    readonly rowDimension: number;
+    readonly colDimension: number;
     constructor();
+    set(i: number, j: number, value: number): this;
+    get(i: number, j: number): number;
     /** Sets the matrix values in a row-major ordered fashion. */
-    set(n11: number, n12: number, n13: number, n14: number, n21: number, n22: number, n23: number, n24: number, n31: number, n32: number, n33: number, n34: number, n41: number, n42: number, n43: number, n44: number): this;
+    setElements(n11: number, n12: number, n13: number, n14: number, n21: number, n22: number, n23: number, n24: number, n31: number, n32: number, n33: number, n34: number, n41: number, n42: number, n43: number, n44: number): this;
     identity(): this;
     clone(): this;
     copy(m: this): this;
@@ -35,6 +38,8 @@ export declare class Matrix4 implements Matrix {
     makeBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): this;
     multiply(m: this): this;
     premultiply(m: this): this;
+    transformVector3(v: Vector3): Vector3;
+    transformVector4(v: Vector4): Vector4;
     multiplyMatrices(a: this, b: this): this;
     multiplyScalar(s: number): this;
     determinant(): number;

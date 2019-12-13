@@ -1,4 +1,5 @@
 import { Matrix } from './interfaces';
+import { Vector2 } from './vector2';
 import { Vector3 } from './vector3';
 import { Complex } from './complex';
 /**
@@ -7,8 +8,11 @@ import { Complex } from './complex';
  */
 export declare class Matrix3 implements Matrix {
     private _elements;
-    get elements(): number[];
+    readonly rowDimension: number;
+    readonly colDimension: number;
     constructor();
+    set(i: number, j: number, value: number): this;
+    get(i: number, j: number): number;
     /**
      * Sets the matrix values in a row-major ordered fashion.
      * @param {number} n11 Element a11.
@@ -21,7 +25,7 @@ export declare class Matrix3 implements Matrix {
      * @param {number} n32 Element a32.
      * @param {number} n33 Element a33.
      */
-    set(n11: number, n12: number, n13: number, n21: number, n22: number, n23: number, n31: number, n32: number, n33: number): this;
+    setElements(n11: number, n12: number, n13: number, n21: number, n22: number, n23: number, n31: number, n32: number, n33: number): this;
     /**
      * Sets a row of the matrix.
      * @param {number} i The row index (0-2).
@@ -87,6 +91,18 @@ export declare class Matrix3 implements Matrix {
      * @param {Matrix3} m The given matrix.
      */
     add(m: this): this;
+    /**
+     * Scales a vector as a projected vector (x, y, 1) by a 3x3 matrix
+     * @param {Vector2} a The vector to transform.
+     * @returns {Vector2} The original vector, transformed.
+     */
+    transformVector2(a: Vector2): Vector2;
+    /**
+     * Multiplies a vector by a 3x3 matrix.
+     * @param {Vector3} a The vector to transform.
+     * @returns {Vector3} The original vector, transformed.
+     */
+    transformVector3(a: Vector3): Vector3;
     /**
      * Right-multiplies the given matrix with this one (this * m).
      * @param {Matrix3} m The given matrix.

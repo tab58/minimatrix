@@ -42,7 +42,6 @@ export declare class Vector4 implements Vector {
      * @returns {Vector3} This vector.
      */
     multiplyVectors(a: this, b: this): this;
-    applyMatrix4(m: Matrix4): this;
     /**
      * Divides element-wise this vector by a vector.
      * @param {Vector4} v The vector to divide by.

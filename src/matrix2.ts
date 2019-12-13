@@ -7,6 +7,7 @@
  * @author tschw
  */
 import { Vector2 } from './vector2';
+import { Vector3 } from './vector3';
 import { Matrix } from './interfaces';
 import { formatPrintNumber } from './utils';
 
@@ -17,8 +18,9 @@ import { formatPrintNumber } from './utils';
 export class Matrix2 implements Matrix {
   private _elements: number[];
 
-  public get elements (): number[] { return this._elements.slice(); }
-
+  public readonly rowDimension: number = 2;
+  public readonly colDimension: number = 2;
+  
   /**
    * @constructor
    */
@@ -29,6 +31,17 @@ export class Matrix2 implements Matrix {
     ];
   }
 
+  set (i: number, j: number, value: number): this {
+    const n = this.colDimension;
+    this._elements[i + j * n] = value;
+    return this;
+  }
+
+  get (i: number, j: number): number {
+    const n = this.colDimension;
+    return this._elements[i + j * n];
+  }
+
   /**
    * Sets the matrix values in a row-major ordered fashion.
    * @param {number} n11 Element a11.
@@ -36,7 +49,7 @@ export class Matrix2 implements Matrix {
    * @param {number} n21 Element a21.
    * @param {number} n22 Element a22.
    */
-  set (n11: number, n12: number, n21: number, n22: number): this {
+  setElements (n11: number, n12: number, n21: number, n22: number): this {
     const te = this._elements;
     te[ 0 ] = n11; te[ 1 ] = n21;
     te[ 2 ] = n12; te[ 3 ] = n22;
@@ -170,7 +183,7 @@ export class Matrix2 implements Matrix {
    * Sets the matrix as the identity matrix.
    */
   identity (): this {
-    this.set(
+    this.setElements(
       1, 0,
       0, 1
     );
@@ -195,6 +208,24 @@ export class Matrix2 implements Matrix {
     te[ 0 ] = me[ 0 ]; te[ 1 ] = me[ 1 ];
     te[ 2 ] = me[ 2 ]; te[ 3 ] = me[ 3 ];
     return this;
+  }
+
+  /**
+   * Multiplies a vector by a 2x2 matrix.
+   * @param {Vector2} a The vector to transform.
+   * @returns {Vector2} This vector.
+   */
+  transformVector2 (v: Vector2): Vector2 {
+    const ae = this._elements;
+    const a11 = ae[ 0 ];
+    const a12 = ae[ 2 ];
+    const a21 = ae[ 1 ];
+    const a22 = ae[ 3 ];
+    const x = v.x;
+    const y = v.y;
+    const _x = a11 * x + a12 * y;
+    const _y = a21 * x + a22 * y;
+    return v.set(_x, _y);
   }
 
   /**
@@ -406,7 +437,7 @@ export class Matrix2 implements Matrix {
     const n12 = alpha * a.x * b.y;
     const n21 = alpha * a.y * b.x;
     const n22 = alpha * a.y * b.y;
-    return this.set(n11, n12, n21, n22);
+    return this.setElements(n11, n12, n21, n22);
   }
 
   /**

@@ -219,7 +219,7 @@ describe('Vector2', () => {
   describe('Linear Algebra Operations', () => {
     it('should be transformed a 2x2 matrix', () => {
       const m = new Matrix2();
-      m.set(11, 13, 17, 19);
+      m.setElements(11, 13, 17, 19);
       const a = new Vector2(5, 7);
       a.multiplyMatrix2(m);
       expect(a.x).to.be.eql(11 * 5 + 13 * 7);
@@ -227,7 +227,7 @@ describe('Vector2', () => {
     });
     it('should be transformed in homogeneous coordinates by a 3x3 matrix', () => {
       const m = new Matrix3();
-      m.set(3, 5, 7, 11, 13, 17, 19, 23, 29);
+      m.setElements(3, 5, 7, 11, 13, 17, 19, 23, 29);
       const a = new Vector2(31, 37);
       a.multiplyMatrix3(m);
       expect(a.x).to.be.eql(3 * 31 + 5 * 37 + 7);

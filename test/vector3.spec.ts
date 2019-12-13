@@ -249,7 +249,7 @@ describe('Vector3', () => {
   describe('Linear Algebra Operations', () => {
     it('should be transformed a 3x3 matrix', () => {
       const m = new Matrix3();
-      m.set(13, 17, 19, 23, 29, 31, 37, 41, 43);
+      m.setElements(13, 17, 19, 23, 29, 31, 37, 41, 43);
       const a = new Vector3(5, 7, 11);
       a.multiplyMatrix3(m);
       expect(a.x).to.be.eql(13 * 5 + 17 * 7 + 19 * 11);

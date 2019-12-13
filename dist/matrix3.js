@@ -22,13 +22,23 @@ const complex_1 = require("./complex");
  */
 class Matrix3 {
     constructor() {
+        this.rowDimension = 3;
+        this.colDimension = 3;
         this._elements = [
             1, 0, 0,
             0, 1, 0,
             0, 0, 1
         ];
     }
-    get elements() { return this._elements.slice(); }
+    set(i, j, value) {
+        const n = this.colDimension;
+        this._elements[i + j * n] = value;
+        return this;
+    }
+    get(i, j) {
+        const n = this.colDimension;
+        return this._elements[i + j * n];
+    }
     /**
      * Sets the matrix values in a row-major ordered fashion.
      * @param {number} n11 Element a11.
@@ -41,7 +51,7 @@ class Matrix3 {
      * @param {number} n32 Element a32.
      * @param {number} n33 Element a33.
      */
-    set(n11, n12, n13, n21, n22, n23, n31, n32, n33) {
+    setElements(n11, n12, n13, n21, n22, n23, n31, n32, n33) {
         const te = this._elements;
         te[0] = n11;
         te[1] = n21;
@@ -160,7 +170,7 @@ class Matrix3 {
      * Sets the matrix as the identity matrix.
      */
     identity() {
-        this.set(1, 0, 0, 0, 1, 0, 0, 0, 1);
+        this.setElements(1, 0, 0, 0, 1, 0, 0, 0, 1);
         return this;
     }
     /**
@@ -251,6 +261,52 @@ class Matrix3 {
      */
     add(m) {
         return this.addMatrices(this, m, 1);
+    }
+    /**
+     * Scales a vector as a projected vector (x, y, 1) by a 3x3 matrix
+     * @param {Vector2} a The vector to transform.
+     * @returns {Vector2} The original vector, transformed.
+     */
+    transformVector2(a) {
+        const ae = this._elements;
+        const a11 = ae[0];
+        const a12 = ae[3];
+        const a13 = ae[6];
+        const a21 = ae[1];
+        const a22 = ae[4];
+        const a23 = ae[7];
+        // const a31 = ae[ 2 ];
+        // const a32 = ae[ 5 ];
+        // const a33 = ae[ 8 ];
+        const x = a.x;
+        const y = a.y;
+        const _x = a11 * x + a12 * y + a13;
+        const _y = a21 * x + a22 * y + a23;
+        return a.set(_x, _y);
+    }
+    /**
+     * Multiplies a vector by a 3x3 matrix.
+     * @param {Vector3} a The vector to transform.
+     * @returns {Vector3} The original vector, transformed.
+     */
+    transformVector3(a) {
+        const ae = this._elements;
+        const x = a.x;
+        const y = a.y;
+        const z = a.z;
+        let a1 = ae[0];
+        let a2 = ae[3];
+        let a3 = ae[6];
+        const _x = a1 * x + a2 * y + a3 * z;
+        a1 = ae[1];
+        a2 = ae[4];
+        a3 = ae[7];
+        const _y = a1 * x + a2 * y + a3 * z;
+        a1 = ae[2];
+        a2 = ae[5];
+        a3 = ae[8];
+        const _z = a1 * x + a2 * y + a3 * z;
+        return a.set(_x, _y, _z);
     }
     /**
      * Right-multiplies the given matrix with this one (this * m).
@@ -518,7 +574,7 @@ class Matrix3 {
         const n31 = alpha * a.z * b.x;
         const n32 = alpha * a.z * b.y;
         const n33 = alpha * a.z * b.z;
-        return this.set(n11, n12, n13, n21, n22, n23, n31, n32, n33);
+        return this.setElements(n11, n12, n13, n21, n22, n23, n31, n32, n33);
     }
     /**
      * Adds the outer product of two vectors (a*b^T) to this matrix.

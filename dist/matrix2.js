@@ -19,12 +19,22 @@ class Matrix2 {
      * @constructor
      */
     constructor() {
+        this.rowDimension = 2;
+        this.colDimension = 2;
         this._elements = [
             1, 0,
             0, 1
         ];
     }
-    get elements() { return this._elements.slice(); }
+    set(i, j, value) {
+        const n = this.colDimension;
+        this._elements[i + j * n] = value;
+        return this;
+    }
+    get(i, j) {
+        const n = this.colDimension;
+        return this._elements[i + j * n];
+    }
     /**
      * Sets the matrix values in a row-major ordered fashion.
      * @param {number} n11 Element a11.
@@ -32,7 +42,7 @@ class Matrix2 {
      * @param {number} n21 Element a21.
      * @param {number} n22 Element a22.
      */
-    set(n11, n12, n21, n22) {
+    setElements(n11, n12, n21, n22) {
         const te = this._elements;
         te[0] = n11;
         te[1] = n21;
@@ -161,7 +171,7 @@ class Matrix2 {
      * Sets the matrix as the identity matrix.
      */
     identity() {
-        this.set(1, 0, 0, 1);
+        this.setElements(1, 0, 0, 1);
         return this;
     }
     /**
@@ -183,6 +193,23 @@ class Matrix2 {
         te[2] = me[2];
         te[3] = me[3];
         return this;
+    }
+    /**
+     * Multiplies a vector by a 2x2 matrix.
+     * @param {Vector2} a The vector to transform.
+     * @returns {Vector2} This vector.
+     */
+    transformVector2(v) {
+        const ae = this._elements;
+        const a11 = ae[0];
+        const a12 = ae[2];
+        const a21 = ae[1];
+        const a22 = ae[3];
+        const x = v.x;
+        const y = v.y;
+        const _x = a11 * x + a12 * y;
+        const _y = a21 * x + a22 * y;
+        return v.set(_x, _y);
     }
     /**
      * Right-multiplies the given matrix with this one (this * m).
@@ -373,7 +400,7 @@ class Matrix2 {
         const n12 = alpha * a.x * b.y;
         const n21 = alpha * a.y * b.x;
         const n22 = alpha * a.y * b.y;
-        return this.set(n11, n12, n21, n22);
+        return this.setElements(n11, n12, n21, n22);
     }
     /**
      * Adds the outer product of two vectors (a*b^T) to this matrix.

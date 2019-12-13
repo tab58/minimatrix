@@ -239,32 +239,8 @@ class Vector3 {
      * @param {Matrix3} m The matrix to scale this vector by.
      * @return {Vector3} This vector.
      */
-    multiplyMatrix(m) {
-        return this.multiplyMatrix3(m);
-    }
-    /**
-     * Multiplies this vector by a 3x3 matrix.
-     * @param {Matrix3} a The matrix to scale by.
-     * @returns {Vector3} This vector.
-     */
-    multiplyMatrix3(a) {
-        const ae = a.elements;
-        const x = this._x;
-        const y = this._y;
-        const z = this._z;
-        let a1 = ae[0];
-        let a2 = ae[3];
-        let a3 = ae[6];
-        this._x = a1 * x + a2 * y + a3 * z;
-        a1 = ae[1];
-        a2 = ae[4];
-        a3 = ae[7];
-        this._y = a1 * x + a2 * y + a3 * z;
-        a1 = ae[2];
-        a2 = ae[5];
-        a3 = ae[8];
-        this._z = a1 * x + a2 * y + a3 * z;
-        return this;
+    multiplyMatrix3(m) {
+        return m.transformVector3(this);
     }
     /**
      * Scales this vector by a number.

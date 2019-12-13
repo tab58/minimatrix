@@ -10,6 +10,7 @@
  */
 import _Math from './core';
 import { Matrix } from './interfaces';
+import { Vector2 } from './vector2';
 import { Vector3 } from './vector3';
 import { formatPrintNumber } from './utils';
 import { getCubicRoots } from 'minimatrix-polyroots';
@@ -22,7 +23,8 @@ import { Complex } from './complex';
 export class Matrix3 implements Matrix {
   private _elements: number[];
 
-  public get elements (): number[] { return this._elements.slice(); }
+  public readonly rowDimension: number = 3;
+  public readonly colDimension: number = 3;
 
   constructor () {
     this._elements = [
@@ -30,6 +32,17 @@ export class Matrix3 implements Matrix {
       0, 1, 0,
       0, 0, 1
     ];
+  }
+
+  set (i: number, j: number, value: number): this {
+    const n = this.colDimension;
+    this._elements[i + j * n] = value;
+    return this;
+  }
+
+  get (i: number, j: number): number {
+    const n = this.colDimension;
+    return this._elements[i + j * n];
   }
 
   /**
@@ -44,7 +57,7 @@ export class Matrix3 implements Matrix {
    * @param {number} n32 Element a32.
    * @param {number} n33 Element a33.
    */
-  set (n11: number, n12: number, n13: number, n21: number, n22: number, n23: number, n31: number, n32: number, n33: number): this {
+  setElements (n11: number, n12: number, n13: number, n21: number, n22: number, n23: number, n31: number, n32: number, n33: number): this {
     const te = this._elements;
     te[ 0 ] = n11; te[ 1 ] = n21; te[ 2 ] = n31;
     te[ 3 ] = n12; te[ 4 ] = n22; te[ 5 ] = n32;
@@ -152,7 +165,7 @@ export class Matrix3 implements Matrix {
    * Sets the matrix as the identity matrix.
    */
   identity (): this {
-    this.set(
+    this.setElements(
       1, 0, 0,
       0, 1, 0,
       0, 0, 1
@@ -250,6 +263,58 @@ export class Matrix3 implements Matrix {
    */
   add (m: this): this {
     return this.addMatrices(this, m, 1);
+  }
+
+  /**
+   * Scales a vector as a projected vector (x, y, 1) by a 3x3 matrix
+   * @param {Vector2} a The vector to transform.
+   * @returns {Vector2} The original vector, transformed.
+   */
+  transformVector2 (a: Vector2): Vector2 {
+    const ae = this._elements;
+    const a11 = ae[ 0 ];
+    const a12 = ae[ 3 ];
+    const a13 = ae[ 6 ];
+    const a21 = ae[ 1 ];
+    const a22 = ae[ 4 ];
+    const a23 = ae[ 7 ];
+    // const a31 = ae[ 2 ];
+    // const a32 = ae[ 5 ];
+    // const a33 = ae[ 8 ];
+    const x = a.x;
+    const y = a.y;
+    const _x = a11 * x + a12 * y + a13;
+    const _y = a21 * x + a22 * y + a23;
+    return a.set(_x, _y);
+  }
+
+  /**
+   * Multiplies a vector by a 3x3 matrix.
+   * @param {Vector3} a The vector to transform.
+   * @returns {Vector3} The original vector, transformed.
+   */
+  transformVector3 (a: Vector3): Vector3 {
+    const ae = this._elements;
+    const x = a.x;
+    const y = a.y;
+    const z = a.z;
+
+    let a1 = ae[ 0 ];
+    let a2 = ae[ 3 ];
+    let a3 = ae[ 6 ];
+    const _x = a1 * x + a2 * y + a3 * z;
+
+    a1 = ae[ 1 ];
+    a2 = ae[ 4 ];
+    a3 = ae[ 7 ];
+    const _y = a1 * x + a2 * y + a3 * z;
+
+    a1 = ae[ 2 ];
+    a2 = ae[ 5 ];
+    a3 = ae[ 8 ];
+    const _z = a1 * x + a2 * y + a3 * z;
+    
+    return a.set(_x, _y, _z);
   }
 
   /**
@@ -535,7 +600,7 @@ export class Matrix3 implements Matrix {
     const n31 = alpha * a.z * b.x;
     const n32 = alpha * a.z * b.y;
     const n33 = alpha * a.z * b.z;
-    return this.set(n11, n12, n13, n21, n22, n23, n31, n32, n33);
+    return this.setElements(n11, n12, n13, n21, n22, n23, n31, n32, n33);
   }
 
   /**

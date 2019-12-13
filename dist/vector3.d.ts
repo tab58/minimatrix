@@ -130,13 +130,7 @@ export declare class Vector3 implements Vector {
      * @param {Matrix3} m The matrix to scale this vector by.
      * @return {Vector3} This vector.
      */
-    multiplyMatrix(m: Matrix3): this;
-    /**
-     * Multiplies this vector by a 3x3 matrix.
-     * @param {Matrix3} a The matrix to scale by.
-     * @returns {Vector3} This vector.
-     */
-    multiplyMatrix3(a: Matrix3): this;
+    multiplyMatrix3(m: Matrix3): this;
     /**
      * Scales this vector by a number.
      * @param {number} scalar The number to scale by.

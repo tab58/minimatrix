@@ -19,7 +19,8 @@ const core_1 = __importDefault(require("./core"));
 const utils_1 = require("./utils");
 class Matrix4 {
     constructor() {
-        this.dimension = 4;
+        this.rowDimension = 4;
+        this.colDimension = 4;
         this._elements = [
             1, 0, 0, 0,
             0, 1, 0, 0,
@@ -27,9 +28,17 @@ class Matrix4 {
             0, 0, 0, 1
         ];
     }
-    get elements() { return this._elements.slice(); }
+    set(i, j, value) {
+        const n = this.colDimension;
+        this._elements[i + j * n] = value;
+        return this;
+    }
+    get(i, j) {
+        const n = this.colDimension;
+        return this._elements[i + j * n];
+    }
     /** Sets the matrix values in a row-major ordered fashion. */
-    set(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44) {
+    setElements(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44) {
         const te = this._elements;
         te[0] = n11;
         te[4] = n12;
@@ -50,7 +59,7 @@ class Matrix4 {
         return this;
     }
     identity() {
-        this.set(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        this.setElements(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
         return this;
     }
     clone() {
@@ -58,7 +67,7 @@ class Matrix4 {
     }
     copy(m) {
         const te = this._elements;
-        const me = m.elements;
+        const me = m._elements;
         te[0] = me[0];
         te[1] = me[1];
         te[2] = me[2];
@@ -79,7 +88,7 @@ class Matrix4 {
     }
     copyPosition(m) {
         const te = this._elements;
-        const me = m.elements;
+        const me = m._elements;
         te[12] = me[12];
         te[13] = me[13];
         te[14] = me[14];
@@ -200,7 +209,7 @@ class Matrix4 {
         return this;
     }
     makeBasis(xAxis, yAxis, zAxis) {
-        this.set(xAxis.x, yAxis.x, zAxis.x, 0, xAxis.y, yAxis.y, zAxis.y, 0, xAxis.z, yAxis.z, zAxis.z, 0, 0, 0, 0, 1);
+        this.setElements(xAxis.x, yAxis.x, zAxis.x, 0, xAxis.y, yAxis.y, zAxis.y, 0, xAxis.z, yAxis.z, zAxis.z, 0, 0, 0, 0, 1);
         return this;
     }
     multiply(m) {
@@ -209,9 +218,32 @@ class Matrix4 {
     premultiply(m) {
         return this.multiplyMatrices(m, this);
     }
+    transformVector3(v) {
+        const x = v.x;
+        const y = v.y;
+        const z = v.z;
+        const w = 1;
+        const e = this._elements;
+        const _x = e[0] * x + e[4] * y + e[8] * z + e[12];
+        const _y = e[1] * x + e[5] * y + e[9] * z + e[13];
+        const _z = e[2] * x + e[6] * y + e[10] * z + e[14];
+        return v.set(_x, _y, _z);
+    }
+    transformVector4(v) {
+        const x = v.x;
+        const y = v.y;
+        const z = v.z;
+        const w = v.w;
+        const e = this._elements;
+        const _x = e[0] * x + e[4] * y + e[8] * z + e[12] * w;
+        const _y = e[1] * x + e[5] * y + e[9] * z + e[13] * w;
+        const _z = e[2] * x + e[6] * y + e[10] * z + e[14] * w;
+        const _w = e[3] * x + e[7] * y + e[11] * z + e[15] * w;
+        return v.set(_x, _y, _z, _w);
+    }
     multiplyMatrices(a, b) {
-        const ae = a.elements;
-        const be = b.elements;
+        const ae = a._elements;
+        const be = b._elements;
         const te = this._elements;
         const a11 = ae[0], a12 = ae[4], a13 = ae[8], a14 = ae[12];
         const a21 = ae[1], a22 = ae[5], a23 = ae[9], a24 = ae[13];
@@ -335,7 +367,7 @@ class Matrix4 {
     }
     getAdjugate(matrix) {
         const te = this._elements;
-        const me = matrix.elements;
+        const me = matrix._elements;
         const a = me[0];
         const e = me[1];
         const i = me[2];
@@ -376,7 +408,7 @@ class Matrix4 {
     getInverse(m, throwOnDegenerate, singularTol = 1e-14) {
         // based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
         const te = this._elements;
-        const me = m.elements;
+        const me = m._elements;
         const n11 = me[0], n21 = me[1], n31 = me[2], n41 = me[3], n12 = me[4], n22 = me[5], n32 = me[6], n42 = me[7], n13 = me[8], n23 = me[9], n33 = me[10], n43 = me[11], n14 = me[12], n24 = me[13], n34 = me[14], n44 = me[15], t11 = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44, t12 = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44, t13 = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44, t14 = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
         const det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14;
         if (core_1.default.abs(det) < singularTol) {
@@ -426,25 +458,25 @@ class Matrix4 {
         return this;
     }
     makeTranslation(x, y, z) {
-        this.set(1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1);
+        this.setElements(1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1);
         return this;
     }
     makeRotationX(theta) {
         const c = core_1.default.cos(theta);
         const s = core_1.default.sin(theta);
-        this.set(1, 0, 0, 0, 0, c, -s, 0, 0, s, c, 0, 0, 0, 0, 1);
+        this.setElements(1, 0, 0, 0, 0, c, -s, 0, 0, s, c, 0, 0, 0, 0, 1);
         return this;
     }
     makeRotationY(theta) {
         const c = core_1.default.cos(theta);
         const s = core_1.default.sin(theta);
-        this.set(c, 0, s, 0, 0, 1, 0, 0, -s, 0, c, 0, 0, 0, 0, 1);
+        this.setElements(c, 0, s, 0, 0, 1, 0, 0, -s, 0, c, 0, 0, 0, 0, 1);
         return this;
     }
     makeRotationZ(theta) {
         const c = core_1.default.cos(theta);
         const s = core_1.default.sin(theta);
-        this.set(c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        this.setElements(c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
         return this;
     }
     makeRotationAxis(axis, angle) {
@@ -454,20 +486,20 @@ class Matrix4 {
         const t = 1 - c;
         const x = axis.x, y = axis.y, z = axis.z;
         const tx = t * x, ty = t * y;
-        this.set(tx * x + c, tx * y - s * z, tx * z + s * y, 0, tx * y + s * z, ty * y + c, ty * z - s * x, 0, tx * z - s * y, ty * z + s * x, t * z * z + c, 0, 0, 0, 0, 1);
+        this.setElements(tx * x + c, tx * y - s * z, tx * z + s * y, 0, tx * y + s * z, ty * y + c, ty * z - s * x, 0, tx * z - s * y, ty * z + s * x, t * z * z + c, 0, 0, 0, 0, 1);
         return this;
     }
     makeScale(x, y, z) {
-        this.set(x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1);
+        this.setElements(x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1);
         return this;
     }
     makeShear(x, y, z) {
-        this.set(1, y, z, 0, x, 1, z, 0, x, y, 1, 0, 0, 0, 0, 1);
+        this.setElements(1, y, z, 0, x, 1, z, 0, x, y, 1, 0, 0, 0, 0, 1);
         return this;
     }
     equals(matrix) {
         const te = this._elements;
-        const me = matrix.elements;
+        const me = matrix._elements;
         for (let i = 0; i < 16; i++) {
             if (te[i] !== me[i])
                 return false;

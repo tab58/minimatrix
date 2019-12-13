@@ -6,11 +6,14 @@ import { Matrix } from './interfaces';
  */
 export declare class Matrix2 implements Matrix {
     private _elements;
-    get elements(): number[];
+    readonly rowDimension: number;
+    readonly colDimension: number;
     /**
      * @constructor
      */
     constructor();
+    set(i: number, j: number, value: number): this;
+    get(i: number, j: number): number;
     /**
      * Sets the matrix values in a row-major ordered fashion.
      * @param {number} n11 Element a11.
@@ -18,7 +21,7 @@ export declare class Matrix2 implements Matrix {
      * @param {number} n21 Element a21.
      * @param {number} n22 Element a22.
      */
-    set(n11: number, n12: number, n21: number, n22: number): this;
+    setElements(n11: number, n12: number, n21: number, n22: number): this;
     /**
      * Sets a row of the matrix.
      * @param {number} i The row index (0-1).
@@ -76,6 +79,12 @@ export declare class Matrix2 implements Matrix {
      * @param {Matrix2} m The given matrix.
      */
     copy(m: this): this;
+    /**
+     * Multiplies a vector by a 2x2 matrix.
+     * @param {Vector2} a The vector to transform.
+     * @returns {Vector2} This vector.
+     */
+    transformVector2(v: Vector2): Vector2;
     /**
      * Right-multiplies the given matrix with this one (this * m).
      * @param {Matrix2} m The given matrix.

@@ -12,14 +12,15 @@
  */
 import _Math from './core';
 import { Vector3 } from './vector3';
+import { Vector4 } from './vector4';
 import { Matrix } from './interfaces';
 import { formatPrintNumber } from './utils';
 
 export class Matrix4 implements Matrix {
   private _elements: number[];
 
-  public get elements (): number[] { return this._elements.slice(); }
-  public readonly dimension: number = 4;
+  public readonly rowDimension: number = 4;
+  public readonly colDimension: number = 4;
 
   constructor () {
     this._elements = [
@@ -28,10 +29,21 @@ export class Matrix4 implements Matrix {
       0, 0, 1, 0,
       0, 0, 0, 1  
     ];
+	}
+
+  set (i: number, j: number, value: number): this {
+    const n = this.colDimension;
+    this._elements[i + j * n] = value;
+    return this;
+  }
+
+  get (i: number, j: number): number {
+    const n = this.colDimension;
+    return this._elements[i + j * n];
   }
 
 	/** Sets the matrix values in a row-major ordered fashion. */
-  set (n11: number, n12: number, n13: number, n14: number,
+  setElements (n11: number, n12: number, n13: number, n14: number,
     n21: number, n22: number, n23: number, n24: number,
     n31: number, n32: number, n33: number, n34: number,
     n41: number, n42: number, n43: number, n44: number) {
@@ -44,7 +56,7 @@ export class Matrix4 implements Matrix {
 	}
 
 	identity () {
-		this.set(
+		this.setElements(
 			1, 0, 0, 0,
 			0, 1, 0, 0,
 			0, 0, 1, 0,
@@ -59,7 +71,7 @@ export class Matrix4 implements Matrix {
 
 	copy (m: this): this {
 		const te = this._elements;
-		const me = m.elements;
+		const me = m._elements;
 		te[ 0 ] = me[ 0 ]; te[ 1 ] = me[ 1 ]; te[ 2 ] = me[ 2 ]; te[ 3 ] = me[ 3 ];
 		te[ 4 ] = me[ 4 ]; te[ 5 ] = me[ 5 ]; te[ 6 ] = me[ 6 ]; te[ 7 ] = me[ 7 ];
 		te[ 8 ] = me[ 8 ]; te[ 9 ] = me[ 9 ]; te[ 10 ] = me[ 10 ]; te[ 11 ] = me[ 11 ];
@@ -69,7 +81,7 @@ export class Matrix4 implements Matrix {
 
 	copyPosition (m: this): this {
     const te = this._elements;
-    const me = m.elements;
+    const me = m._elements;
 		te[ 12 ] = me[ 12 ];
 		te[ 13 ] = me[ 13 ];
 		te[ 14 ] = me[ 14 ];
@@ -200,7 +212,7 @@ export class Matrix4 implements Matrix {
 	}
 
 	makeBasis (xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): this {
-		this.set(
+		this.setElements(
 			xAxis.x, yAxis.x, zAxis.x, 0,
 			xAxis.y, yAxis.y, zAxis.y, 0,
 			xAxis.z, yAxis.z, zAxis.z, 0,
@@ -217,9 +229,36 @@ export class Matrix4 implements Matrix {
 		return this.multiplyMatrices( m, this );
 	}
 
+	transformVector3 (v: Vector3): Vector3 {
+		const x = v.x;
+		const y = v.y;
+		const z = v.z;
+		const w = 1;
+		const e = this._elements;
+		
+		const _x = e[ 0 ] * x + e[ 4 ] * y + e[ 8 ] * z + e[ 12 ];
+		const _y = e[ 1 ] * x + e[ 5 ] * y + e[ 9 ] * z + e[ 13 ];
+		const _z = e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z + e[ 14 ];
+		return v.set(_x, _y, _z);
+	}
+
+	transformVector4 (v: Vector4): Vector4 {
+		const x = v.x;
+		const y = v.y;
+		const z = v.z;
+		const w = v.w;
+		const e = this._elements;
+		
+		const _x = e[ 0 ] * x + e[ 4 ] * y + e[ 8 ] * z + e[ 12 ] * w;
+		const _y = e[ 1 ] * x + e[ 5 ] * y + e[ 9 ] * z + e[ 13 ] * w;
+		const _z = e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z + e[ 14 ] * w;
+		const _w = e[ 3 ] * x + e[ 7 ] * y + e[ 11 ] * z + e[ 15 ] * w;
+		return v.set(_x, _y, _z, _w);
+	}
+
 	multiplyMatrices (a: this, b: this): this {
-		const ae = a.elements;
-		const be = b.elements;
+		const ae = a._elements;
+		const be = b._elements;
 		const te = this._elements;
 
 		const a11 = ae[ 0 ], a12 = ae[ 4 ], a13 = ae[ 8 ], a14 = ae[ 12 ];
@@ -350,7 +389,7 @@ export class Matrix4 implements Matrix {
 
 	getAdjugate (matrix: this): this {
 		const te = this._elements;
-		const	me = matrix.elements;
+		const	me = matrix._elements;
 
 		const a = me[0];
 		const e = me[1];
@@ -401,7 +440,7 @@ export class Matrix4 implements Matrix {
 	getInverse (m: this, throwOnDegenerate: boolean, singularTol: number = 1e-14): this {
 		// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
 		const te = this._elements;
-		const	me = m.elements;
+		const	me = m._elements;
 
 		const	n11 = me[ 0 ], n21 = me[ 1 ], n31 = me[ 2 ], n41 = me[ 3 ],
 			n12 = me[ 4 ], n22 = me[ 5 ], n32 = me[ 6 ], n42 = me[ 7 ],
@@ -463,7 +502,7 @@ export class Matrix4 implements Matrix {
 	}
 
 	makeTranslation (x: number, y: number, z: number): this {
-		this.set(
+		this.setElements(
 			1, 0, 0, x,
 			0, 1, 0, y,
 			0, 0, 1, z,
@@ -475,7 +514,7 @@ export class Matrix4 implements Matrix {
 	makeRotationX (theta: number ): this {
 		const c = _Math.cos(theta);
 		const s = _Math.sin(theta);
-		this.set(
+		this.setElements(
 			1, 0, 0, 0,
 			0, c, - s, 0,
 			0, s, c, 0,
@@ -487,7 +526,7 @@ export class Matrix4 implements Matrix {
 	makeRotationY (theta: number): this {
 		const c = _Math.cos(theta);
 		const s = _Math.sin(theta);
-		this.set(
+		this.setElements(
 			 c, 0, s, 0,
 			 0, 1, 0, 0,
 			- s, 0, c, 0,
@@ -499,7 +538,7 @@ export class Matrix4 implements Matrix {
 	makeRotationZ (theta: number): this {
 		const c = _Math.cos(theta);
 		const s = _Math.sin(theta);
-		this.set(
+		this.setElements(
 			c, - s, 0, 0,
 			s, c, 0, 0,
 			0, 0, 1, 0,
@@ -515,7 +554,7 @@ export class Matrix4 implements Matrix {
 		const t = 1 - c;
 		const x = axis.x, y = axis.y, z = axis.z;
 		const tx = t * x, ty = t * y;
-		this.set(
+		this.setElements(
 			tx * x + c, tx * y - s * z, tx * z + s * y, 0,
 			tx * y + s * z, ty * y + c, ty * z - s * x, 0,
 			tx * z - s * y, ty * z + s * x, t * z * z + c, 0,
@@ -525,7 +564,7 @@ export class Matrix4 implements Matrix {
 	}
 
 	makeScale (x: number, y: number, z: number): this {
-		this.set(
+		this.setElements(
 			x, 0, 0, 0,
 			0, y, 0, 0,
 			0, 0, z, 0,
@@ -535,7 +574,7 @@ export class Matrix4 implements Matrix {
 	}
 
 	makeShear (x: number, y: number, z: number): this {
-		this.set(
+		this.setElements(
 			1, y, z, 0,
 			x, 1, z, 0,
 			x, y, 1, 0,
@@ -546,7 +585,7 @@ export class Matrix4 implements Matrix {
 
 	equals (matrix: this): boolean {
 		const te = this._elements;
-		const me = matrix.elements;
+		const me = matrix._elements;
 
 		for (let i = 0; i < 16; i++) {
 			if (te[i] !== me[i]) return false;

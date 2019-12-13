@@ -189,21 +189,6 @@ export class Vector4 implements Vector {
     return this;
   }
 
-
-	applyMatrix4 (m: Matrix4): this {
-    const x = this._x;
-    const y = this._y;
-    const z = this._z;
-    const w = this._w;
-    const e = m.elements;
-    
-		this._x = e[ 0 ] * x + e[ 4 ] * y + e[ 8 ] * z + e[ 12 ] * w;
-		this._y = e[ 1 ] * x + e[ 5 ] * y + e[ 9 ] * z + e[ 13 ] * w;
-		this._z = e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z + e[ 14 ] * w;
-		this._w = e[ 3 ] * x + e[ 7 ] * y + e[ 11 ] * z + e[ 15 ] * w;
-		return this;
-  }
-
   /**
    * Divides element-wise this vector by a vector.
    * @param {Vector4} v The vector to divide by.
@@ -264,7 +249,7 @@ export class Vector4 implements Vector {
 		const epsilon = 0.01;		// margin to allow for rounding errors
 		const epsilon2 = 0.1;		// margin to distinguish between 0 and 180 degrees
 
-		const	te = m.elements;
+		const	te = m.toArray();
 		const	m11 = te[ 0 ], m12 = te[ 4 ], m13 = te[ 8 ],
 			m21 = te[ 1 ], m22 = te[ 5 ], m23 = te[ 9 ],
 			m31 = te[ 2 ], m32 = te[ 6 ], m33 = te[ 10 ];

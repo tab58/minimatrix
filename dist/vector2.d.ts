@@ -117,18 +117,6 @@ export declare class Vector2 implements Vector {
      */
     multiply(v: this): this;
     /**
-     * Multiplies this vector by a 2x2 matrix.
-     * @param {Matrix2} a The matrix to scale by.
-     * @returns {Vector2} This vector.
-     */
-    multiplyMatrix2(a: Matrix2): this;
-    /**
-     * Scales this vector as a projected vector (x, y, 1) by a 3x3 matrix
-     * @param {Matrix3} a The matrix to scale by.
-     * @returns {Vector2} This vector.
-     */
-    multiplyMatrix3(a: Matrix3): this;
-    /**
      * Scales this vector by a number.
      * @param {number} scalar The number to scale by.
      * @returns {Vector2} This vector.
@@ -141,6 +129,17 @@ export declare class Vector2 implements Vector {
      * @returns {Vector2} This vector.
      */
     multiplyVectors(a: this, b: this): this;
+    /**
+     * Multiplies the vector by a 2x2 matrix.
+     * @param {Vector2} m The matrix to scale by.
+     * @returns {Vector2} This vector.
+     */
+    multiplyMatrix2(m: Matrix2): this;
+    /**
+     * Scales this vector as a projected vector (x, y, 1) by a 3x3 matrix.
+     * @param m The 3x3 matrix.
+     */
+    multiplyMatrix3(m: Matrix3): this;
     /**
      * Divides element-wise this vector by a vector.
      * @param {Vector2} v The vector to divide by.

@@ -1,8 +1,13 @@
 export interface Matrix {
   /**
-   * The elements of the matrix in row-major order.
+   * The number of rows in the matrix.
    */
-  elements: number[];
+  rowDimension: number;
+
+  /**
+   * The number of columns in the matrix.
+   */
+  colDimension: number;
 
   /**
    * Sets the matrix as the identity matrix.
@@ -130,6 +135,16 @@ export interface Matrix {
    * Swaps columns in-place in the matrix. Zero is the first column.
    */
   swapColumns (i: number, j: number): this;
+
+  /**
+   * Sets the value of the matrix in (row, col) = (i, j) position.
+   */
+  set (i: number, j: number, value: number): this;
+
+  /**
+   * Gets the value of the matrix in (row, col) = (i, j) position.
+   */
+  get (i: number, j: number): number;
 }
 
 export interface Vector {
