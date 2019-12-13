@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const mathProps = [
+var mathProps = [
     "E",
     "LN10",
     "LN2",
@@ -43,11 +43,11 @@ const mathProps = [
     "tanh",
     "trunc"
 ];
-const _Math = mathProps.reduce((acc, prop) => {
+var _Math = mathProps.reduce(function (acc, prop) {
     acc[prop] = Math[prop];
     return acc;
 }, {});
-const core = {
+var core = {
     DEG2RAD: Math.PI / 180,
     RAD2DEG: 180 / Math.PI,
     PI2: 2 * Math.PI,
@@ -56,15 +56,15 @@ const core = {
     },
     hypot: function (w, z) {
         // rewritten to deal with overflow/underflow
-        const a = w;
-        const b = z;
+        var a = w;
+        var b = z;
         if (a === 0 && b === 0) {
             return 0;
         }
-        const x = _Math.abs(a);
-        const y = _Math.abs(b);
-        const u = _Math.max(x, y);
-        const t = _Math.min(x, y) / u;
+        var x = _Math.abs(a);
+        var y = _Math.abs(b);
+        var u = _Math.max(x, y);
+        var t = _Math.min(x, y) / u;
         return u * _Math.sqrt(1 + t * t);
     },
     // compute euclidian modulo of m % n
@@ -125,7 +125,7 @@ const core = {
     nearestPowerOfTwo: function (value) {
         return _Math.pow(2, _Math.round(_Math.log(value) / _Math.LN2));
     },
-    nextPowerOfTwo: (value) => {
+    nextPowerOfTwo: function (value) {
         value--;
         value |= value >> 1;
         value |= value >> 2;

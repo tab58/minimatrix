@@ -8,7 +8,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @author alteredq / http://alteredqualia.com/
  * @author mrdoob / http://mrdoob.com/
  */
-const core_1 = __importDefault(require("./core"));
+var core_1 = __importDefault(require("./core"));
 exports.DEFAULT_TOLERANCE = 1e-14;
 /**
  * Test if a number is close to zero.
