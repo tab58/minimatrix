@@ -121,9 +121,15 @@ export interface Matrix {
      * Gets the value of the matrix in (row, col) = (i, j) position.
      */
     get(i: number, j: number): number;
+    /**
+     * Prints out the matrix in a more human-readable format.
+     */
+    prettyPrint(): string;
 }
 export interface Vector {
     dimension: number;
+    /** Clones the vector. */
+    clone(): this;
     /**
      * Sets the vector components to a scalar.
      * @param {number} scalar The scalar.

@@ -145,6 +145,11 @@ export interface Matrix {
    * Gets the value of the matrix in (row, col) = (i, j) position.
    */
   get (i: number, j: number): number;
+
+  /**
+   * Prints out the matrix in a more human-readable format.
+   */
+  prettyPrint (): string;
 }
 
 export interface Vector {

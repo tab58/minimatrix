@@ -58,7 +58,7 @@ export declare class Vector2 implements Vector {
      * Clones the vector.
      * @returns {Vector2} A new vector with the same components.
      */
-    clone(): Vector2;
+    clone(): this;
     /**
      * Copies the component values of a vector to this vector.
      * @param {Vector2} v The vector to copy.

@@ -108,8 +108,8 @@ export class Vector2 implements Vector {
    * Clones the vector.
    * @returns {Vector2} A new vector with the same components.
    */
-  clone (): Vector2 {
-    return new Vector2(this.x, this.y);
+  clone (): this {
+    return new Vector2(this.x, this.y) as this;
   }
 
   /**
