@@ -276,6 +276,18 @@ export class Vector2 implements Vector {
   }
 
   /**
+   * Calculates the outer product of the matrix.
+   * @param scalar A scalar to multiply the outer product by.
+   */
+  getOuterProduct (scalar: number = 1): Matrix2 {
+    const u1 = this._x;
+    const u2 = this._y;
+    return new Matrix2()
+      .setElements(u1 * u1, u1 * u2, u2 * u1, u2 * u2)
+      .multiplyScalar(scalar);
+  }
+
+  /**
    * Takes the minimum of each component of this vector and the given vector.
    * @param {Vector2} v The given vector.
    * @returns {Vector2} This vector.

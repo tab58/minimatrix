@@ -309,6 +309,19 @@ export class Vector3 implements Vector {
   }
 
   /**
+   * Calculates the outer product of the matrix.
+   * @param scalar A scalar to multiply the outer product by.
+   */
+  getOuterProduct (scalar: number = 1): Matrix3 {
+    const u1 = this._x;
+    const u2 = this._y;
+    const u3 = this._z;
+    return new Matrix3()
+      .setElements(u1 * u1, u1 * u2, u1 * u3, u2 * u1, u2 * u2, u2 * u3, u3 * u1, u3 * u2, u3 * u3)
+      .multiplyScalar(scalar);
+  }
+
+  /**
    * Takes the minimum of each component of this vector and the given vector.
    * @param {Vector3} v The given vector.
    * @returns {Vector3} This vector.

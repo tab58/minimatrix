@@ -335,6 +335,23 @@ export class Vector4 implements Vector {
 		return this;
 	}
 
+	/**
+   * Calculates the outer product of the matrix.
+   * @param scalar A scalar to multiply the outer product by.
+   */
+  getOuterProduct (scalar: number = 1): Matrix4 {
+    const u1 = this._x;
+    const u2 = this._y;
+		const u3 = this._z;
+		const u4 = this._w;
+    return new Matrix4()
+			.setElements(u1 * u1, u1 * u2, u1 * u3, u1 * u4,
+				u2 * u1, u2 * u2, u2 * u3, u2 * u4,
+				u3 * u1, u3 * u2, u3 * u3, u3 * u4,
+				u4 * u1, u4 * u2, u4 * u3, u4 * u4)
+      .multiplyScalar(scalar);
+  }
+
 	min (v: this): this {
 		this._x = _Math.min( this.x, v.x );
 		this._y = _Math.min( this.y, v.y );
