@@ -45,6 +45,48 @@ export class Matrix4 implements Matrix {
   get (i: number, j: number): number {
     const n = this.colDimension;
     return this._elements[i + j * n];
+	}
+	
+	/**
+   * Gets the row at the specified index of the matrix.
+   * @param {number} i The index of the row (0-3).
+   * @returns {Vector4} The vector with the row values.
+   */
+  getRow (i: number): Vector4 {
+    const te = this._elements;
+    switch (i) {
+      case 0:
+        return new Vector4(te[0], te[4], te[8], te[12]);
+      case 1:
+        return new Vector4(te[1], te[5], te[9], te[13]);
+      case 2:
+        return new Vector4(te[2], te[6], te[10], te[14]);
+			case 3:
+				return new Vector4(te[3], te[7], te[11], te[15]);
+      default:
+        throw new Error('getRow(): no row defined at ' + i + '.');
+    }
+	}
+
+  /**
+   * Gets the column at the specified index of the matrix.
+   * @param {number} i The index of the column (0-3).
+   * @returns {Vector4} The vector with the column values.
+   */
+  getColumn (i: number): Vector4 {
+    const te = this._elements;
+    switch (i) {
+      case 0:
+        return new Vector4(te[0], te[1], te[2], te[3]);
+      case 1:
+        return new Vector4(te[4], te[5], te[6], te[7]);
+      case 2:
+        return new Vector4(te[8], te[9], te[10], te[11]);
+			case 3:
+				return new Vector4(te[12], te[13], te[14], te[15]);
+      default:
+        throw new Error('getColumn(): no column defined at ' + i + '.');
+    }
   }
 
 	/** Sets the matrix values in a row-major ordered fashion. */

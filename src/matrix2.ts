@@ -120,7 +120,7 @@ export class Matrix2 implements Matrix {
       case 1:
         return new Vector2(te[1], te[3]);
       default:
-        throw new Error('No row defined at ' + i + '.');
+        throw new Error('getRow(): no row defined at ' + i + '.');
     }
   }
 
@@ -137,7 +137,7 @@ export class Matrix2 implements Matrix {
       case 1:
         return new Vector2(te[2], te[3]);
       default:
-        throw new Error('No column defined at ' + i + '.');
+        throw new Error('getColumn(): no column defined at ' + i + '.');
     }
   }
 

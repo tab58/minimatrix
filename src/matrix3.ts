@@ -653,7 +653,7 @@ export class Matrix3 implements Matrix {
       case 2:
         return new Vector3(te[2], te[5], te[8]);
       default:
-        throw new Error('No row defined at ' + i + '.');
+        throw new Error('getRow(): no row defined at ' + i + '.');
     }
   }
 
@@ -672,7 +672,7 @@ export class Matrix3 implements Matrix {
       case 2:
         return new Vector3(te[6], te[7], te[8]);
       default:
-        throw new Error('No column defined at ' + i + '.');
+        throw new Error('getColumn(): no column defined at ' + i + '.');
     }
   }
 
