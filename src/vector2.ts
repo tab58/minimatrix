@@ -28,9 +28,9 @@ export class Vector2 implements Vector {
    * @param {number} x The x-component value.
    * @param {number} y The y-component value.
    */
-  constructor (x: number, y: number) {
-    this._x = x || 0;
-    this._y = y || 0;
+  constructor (x: number = 0, y: number = 0) {
+    this._x = x;
+    this._y = y;
   }
 
   /**

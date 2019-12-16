@@ -22,7 +22,7 @@ export class LinAlgHelpers {
       case 4:
         return (v as Vector4).getOuterProduct();
       default:
-        throw new Error(`LinAlgHelpers.getOuterProduct(): vector is not Vector2, Vector3, or Vector4.`);
+        throw new Error(`LinAlgHelpers.getOuterProduct(): vector dimension (${d}) is not Vector2, Vector3, or Vector4.`);
     }
   }
 
@@ -41,7 +41,7 @@ export class LinAlgHelpers {
       case 4:
         return (m as Matrix4).getRow(i);
       default:
-        throw new Error(`LinAlgHelpers.getRow(): row is not Vector2, Vector3, or Vector4.`);
+        throw new Error(`LinAlgHelpers.getRow(): matrix dimension (${d}) does not produce Vector2, Vector3, or Vector4.`);
     }
   }
 
@@ -60,7 +60,7 @@ export class LinAlgHelpers {
       case 4:
         return (m as Matrix4).getColumn(i);
       default:
-        throw new Error(`LinAlgHelpers.getColumn(): column is not Vector2, Vector3, or Vector4.`);
+        throw new Error(`LinAlgHelpers.getColumn(): matrix dimension (${d}) does not produce Vector2, Vector3, or Vector4.`);
     }
   }
 
@@ -87,7 +87,7 @@ export class LinAlgHelpers {
       const v3 = a[offset + 3];
       return new Vector4(v0, v1, v2, v3);
     } else {
-      throw new Error(`LinAlgHelpers.vectorFromValues(): vector size is not Vector2, Vector3, or Vector4.`);
+      throw new Error(`LinAlgHelpers.vectorFromValues(): vector size (${n}) is not Vector2, Vector3, or Vector4.`);
     }
   }
 
@@ -98,17 +98,18 @@ export class LinAlgHelpers {
    */
   public static transformVector (m: Matrix, v: Vector): Vector {
     if (m.rowDimension !== v.dimension) {
-      throw new Error(`LinAlgHelpers.transformVector(): matrix row and vector dimensions are not equal.`);
+      throw new Error(`LinAlgHelpers.transformVector(): matrix row (${m.rowDimension}) and vector (${v.dimension}) dimensions are not equal.`);
     }
-    switch (m.rowDimension) {
+    const n = m.rowDimension;
+    switch (n) {
       case 2:
-        return (m as Matrix2).transformVector2((v as Vector2).clone()) as Vector;
+        return (m as Matrix2).transformVector2((v as Vector2).clone());
       case 3:
-        return (m as Matrix3).transformVector3((v as Vector3).clone()) as Vector;
+        return (m as Matrix3).transformVector3((v as Vector3).clone());
       case 4:
-        return (m as Matrix4).transformVector4((v as Vector4).clone()) as Vector;
+        return (m as Matrix4).transformVector4((v as Vector4).clone());
       default:
-        throw new Error(`LinAlgHelpers.transformVector(): vector not a Vector2, Vector3, or Vector4.`);
+        throw new Error(`LinAlgHelpers.transformVector(): vector size (${n}) not a Vector2, Vector3, or Vector4.`);
     }
   }
 }
