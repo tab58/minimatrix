@@ -47,8 +47,8 @@ export class Complex {
 
   /**
    * Creates a Complex number from a given vector in the complex plane.
-   * @param {Vector2} v The given vector.
-   * @returns {Complex} This complex number.
+   * @param v The given vector.
+   * @returns This complex number.
    */
   fromVector2 (v: Vector2): this {
     return new Complex(v.x, v.y) as this;
@@ -56,8 +56,8 @@ export class Complex {
 
   /**
    * Copies a complex number.
-   * @param {Complex} C The given complex number.
-   * @returns {Complex} This complex number.
+   * @param C The given complex number.
+   * @returns This complex number.
    */
   copy (C: this): this {
     this._real = C._real;

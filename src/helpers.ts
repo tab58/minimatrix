@@ -8,6 +8,10 @@ import { Vector, Matrix } from './interfaces';
 
 /** Helpers for common linear algebra functions. */
 export class LinAlgHelpers {
+  /**
+   * Builds the outer product from a vector.
+   * @param v The vector.
+   */
   public static getOuterProduct (v: Vector): Matrix {
     const d = v.dimension;
     switch (d) {
@@ -22,6 +26,11 @@ export class LinAlgHelpers {
     }
   }
 
+  /**
+   * Gets a row from the matrix as a vector.
+   * @param m The matrix.
+   * @param i The row number (zero-based index).
+   */
   public static getRow (m: Matrix, i: number): Vector {
     const d = m.rowDimension;
     switch (d) {
@@ -36,6 +45,11 @@ export class LinAlgHelpers {
     }
   }
 
+  /**
+   * Gets a column from the matrix as a vector.
+   * @param m The matrix.
+   * @param i The column number (zero-based index).
+   */
   public static getColumn (m: Matrix, i: number): Vector {
     const d = m.colDimension;
     switch (d) {
@@ -50,6 +64,12 @@ export class LinAlgHelpers {
     }
   }
 
+  /**
+   * Builds a vector of the values.
+   * @param a The array with values.
+   * @param n The size of the vector.
+   * @param offset The offset index of the array.
+   */
   public static vectorFromValues (a: number[], n: number, offset: number = 0): Vector {
     if (n === 2) {
       const v0 = a[offset];
@@ -68,6 +88,27 @@ export class LinAlgHelpers {
       return new Vector4(v0, v1, v2, v3);
     } else {
       throw new Error(`LinAlgHelpers.vectorFromValues(): vector size is not Vector2, Vector3, or Vector4.`);
+    }
+  }
+
+  /**
+   * Transforms (multiplies) a vector by a matrix.
+   * @param m The matrix to transform the vector by.
+   * @param v The vector to transform.
+   */
+  public static transformVector (m: Matrix, v: Vector): Vector {
+    if (m.rowDimension !== v.dimension) {
+      throw new Error(`LinAlgHelpers.transformVector(): matrix row and vector dimensions are not equal.`);
+    }
+    switch (m.rowDimension) {
+      case 2:
+        return (m as Matrix2).transformVector2((v as Vector2).clone()) as Vector;
+      case 3:
+        return (m as Matrix3).transformVector3((v as Vector3).clone()) as Vector;
+      case 4:
+        return (m as Matrix4).transformVector4((v as Vector4).clone()) as Vector;
+      default:
+        throw new Error(`LinAlgHelpers.transformVector(): vector not a Vector2, Vector3, or Vector4.`);
     }
   }
 }
