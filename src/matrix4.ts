@@ -22,6 +22,11 @@ export class Matrix4 implements Matrix {
   public readonly rowDimension: number = 4;
   public readonly colDimension: number = 4;
 
+	public readonly E0 = new Vector4(1, 0, 0, 0);
+  public readonly E1 = new Vector4(0, 1, 0, 0);
+	public readonly E2 = new Vector4(0, 0, 1, 0);
+  public readonly E3 = new Vector4(0, 0, 0, 1);
+
   constructor () {
     this._elements = [
       1, 0, 0, 0,

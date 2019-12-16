@@ -26,6 +26,10 @@ export class Matrix3 implements Matrix {
   public readonly rowDimension: number = 3;
   public readonly colDimension: number = 3;
 
+  public readonly E0 = new Vector3(1, 0, 0);
+  public readonly E1 = new Vector3(0, 1, 0);
+  public readonly E2 = new Vector3(0, 0, 1);
+
   constructor () {
     this._elements = [
       1, 0, 0,
@@ -686,46 +690,3 @@ export class Matrix3 implements Matrix {
     return matrixString;
   }
 }
-
-Object.defineProperties(Matrix3.prototype, {
-  /**
-   * @property {boolean} isMatrix3 Boolean to test if argument is Matrix3.
-   * @memberof Matrix3
-   */
-  isMatrix3: {
-    value: true,
-    writable: false
-  },
-  /**
-   * @property {number} dimension The dimension of the matrix.
-   * @memberof Matrix3
-   */
-  dimension: {
-    value: 3,
-    writable: false
-  },
-  /**
-   * @property {Vector3} E0 The first standard basis vector (1, 0, 0).
-   * @memberof Matrix3
-   */
-  E0: {
-    value: Object.freeze(new Vector3(1, 0, 0)),
-    writable: false
-  },
-  /**
-   * @property {Vector3} E1 The first standard basis vector (0, 1, 0).
-   * @memberof Matrix3
-   */
-  E1: {
-    value: Object.freeze(new Vector3(0, 1, 0)),
-    writable: false
-  },
-  /**
-   * @property {Vector3} E2 The first standard basis vector (0, 0, 1).
-   * @memberof Matrix3
-   */
-  E2: {
-    value: Object.freeze(new Vector3(0, 0, 1)),
-    writable: false
-  }
-});
