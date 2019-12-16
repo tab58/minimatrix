@@ -15,14 +15,14 @@ export declare class Complex {
     clone(): this;
     /**
      * Creates a Complex number from a given vector in the complex plane.
-     * @param {Vector2} v The given vector.
-     * @returns {Complex} This complex number.
+     * @param v The given vector.
+     * @returns This complex number.
      */
     fromVector2(v: Vector2): this;
     /**
      * Copies a complex number.
-     * @param {Complex} C The given complex number.
-     * @returns {Complex} This complex number.
+     * @param C The given complex number.
+     * @returns This complex number.
      */
     copy(C: this): this;
     /**

@@ -52,16 +52,16 @@ var Complex = /** @class */ (function () {
     };
     /**
      * Creates a Complex number from a given vector in the complex plane.
-     * @param {Vector2} v The given vector.
-     * @returns {Complex} This complex number.
+     * @param v The given vector.
+     * @returns This complex number.
      */
     Complex.prototype.fromVector2 = function (v) {
         return new Complex(v.x, v.y);
     };
     /**
      * Copies a complex number.
-     * @param {Complex} C The given complex number.
-     * @returns {Complex} This complex number.
+     * @param C The given complex number.
+     * @returns This complex number.
      */
     Complex.prototype.copy = function (C) {
         this._real = C._real;

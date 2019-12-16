@@ -7,6 +7,10 @@ var vector4_1 = require("./vector4");
 var LinAlgHelpers = /** @class */ (function () {
     function LinAlgHelpers() {
     }
+    /**
+     * Builds the outer product from a vector.
+     * @param v The vector.
+     */
     LinAlgHelpers.getOuterProduct = function (v) {
         var d = v.dimension;
         switch (d) {
@@ -20,6 +24,11 @@ var LinAlgHelpers = /** @class */ (function () {
                 throw new Error("LinAlgHelpers.getOuterProduct(): vector is not Vector2, Vector3, or Vector4.");
         }
     };
+    /**
+     * Gets a row from the matrix as a vector.
+     * @param m The matrix.
+     * @param i The row number (zero-based index).
+     */
     LinAlgHelpers.getRow = function (m, i) {
         var d = m.rowDimension;
         switch (d) {
@@ -33,6 +42,11 @@ var LinAlgHelpers = /** @class */ (function () {
                 throw new Error("LinAlgHelpers.getRow(): row is not Vector2, Vector3, or Vector4.");
         }
     };
+    /**
+     * Gets a column from the matrix as a vector.
+     * @param m The matrix.
+     * @param i The column number (zero-based index).
+     */
     LinAlgHelpers.getColumn = function (m, i) {
         var d = m.colDimension;
         switch (d) {
@@ -46,6 +60,12 @@ var LinAlgHelpers = /** @class */ (function () {
                 throw new Error("LinAlgHelpers.getColumn(): column is not Vector2, Vector3, or Vector4.");
         }
     };
+    /**
+     * Builds a vector of the values.
+     * @param a The array with values.
+     * @param n The size of the vector.
+     * @param offset The offset index of the array.
+     */
     LinAlgHelpers.vectorFromValues = function (a, n, offset) {
         if (offset === void 0) { offset = 0; }
         if (n === 2) {
@@ -68,6 +88,26 @@ var LinAlgHelpers = /** @class */ (function () {
         }
         else {
             throw new Error("LinAlgHelpers.vectorFromValues(): vector size is not Vector2, Vector3, or Vector4.");
+        }
+    };
+    /**
+     * Transforms (multiplies) a vector by a matrix.
+     * @param m The matrix to transform the vector by.
+     * @param v The vector to transform.
+     */
+    LinAlgHelpers.transformVector = function (m, v) {
+        if (m.rowDimension !== v.dimension) {
+            throw new Error("LinAlgHelpers.transformVector(): matrix row and vector dimensions are not equal.");
+        }
+        switch (m.rowDimension) {
+            case 2:
+                return m.transformVector2(v.clone());
+            case 3:
+                return m.transformVector3(v.clone());
+            case 4:
+                return m.transformVector4(v.clone());
+            default:
+                throw new Error("LinAlgHelpers.transformVector(): vector not a Vector2, Vector3, or Vector4.");
         }
     };
     return LinAlgHelpers;
