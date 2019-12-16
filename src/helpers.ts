@@ -49,4 +49,25 @@ export class LinAlgHelpers {
         throw new Error(`LinAlgHelpers.getColumn(): column is not Vector2, Vector3, or Vector4.`);
     }
   }
+
+  public static vectorFromValues (a: number[], n: number, offset: number = 0): Vector {
+    if (n === 2) {
+      const v0 = a[offset];
+      const v1 = a[offset + 1];
+      return new Vector2(v0, v1);
+    } else if (n === 3) {
+      const v0 = a[offset];
+      const v1 = a[offset + 1];
+      const v2 = a[offset + 2];
+      return new Vector3(v0, v1, v2);
+    } else if (n === 4) {
+      const v0 = a[offset];
+      const v1 = a[offset + 1];
+      const v2 = a[offset + 2];
+      const v3 = a[offset + 3];
+      return new Vector4(v0, v1, v2, v3);
+    } else {
+      throw new Error(`LinAlgHelpers.vectorFromValues(): vector size is not Vector2, Vector3, or Vector4.`);
+    }
+  }
 }
