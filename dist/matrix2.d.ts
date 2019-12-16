@@ -8,6 +8,8 @@ export declare class Matrix2 implements Matrix {
     private _elements;
     readonly rowDimension: number;
     readonly colDimension: number;
+    readonly E0: Vector2;
+    readonly E1: Vector2;
     /**
      * @constructor
      */

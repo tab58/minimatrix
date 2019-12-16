@@ -24,6 +24,9 @@ var Matrix3 = /** @class */ (function () {
     function Matrix3() {
         this.rowDimension = 3;
         this.colDimension = 3;
+        this.E0 = new vector3_1.Vector3(1, 0, 0);
+        this.E1 = new vector3_1.Vector3(0, 1, 0);
+        this.E2 = new vector3_1.Vector3(0, 0, 1);
         this._elements = [
             1, 0, 0,
             0, 1, 0,
@@ -627,7 +630,7 @@ var Matrix3 = /** @class */ (function () {
             case 2:
                 return new vector3_1.Vector3(te[2], te[5], te[8]);
             default:
-                throw new Error('No row defined at ' + i + '.');
+                throw new Error('getRow(): no row defined at ' + i + '.');
         }
     };
     /**
@@ -645,7 +648,7 @@ var Matrix3 = /** @class */ (function () {
             case 2:
                 return new vector3_1.Vector3(te[6], te[7], te[8]);
             default:
-                throw new Error('No column defined at ' + i + '.');
+                throw new Error('getColumn(): no column defined at ' + i + '.');
         }
     };
     /**
@@ -659,46 +662,4 @@ var Matrix3 = /** @class */ (function () {
     return Matrix3;
 }());
 exports.Matrix3 = Matrix3;
-Object.defineProperties(Matrix3.prototype, {
-    /**
-     * @property {boolean} isMatrix3 Boolean to test if argument is Matrix3.
-     * @memberof Matrix3
-     */
-    isMatrix3: {
-        value: true,
-        writable: false
-    },
-    /**
-     * @property {number} dimension The dimension of the matrix.
-     * @memberof Matrix3
-     */
-    dimension: {
-        value: 3,
-        writable: false
-    },
-    /**
-     * @property {Vector3} E0 The first standard basis vector (1, 0, 0).
-     * @memberof Matrix3
-     */
-    E0: {
-        value: Object.freeze(new vector3_1.Vector3(1, 0, 0)),
-        writable: false
-    },
-    /**
-     * @property {Vector3} E1 The first standard basis vector (0, 1, 0).
-     * @memberof Matrix3
-     */
-    E1: {
-        value: Object.freeze(new vector3_1.Vector3(0, 1, 0)),
-        writable: false
-    },
-    /**
-     * @property {Vector3} E2 The first standard basis vector (0, 0, 1).
-     * @memberof Matrix3
-     */
-    E2: {
-        value: Object.freeze(new vector3_1.Vector3(0, 0, 1)),
-        writable: false
-    }
-});
 //# sourceMappingURL=matrix3.js.map

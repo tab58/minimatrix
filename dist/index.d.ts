@@ -7,4 +7,5 @@ import { Matrix4 } from './matrix4';
 import { Vector2 } from './vector2';
 import { Vector3 } from './vector3';
 import { Vector4 } from './vector4';
-export { Matrix2, Matrix3, Matrix4, Vector2, Vector3, Vector4, Complex, Compare, Vector, Matrix };
+import { LinAlgHelpers } from './helpers';
+export { Matrix2, Matrix3, Matrix4, Vector2, Vector3, Vector4, Complex, Compare, Vector, Matrix, LinAlgHelpers };

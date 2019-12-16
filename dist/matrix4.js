@@ -16,11 +16,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @author WestLangley / http://github.com/WestLangley
  */
 var core_1 = __importDefault(require("./core"));
+var vector4_1 = require("./vector4");
 var utils_1 = require("./utils");
 var Matrix4 = /** @class */ (function () {
     function Matrix4() {
         this.rowDimension = 4;
         this.colDimension = 4;
+        this.E0 = new vector4_1.Vector4(1, 0, 0, 0);
+        this.E1 = new vector4_1.Vector4(0, 1, 0, 0);
+        this.E2 = new vector4_1.Vector4(0, 0, 1, 0);
+        this.E3 = new vector4_1.Vector4(0, 0, 0, 1);
         this._elements = [
             1, 0, 0, 0,
             0, 1, 0, 0,
@@ -36,6 +41,46 @@ var Matrix4 = /** @class */ (function () {
     Matrix4.prototype.get = function (i, j) {
         var n = this.colDimension;
         return this._elements[i + j * n];
+    };
+    /**
+   * Gets the row at the specified index of the matrix.
+   * @param {number} i The index of the row (0-3).
+   * @returns {Vector4} The vector with the row values.
+   */
+    Matrix4.prototype.getRow = function (i) {
+        var te = this._elements;
+        switch (i) {
+            case 0:
+                return new vector4_1.Vector4(te[0], te[4], te[8], te[12]);
+            case 1:
+                return new vector4_1.Vector4(te[1], te[5], te[9], te[13]);
+            case 2:
+                return new vector4_1.Vector4(te[2], te[6], te[10], te[14]);
+            case 3:
+                return new vector4_1.Vector4(te[3], te[7], te[11], te[15]);
+            default:
+                throw new Error('getRow(): no row defined at ' + i + '.');
+        }
+    };
+    /**
+     * Gets the column at the specified index of the matrix.
+     * @param {number} i The index of the column (0-3).
+     * @returns {Vector4} The vector with the column values.
+     */
+    Matrix4.prototype.getColumn = function (i) {
+        var te = this._elements;
+        switch (i) {
+            case 0:
+                return new vector4_1.Vector4(te[0], te[1], te[2], te[3]);
+            case 1:
+                return new vector4_1.Vector4(te[4], te[5], te[6], te[7]);
+            case 2:
+                return new vector4_1.Vector4(te[8], te[9], te[10], te[11]);
+            case 3:
+                return new vector4_1.Vector4(te[12], te[13], te[14], te[15]);
+            default:
+                throw new Error('getColumn(): no column defined at ' + i + '.');
+        }
     };
     /** Sets the matrix values in a row-major ordered fashion. */
     Matrix4.prototype.setElements = function (n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44) {

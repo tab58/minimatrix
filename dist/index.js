@@ -23,4 +23,6 @@ var vector3_1 = require("./vector3");
 exports.Vector3 = vector3_1.Vector3;
 var vector4_1 = require("./vector4");
 exports.Vector4 = vector4_1.Vector4;
+var helpers_1 = require("./helpers");
+exports.LinAlgHelpers = helpers_1.LinAlgHelpers;
 //# sourceMappingURL=index.js.map

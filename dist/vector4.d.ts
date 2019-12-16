@@ -70,6 +70,11 @@ export declare class Vector4 implements Vector {
      */
     distanceToSquared(v: this): number;
     setAxisAngleFromRotationMatrix(m: Matrix4): this;
+    /**
+   * Calculates the outer product of the matrix.
+   * @param scalar A scalar to multiply the outer product by.
+   */
+    getOuterProduct(scalar?: number): Matrix4;
     min(v: this): this;
     max(v: this): this;
     clamp(min: this, max: this): this;

@@ -158,6 +158,11 @@ export declare class Vector3 implements Vector {
      */
     divideScalar(scalar: number): this;
     /**
+     * Calculates the outer product of the matrix.
+     * @param scalar A scalar to multiply the outer product by.
+     */
+    getOuterProduct(scalar?: number): Matrix3;
+    /**
      * Takes the minimum of each component of this vector and the given vector.
      * @param {Vector3} v The given vector.
      * @returns {Vector3} This vector.

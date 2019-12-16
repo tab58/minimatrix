@@ -10,6 +10,9 @@ export declare class Matrix3 implements Matrix {
     private _elements;
     readonly rowDimension: number;
     readonly colDimension: number;
+    readonly E0: Vector3;
+    readonly E1: Vector3;
+    readonly E2: Vector3;
     constructor();
     set(i: number, j: number, value: number): this;
     get(i: number, j: number): number;

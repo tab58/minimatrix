@@ -154,6 +154,11 @@ export declare class Vector2 implements Vector {
      */
     divideScalar(scalar: number): this;
     /**
+     * Calculates the outer product of the matrix.
+     * @param scalar A scalar to multiply the outer product by.
+     */
+    getOuterProduct(scalar?: number): Matrix2;
+    /**
      * Takes the minimum of each component of this vector and the given vector.
      * @param {Vector2} v The given vector.
      * @returns {Vector2} This vector.

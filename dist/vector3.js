@@ -14,6 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @author WestLangley / http://github.com/WestLangley
  */
 var core_1 = __importDefault(require("./core"));
+var matrix3_1 = require("./matrix3");
 var vec3HelperFunctions = {
     clampScalar: function () {
         var _ = [];
@@ -314,6 +315,19 @@ var Vector3 = /** @class */ (function () {
      */
     Vector3.prototype.divideScalar = function (scalar) {
         return this.multiplyScalar(1.0 / scalar);
+    };
+    /**
+     * Calculates the outer product of the matrix.
+     * @param scalar A scalar to multiply the outer product by.
+     */
+    Vector3.prototype.getOuterProduct = function (scalar) {
+        if (scalar === void 0) { scalar = 1; }
+        var u1 = this._x;
+        var u2 = this._y;
+        var u3 = this._z;
+        return new matrix3_1.Matrix3()
+            .setElements(u1 * u1, u1 * u2, u1 * u3, u2 * u1, u2 * u2, u2 * u3, u3 * u1, u3 * u2, u3 * u3)
+            .multiplyScalar(scalar);
     };
     /**
      * Takes the minimum of each component of this vector and the given vector.

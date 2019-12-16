@@ -11,6 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @author WestLangley / http://github.com/WestLangley
  */
 var core_1 = __importDefault(require("./core"));
+var matrix4_1 = require("./matrix4");
 var Vector4 = /** @class */ (function () {
     function Vector4(x, y, z, w) {
         if (x === void 0) { x = 0; }
@@ -324,6 +325,20 @@ var Vector4 = /** @class */ (function () {
         this._z = (m21 - m12) / s;
         this._w = core_1.default.acos((m11 + m22 + m33 - 1) / 2);
         return this;
+    };
+    /**
+   * Calculates the outer product of the matrix.
+   * @param scalar A scalar to multiply the outer product by.
+   */
+    Vector4.prototype.getOuterProduct = function (scalar) {
+        if (scalar === void 0) { scalar = 1; }
+        var u1 = this._x;
+        var u2 = this._y;
+        var u3 = this._z;
+        var u4 = this._w;
+        return new matrix4_1.Matrix4()
+            .setElements(u1 * u1, u1 * u2, u1 * u3, u1 * u4, u2 * u1, u2 * u2, u2 * u3, u2 * u4, u3 * u1, u3 * u2, u3 * u3, u3 * u4, u4 * u1, u4 * u2, u4 * u3, u4 * u4)
+            .multiplyScalar(scalar);
     };
     Vector4.prototype.min = function (v) {
         this._x = core_1.default.min(this.x, v.x);

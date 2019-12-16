@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @author zz85 / http://www.lab4games.net/zz85/blog
  */
 var core_1 = __importDefault(require("./core"));
+var matrix2_1 = require("./matrix2");
 /**
  * A 2-dimensional vector.
  */
@@ -259,6 +260,18 @@ var Vector2 = /** @class */ (function () {
      */
     Vector2.prototype.divideScalar = function (scalar) {
         return this.multiplyScalar(1.0 / scalar);
+    };
+    /**
+     * Calculates the outer product of the matrix.
+     * @param scalar A scalar to multiply the outer product by.
+     */
+    Vector2.prototype.getOuterProduct = function (scalar) {
+        if (scalar === void 0) { scalar = 1; }
+        var u1 = this._x;
+        var u2 = this._y;
+        return new matrix2_1.Matrix2()
+            .setElements(u1 * u1, u1 * u2, u2 * u1, u2 * u2)
+            .multiplyScalar(scalar);
     };
     /**
      * Takes the minimum of each component of this vector and the given vector.

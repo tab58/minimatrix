@@ -21,6 +21,8 @@ var Matrix2 = /** @class */ (function () {
     function Matrix2() {
         this.rowDimension = 2;
         this.colDimension = 2;
+        this.E0 = new vector2_1.Vector2(1, 0);
+        this.E1 = new vector2_1.Vector2(0, 1);
         this._elements = [
             1, 0,
             0, 1
@@ -112,7 +114,7 @@ var Matrix2 = /** @class */ (function () {
             case 1:
                 return new vector2_1.Vector2(te[1], te[3]);
             default:
-                throw new Error('No row defined at ' + i + '.');
+                throw new Error('getRow(): no row defined at ' + i + '.');
         }
     };
     /**
@@ -128,7 +130,7 @@ var Matrix2 = /** @class */ (function () {
             case 1:
                 return new vector2_1.Vector2(te[2], te[3]);
             default:
-                throw new Error('No column defined at ' + i + '.');
+                throw new Error('getColumn(): no column defined at ' + i + '.');
         }
     };
     /**
@@ -469,38 +471,4 @@ var Matrix2 = /** @class */ (function () {
     return Matrix2;
 }());
 exports.Matrix2 = Matrix2;
-Object.defineProperties(Matrix2.prototype, {
-    /**
-     * @property {boolean} isMatrix2 Boolean to test if argument is Matrix2.
-     * @memberof Matrix2
-     */
-    isMatrix2: {
-        value: true,
-        writable: false
-    },
-    /**
-     * @property {number} dimension The dimension of this matrix.
-     * @memberof Matrix2
-     */
-    dimension: {
-        value: 2,
-        writable: false
-    },
-    /**
-     * @property {Vector2} E0 The first standard basis vector (1, 0).
-     * @memberof Matrix2
-     */
-    E0: {
-        value: Object.freeze(new vector2_1.Vector2(1, 0)),
-        writable: false
-    },
-    /**
-     * @property {Vector2} E1 The second standard basis vector (0, 1).
-     * @memberof Matrix2
-     */
-    E1: {
-        value: Object.freeze(new vector2_1.Vector2(0, 1)),
-        writable: false
-    }
-});
 //# sourceMappingURL=matrix2.js.map

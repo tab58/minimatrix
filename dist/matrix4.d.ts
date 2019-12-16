@@ -5,9 +5,25 @@ export declare class Matrix4 implements Matrix {
     private _elements;
     readonly rowDimension: number;
     readonly colDimension: number;
+    readonly E0: Vector4;
+    readonly E1: Vector4;
+    readonly E2: Vector4;
+    readonly E3: Vector4;
     constructor();
     set(i: number, j: number, value: number): this;
     get(i: number, j: number): number;
+    /**
+   * Gets the row at the specified index of the matrix.
+   * @param {number} i The index of the row (0-3).
+   * @returns {Vector4} The vector with the row values.
+   */
+    getRow(i: number): Vector4;
+    /**
+     * Gets the column at the specified index of the matrix.
+     * @param {number} i The index of the column (0-3).
+     * @returns {Vector4} The vector with the column values.
+     */
+    getColumn(i: number): Vector4;
     /** Sets the matrix values in a row-major ordered fashion. */
     setElements(n11: number, n12: number, n13: number, n14: number, n21: number, n22: number, n23: number, n24: number, n31: number, n32: number, n33: number, n34: number, n41: number, n42: number, n43: number, n44: number): this;
     identity(): this;
