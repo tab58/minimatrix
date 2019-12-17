@@ -8,6 +8,7 @@ import { Complex } from './complex';
  */
 export declare class Matrix3 implements Matrix {
     private _elements;
+    private _tempElements;
     readonly rowDimension: number;
     readonly colDimension: number;
     readonly E0: Vector3;
@@ -213,4 +214,5 @@ export declare class Matrix3 implements Matrix {
      * Pretty prints this matrix.
      */
     prettyPrint(): string;
+    applyFunction(fn: (elements: number[]) => void): void;
 }

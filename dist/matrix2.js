@@ -15,18 +15,17 @@ var utils_1 = require("./utils");
  * @class Matrix2
  */
 var Matrix2 = /** @class */ (function () {
-    /**
-     * @constructor
-     */
     function Matrix2() {
         this.rowDimension = 2;
         this.colDimension = 2;
         this.E0 = new vector2_1.Vector2(1, 0);
         this.E1 = new vector2_1.Vector2(0, 1);
-        this._elements = [
+        var a = [
             1, 0,
             0, 1
         ];
+        this._elements = a;
+        this._tempElements = a.slice();
     }
     Matrix2.prototype.set = function (i, j, value) {
         var n = this.colDimension;
@@ -369,8 +368,8 @@ var Matrix2 = /** @class */ (function () {
     };
     /**
      * Loads values from an array into a matrix.
-     * @param {number[]} array The array to populate the matrix from.
-     * @param {number} offset The numeric array offset.
+     * @param array The array to populate the matrix from.
+     * @param offset The numeric array offset.
      */
     Matrix2.prototype.fromArray = function (array, offset) {
         if (offset === void 0) { offset = 0; }
@@ -467,6 +466,18 @@ var Matrix2 = /** @class */ (function () {
         var tStr = this._elements.map(utils_1.formatPrintNumber);
         var matrixString = "\n    +-                -+\n    | " + tStr[0] + "  " + tStr[2] + " |\n    | " + tStr[1] + "  " + tStr[3] + " |\n    +-                -+";
         return matrixString;
+    };
+    Matrix2.prototype.applyFunction = function (fn) {
+        var ee = this._elements;
+        var te = this._tempElements;
+        var n = ee.length;
+        for (var i = 0; i < n; ++i) {
+            te[i] = ee[i];
+        }
+        fn.call(null, te);
+        for (var i = 0; i < n; ++i) {
+            ee[i] = te[i];
+        }
     };
     return Matrix2;
 }());

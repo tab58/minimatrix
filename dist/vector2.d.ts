@@ -15,7 +15,7 @@ export declare class Vector2 implements Vector {
      * @param {number} x The x-component value.
      * @param {number} y The y-component value.
      */
-    constructor(x: number, y: number);
+    constructor(x?: number, y?: number);
     /**
      * Sets the components of the vector.
      * @param {number} x The x-component.

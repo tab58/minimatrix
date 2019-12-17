@@ -27,11 +27,13 @@ var Matrix3 = /** @class */ (function () {
         this.E0 = new vector3_1.Vector3(1, 0, 0);
         this.E1 = new vector3_1.Vector3(0, 1, 0);
         this.E2 = new vector3_1.Vector3(0, 0, 1);
-        this._elements = [
+        var a = [
             1, 0, 0,
             0, 1, 0,
             0, 0, 1
         ];
+        this._elements = a;
+        this._tempElements = a.slice();
     }
     Matrix3.prototype.set = function (i, j, value) {
         var n = this.colDimension;
@@ -658,6 +660,18 @@ var Matrix3 = /** @class */ (function () {
         var tStr = this._elements.map(utils_1.formatPrintNumber);
         var matrixString = "\n    +-                         -+\n    | " + tStr[0] + "  " + tStr[3] + "  " + tStr[6] + " |\n    | " + tStr[1] + "  " + tStr[4] + "  " + tStr[7] + " |\n    | " + tStr[2] + "  " + tStr[5] + "  " + tStr[8] + " |\n    +-                         -+";
         return matrixString;
+    };
+    Matrix3.prototype.applyFunction = function (fn) {
+        var ee = this._elements;
+        var te = this._tempElements;
+        var n = ee.length;
+        for (var i = 0; i < n; ++i) {
+            te[i] = ee[i];
+        }
+        fn.call(null, te);
+        for (var i = 0; i < n; ++i) {
+            ee[i] = te[i];
+        }
     };
     return Matrix3;
 }());

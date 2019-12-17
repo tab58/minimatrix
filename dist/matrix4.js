@@ -26,12 +26,14 @@ var Matrix4 = /** @class */ (function () {
         this.E1 = new vector4_1.Vector4(0, 1, 0, 0);
         this.E2 = new vector4_1.Vector4(0, 0, 1, 0);
         this.E3 = new vector4_1.Vector4(0, 0, 0, 1);
-        this._elements = [
+        var a = [
             1, 0, 0, 0,
             0, 1, 0, 0,
             0, 0, 1, 0,
             0, 0, 0, 1
         ];
+        this._elements = a;
+        this._tempElements = a.slice();
     }
     Matrix4.prototype.set = function (i, j, value) {
         var n = this.colDimension;
@@ -590,6 +592,18 @@ var Matrix4 = /** @class */ (function () {
         var tStr = this._elements.map(utils_1.formatPrintNumber);
         var matrixString = "\n    +-                                  -+\n    | " + tStr[0] + "  " + tStr[4] + "  " + tStr[8] + "  " + tStr[12] + " |\n    | " + tStr[1] + "  " + tStr[5] + "  " + tStr[9] + "  " + tStr[13] + " |\n    | " + tStr[2] + "  " + tStr[6] + "  " + tStr[10] + "  " + tStr[14] + " |\n    | " + tStr[3] + "  " + tStr[7] + "  " + tStr[11] + "  " + tStr[15] + " |\n    +-                                  -+";
         return matrixString;
+    };
+    Matrix4.prototype.applyFunction = function (fn) {
+        var ee = this._elements;
+        var te = this._tempElements;
+        var n = ee.length;
+        for (var i = 0; i < n; ++i) {
+            te[i] = ee[i];
+        }
+        fn.call(null, te);
+        for (var i = 0; i < n; ++i) {
+            ee[i] = te[i];
+        }
     };
     return Matrix4;
 }());

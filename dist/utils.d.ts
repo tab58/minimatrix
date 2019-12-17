@@ -4,4 +4,4 @@
  * @param {number} x The number to format.
  * @returns {string} The formatted string.
  */
-export declare function formatPrintNumber(x: number): string;
+export declare const formatPrintNumber: (x: number) => string;

@@ -23,9 +23,11 @@ var Vector2 = /** @class */ (function () {
      * @param {number} y The y-component value.
      */
     function Vector2(x, y) {
+        if (x === void 0) { x = 0; }
+        if (y === void 0) { y = 0; }
         this.dimension = 2;
-        this._x = x || 0;
-        this._y = y || 0;
+        this._x = x;
+        this._y = y;
     }
     Object.defineProperty(Vector2.prototype, "x", {
         get: function () { return this._x; },

@@ -21,7 +21,7 @@ var LinAlgHelpers = /** @class */ (function () {
             case 4:
                 return v.getOuterProduct();
             default:
-                throw new Error("LinAlgHelpers.getOuterProduct(): vector is not Vector2, Vector3, or Vector4.");
+                throw new Error("LinAlgHelpers.getOuterProduct(): vector dimension (" + d + ") is not Vector2, Vector3, or Vector4.");
         }
     };
     /**
@@ -39,7 +39,7 @@ var LinAlgHelpers = /** @class */ (function () {
             case 4:
                 return m.getRow(i);
             default:
-                throw new Error("LinAlgHelpers.getRow(): row is not Vector2, Vector3, or Vector4.");
+                throw new Error("LinAlgHelpers.getRow(): matrix dimension (" + d + ") does not produce Vector2, Vector3, or Vector4.");
         }
     };
     /**
@@ -57,7 +57,7 @@ var LinAlgHelpers = /** @class */ (function () {
             case 4:
                 return m.getColumn(i);
             default:
-                throw new Error("LinAlgHelpers.getColumn(): column is not Vector2, Vector3, or Vector4.");
+                throw new Error("LinAlgHelpers.getColumn(): matrix dimension (" + d + ") does not produce Vector2, Vector3, or Vector4.");
         }
     };
     /**
@@ -87,7 +87,7 @@ var LinAlgHelpers = /** @class */ (function () {
             return new vector4_1.Vector4(v0, v1, v2, v3);
         }
         else {
-            throw new Error("LinAlgHelpers.vectorFromValues(): vector size is not Vector2, Vector3, or Vector4.");
+            throw new Error("LinAlgHelpers.vectorFromValues(): vector size (" + n + ") is not Vector2, Vector3, or Vector4.");
         }
     };
     /**
@@ -97,9 +97,10 @@ var LinAlgHelpers = /** @class */ (function () {
      */
     LinAlgHelpers.transformVector = function (m, v) {
         if (m.rowDimension !== v.dimension) {
-            throw new Error("LinAlgHelpers.transformVector(): matrix row and vector dimensions are not equal.");
+            throw new Error("LinAlgHelpers.transformVector(): matrix row (" + m.rowDimension + ") and vector (" + v.dimension + ") dimensions are not equal.");
         }
-        switch (m.rowDimension) {
+        var n = m.rowDimension;
+        switch (n) {
             case 2:
                 return m.transformVector2(v.clone());
             case 3:
@@ -107,7 +108,7 @@ var LinAlgHelpers = /** @class */ (function () {
             case 4:
                 return m.transformVector4(v.clone());
             default:
-                throw new Error("LinAlgHelpers.transformVector(): vector not a Vector2, Vector3, or Vector4.");
+                throw new Error("LinAlgHelpers.transformVector(): vector size (" + n + ") not a Vector2, Vector3, or Vector4.");
         }
     };
     return LinAlgHelpers;

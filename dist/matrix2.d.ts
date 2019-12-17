@@ -6,13 +6,11 @@ import { Matrix } from './interfaces';
  */
 export declare class Matrix2 implements Matrix {
     private _elements;
+    private _tempElements;
     readonly rowDimension: number;
     readonly colDimension: number;
     readonly E0: Vector2;
     readonly E1: Vector2;
-    /**
-     * @constructor
-     */
     constructor();
     set(i: number, j: number, value: number): this;
     get(i: number, j: number): number;
@@ -149,8 +147,8 @@ export declare class Matrix2 implements Matrix {
     equals(matrix: this): boolean;
     /**
      * Loads values from an array into a matrix.
-     * @param {number[]} array The array to populate the matrix from.
-     * @param {number} offset The numeric array offset.
+     * @param array The array to populate the matrix from.
+     * @param offset The numeric array offset.
      */
     fromArray(array: number[], offset?: number): this;
     /**
@@ -189,4 +187,5 @@ export declare class Matrix2 implements Matrix {
      * Pretty prints this matrix.
      */
     prettyPrint(): string;
+    applyFunction(fn: (elements: number[]) => void): void;
 }

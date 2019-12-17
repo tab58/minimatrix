@@ -125,6 +125,10 @@ export interface Matrix {
      * Prints out the matrix in a more human-readable format.
      */
     prettyPrint(): string;
+    /**
+     * Apply a function directly to the matrix elements.
+     */
+    applyFunction(fn: (elements: number[]) => void): void;
 }
 export interface Vector {
     dimension: number;

@@ -10,7 +10,7 @@ var core_1 = __importDefault(require("./core"));
  * @param {number} x The number to format.
  * @returns {string} The formatted string.
  */
-function formatPrintNumber(x) {
+exports.formatPrintNumber = function (x) {
     var maxLen = 7;
     var rawStr = '' + x;
     if (rawStr.length >= maxLen) {
@@ -36,6 +36,5 @@ function formatPrintNumber(x) {
         }
         return strArray.join(' ');
     }
-}
-exports.formatPrintNumber = formatPrintNumber;
+};
 //# sourceMappingURL=utils.js.map

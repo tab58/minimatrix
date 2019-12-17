@@ -3,6 +3,7 @@ import { Vector4 } from './vector4';
 import { Matrix } from './interfaces';
 export declare class Matrix4 implements Matrix {
     private _elements;
+    private _tempElements;
     readonly rowDimension: number;
     readonly colDimension: number;
     readonly E0: Vector4;
@@ -81,4 +82,5 @@ export declare class Matrix4 implements Matrix {
    * Pretty prints this matrix.
    */
     prettyPrint(): string;
+    applyFunction(fn: (elements: number[]) => void): void;
 }
