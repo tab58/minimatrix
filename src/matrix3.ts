@@ -22,6 +22,7 @@ import { Complex } from './complex';
  */
 export class Matrix3 implements Matrix {
   private _elements: number[];
+  private _tempElements: number[];
 
   public readonly rowDimension: number = 3;
   public readonly colDimension: number = 3;
@@ -31,11 +32,13 @@ export class Matrix3 implements Matrix {
   public readonly E2 = new Vector3(0, 0, 1);
 
   constructor () {
-    this._elements = [
+    const a = [
       1, 0, 0,
       0, 1, 0,
       0, 0, 1
     ];
+    this._elements = a;
+    this._tempElements = a.slice();
   }
 
   set (i: number, j: number, value: number): this {
@@ -688,5 +691,14 @@ export class Matrix3 implements Matrix {
     | ${tStr[2]}  ${tStr[5]}  ${tStr[8]} |
     +-                         -+`;
     return matrixString;
+  }
+
+  applyFunction (fn: (elements: number[]) => void): void {
+    const ee = this._elements;
+    const te = this._tempElements;
+    const n = ee.length;
+    for (let i = 0; i < n; ++i) { te[i] = ee[i]; }
+    fn.call(null, te);
+    for (let i = 0; i < n; ++i) { ee[i] = te[i]; }
   }
 }

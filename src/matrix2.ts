@@ -16,6 +16,7 @@ import { formatPrintNumber } from './utils';
  */
 export class Matrix2 implements Matrix {
   private _elements: number[];
+  private _tempElements: number[];
 
   public readonly rowDimension: number = 2;
   public readonly colDimension: number = 2;
@@ -23,14 +24,13 @@ export class Matrix2 implements Matrix {
   public readonly E0 = new Vector2(1, 0);
   public readonly E1 = new Vector2(0, 1);
   
-  /**
-   * @constructor
-   */
   constructor () {
-    this._elements = [
+    const a = [
       1, 0,
       0, 1
     ];
+    this._elements = a;
+    this._tempElements = a.slice();
   }
 
   set (i: number, j: number, value: number): this {
@@ -403,8 +403,8 @@ export class Matrix2 implements Matrix {
 
   /**
    * Loads values from an array into a matrix.
-   * @param {number[]} array The array to populate the matrix from.
-   * @param {number} offset The numeric array offset.
+   * @param array The array to populate the matrix from.
+   * @param offset The numeric array offset.
    */
   fromArray (array: number[], offset = 0): this {
     for (let i = 0; i < 4; i++) {
@@ -511,5 +511,14 @@ export class Matrix2 implements Matrix {
     | ${tStr[1]}  ${tStr[3]} |
     +-                -+`;
     return matrixString;
+  }
+
+  applyFunction (fn: (elements: number[]) => void): void {
+    const ee = this._elements;
+    const te = this._tempElements;
+    const n = ee.length;
+    for (let i = 0; i < n; ++i) { te[i] = ee[i]; }
+    fn.call(null, te);
+    for (let i = 0; i < n; ++i) { ee[i] = te[i]; }
   }
 }

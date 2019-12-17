@@ -18,6 +18,7 @@ import { formatPrintNumber } from './utils';
 
 export class Matrix4 implements Matrix {
   private _elements: number[];
+  private _tempElements: number[];
 
   public readonly rowDimension: number = 4;
   public readonly colDimension: number = 4;
@@ -28,12 +29,14 @@ export class Matrix4 implements Matrix {
   public readonly E3 = new Vector4(0, 0, 0, 1);
 
   constructor () {
-    this._elements = [
+    const a = [
       1, 0, 0, 0,
       0, 1, 0, 0,
       0, 0, 1, 0,
       0, 0, 0, 1  
-    ];
+		];
+		this._elements = a;
+    this._tempElements = a.slice();
 	}
 
   set (i: number, j: number, value: number): this {
@@ -686,5 +689,14 @@ export class Matrix4 implements Matrix {
     | ${tStr[3]}  ${tStr[7]}  ${tStr[11]}  ${tStr[15]} |
     +-                                  -+`;
     return matrixString;
+	}
+	
+	applyFunction (fn: (elements: number[]) => void): void {
+    const ee = this._elements;
+    const te = this._tempElements;
+    const n = ee.length;
+    for (let i = 0; i < n; ++i) { te[i] = ee[i]; }
+    fn.call(null, te);
+    for (let i = 0; i < n; ++i) { ee[i] = te[i]; }
   }
 }

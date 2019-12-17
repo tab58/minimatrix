@@ -6,7 +6,7 @@ import _Math from './core';
  * @param {number} x The number to format.
  * @returns {string} The formatted string.
  */
-export function formatPrintNumber (x: number): string {
+export const formatPrintNumber = (x: number): string => {
   const maxLen = 7;
   let rawStr = '' + x;
 
