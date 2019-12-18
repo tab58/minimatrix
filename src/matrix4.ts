@@ -691,12 +691,15 @@ export class Matrix4 implements Matrix {
     return matrixString;
 	}
 	
-	applyFunction (fn: (elements: number[]) => void): void {
+	applyFunction (fn: (elements: number[], rowDim: number, colDim: number) => void): void {
     const ee = this._elements;
     const te = this._tempElements;
-    const n = ee.length;
+		const n = ee.length;
+    const r = this.rowDimension;
+		const c = this.colDimension;
+
     for (let i = 0; i < n; ++i) { te[i] = ee[i]; }
-    fn.call(null, te);
+    fn.call(null, te, r, c);
     for (let i = 0; i < n; ++i) { ee[i] = te[i]; }
   }
 }
