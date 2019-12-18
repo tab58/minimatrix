@@ -128,7 +128,7 @@ export interface Matrix {
     /**
      * Apply a function directly to the matrix elements.
      */
-    applyFunction(fn: (elements: number[]) => void): void;
+    applyFunction(fn: (elements: number[], rowDim: number, colDim: number) => void): void;
 }
 export interface Vector {
     dimension: number;

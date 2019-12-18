@@ -82,5 +82,5 @@ export declare class Matrix4 implements Matrix {
    * Pretty prints this matrix.
    */
     prettyPrint(): string;
-    applyFunction(fn: (elements: number[]) => void): void;
+    applyFunction(fn: (elements: number[], rowDim: number, colDim: number) => void): void;
 }

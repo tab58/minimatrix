@@ -597,10 +597,12 @@ var Matrix4 = /** @class */ (function () {
         var ee = this._elements;
         var te = this._tempElements;
         var n = ee.length;
+        var r = this.rowDimension;
+        var c = this.colDimension;
         for (var i = 0; i < n; ++i) {
             te[i] = ee[i];
         }
-        fn.call(null, te);
+        fn.call(null, te, r, c);
         for (var i = 0; i < n; ++i) {
             ee[i] = te[i];
         }
