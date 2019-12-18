@@ -44,6 +44,20 @@ export declare class Matrix4 implements Matrix {
    */
     addMatrices(a: this, b: this, scalar?: number): this;
     /**
+ * Computes the outer product of two vectors (a*b^T).
+ * @param {Vector4} a The first vector.
+ * @param {Vector4} b The second vector.
+ * @param {number} scalar The number to scale the matrix by (defaults to 1).
+ */
+    setOuterProduct(a: Vector4, b: Vector4, scalar?: number): this;
+    /**
+     * Adds the outer product of two vectors (a*b^T) to this matrix.
+     * @param {Vector4} a The first vector.
+     * @param {Vector4} b The second vector.
+     * @param {number} scalar The number to scale the matrix by (defaults to 1).
+     */
+    addOuterProduct(a: Vector4, b: Vector4, scalar?: number): this;
+    /**
    * Swaps rows in-place in the matrix. Zero is the first row.
    */
     swapRows(i: number, j: number): this;

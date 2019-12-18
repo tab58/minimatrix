@@ -7,6 +7,20 @@ export declare class LinAlgHelpers {
      */
     static getOuterProduct(v: Vector): Matrix;
     /**
+     * Computes the outer product ab^T and applies it to a matrix.
+     * @param a
+     * @param b
+     * @param scalar
+     */
+    static setMatrixOuterProduct<T extends Vector, U extends Matrix>(A: U, a: T, b: T, scalar?: number): U;
+    /**
+     * Computes the outer product ab^T and applies it to a matrix.
+     * @param a
+     * @param b
+     * @param scalar
+     */
+    static addMatrixOuterProduct<T extends Vector, U extends Matrix>(A: U, a: T, b: T, scalar?: number): U;
+    /**
      * Gets a row from the matrix as a vector.
      * @param m The matrix.
      * @param i The row number (zero-based index).

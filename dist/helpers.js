@@ -25,6 +25,50 @@ var LinAlgHelpers = /** @class */ (function () {
         }
     };
     /**
+     * Computes the outer product ab^T and applies it to a matrix.
+     * @param a
+     * @param b
+     * @param scalar
+     */
+    LinAlgHelpers.setMatrixOuterProduct = function (A, a, b, scalar) {
+        var d = a.dimension;
+        if (A.rowDimension !== b.dimension || A.colDimension !== a.dimension) {
+            throw new Error('LinAlgHelpers.setOuterProduct(): vector dimensions do not match with matrix.');
+        }
+        switch (d) {
+            case 2:
+                return A.setOuterProduct(a, b, scalar);
+            case 3:
+                return A.setOuterProduct(a, b, scalar);
+            case 4:
+                return A.setOuterProduct(a, b, scalar);
+            default:
+                throw new Error("LinAlgHelpers.setOuterProduct(): vector dimension (" + d + ") is not Vector2, Vector3, or Vector4.");
+        }
+    };
+    /**
+     * Computes the outer product ab^T and applies it to a matrix.
+     * @param a
+     * @param b
+     * @param scalar
+     */
+    LinAlgHelpers.addMatrixOuterProduct = function (A, a, b, scalar) {
+        var d = a.dimension;
+        if (A.rowDimension !== b.dimension || A.colDimension !== a.dimension) {
+            throw new Error('LinAlgHelpers.addOuterProduct(): vector dimensions do not match with matrix.');
+        }
+        switch (d) {
+            case 2:
+                return A.addOuterProduct(a, b, scalar);
+            case 3:
+                return A.addOuterProduct(a, b, scalar);
+            case 4:
+                return A.addOuterProduct(a, b, scalar);
+            default:
+                throw new Error("LinAlgHelpers.addOuterProduct(): vector dimension (" + d + ") is not Vector2, Vector3, or Vector4.");
+        }
+    };
+    /**
      * Gets a row from the matrix as a vector.
      * @param m The matrix.
      * @param i The row number (zero-based index).

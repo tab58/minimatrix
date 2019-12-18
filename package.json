@@ -1,6 +1,6 @@
 {
   "name": "minimatrix",
-  "version": "4.4.1",
+  "version": "4.5.0",
   "description": "A linear algebra package for 2x2 and 3x3 matrices and 2D/3D vectors.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -399,8 +399,9 @@ var Matrix2 = /** @class */ (function () {
      * @param {Vector2} b The second vector.
      * @param {number} scalar The number to scale the matrix by (defaults to 1).
      */
-    Matrix2.prototype.getOuterProduct = function (a, b, scalar) {
-        var alpha = (scalar === undefined ? 1 : scalar);
+    Matrix2.prototype.setOuterProduct = function (a, b, scalar) {
+        if (scalar === void 0) { scalar = 1; }
+        var alpha = scalar;
         var n11 = alpha * a.x * b.x;
         var n12 = alpha * a.x * b.y;
         var n21 = alpha * a.y * b.x;
@@ -414,8 +415,9 @@ var Matrix2 = /** @class */ (function () {
      * @param {number} scalar The number to scale the matrix by (defaults to 1).
      */
     Matrix2.prototype.addOuterProduct = function (a, b, scalar) {
+        if (scalar === void 0) { scalar = 1; }
         var te = this._elements;
-        var alpha = (scalar === undefined ? 1 : scalar);
+        var alpha = scalar;
         var n11 = alpha * a.x * b.x;
         var n12 = alpha * a.x * b.y;
         var n21 = alpha * a.y * b.x;

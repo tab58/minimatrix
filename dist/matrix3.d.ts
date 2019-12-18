@@ -190,14 +190,14 @@ export declare class Matrix3 implements Matrix {
      * @param {Vector3} b The second vector.
      * @param {number} scalar The number to scale the matrix by (defaults to 1).
      */
-    getOuterProduct(a: Vector3, b: Vector3, scalar: number): this;
+    setOuterProduct(a: Vector3, b: Vector3, scalar?: number): this;
     /**
      * Adds the outer product of two vectors (a*b^T) to this matrix.
      * @param {Vector3} a The first vector.
      * @param {Vector3} b The second vector.
      * @param {number} scalar The number to scale the matrix by (defaults to 1).
      */
-    addOuterProduct(a: Vector3, b: Vector3, scalar: number): this;
+    addOuterProduct(a: Vector3, b: Vector3, scalar?: number): this;
     /**
      * Gets the row at the specified index of the matrix.
      * @param {number} i The index of the row (0-2).

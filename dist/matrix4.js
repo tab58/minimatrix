@@ -211,6 +211,79 @@ var Matrix4 = /** @class */ (function () {
         return this;
     };
     /**
+ * Computes the outer product of two vectors (a*b^T).
+ * @param {Vector4} a The first vector.
+ * @param {Vector4} b The second vector.
+ * @param {number} scalar The number to scale the matrix by (defaults to 1).
+ */
+    Matrix4.prototype.setOuterProduct = function (a, b, scalar) {
+        if (scalar === void 0) { scalar = 1; }
+        // computes alpha * (ab^T)
+        var alpha = scalar;
+        var n11 = alpha * a.x * b.x;
+        var n12 = alpha * a.x * b.y;
+        var n13 = alpha * a.x * b.z;
+        var n14 = alpha * a.x * b.w;
+        var n21 = alpha * a.y * b.x;
+        var n22 = alpha * a.y * b.y;
+        var n23 = alpha * a.y * b.z;
+        var n24 = alpha * a.y * b.w;
+        var n31 = alpha * a.z * b.x;
+        var n32 = alpha * a.z * b.y;
+        var n33 = alpha * a.z * b.z;
+        var n34 = alpha * a.z * b.w;
+        var n41 = alpha * a.w * b.x;
+        var n42 = alpha * a.w * b.y;
+        var n43 = alpha * a.w * b.z;
+        var n44 = alpha * a.w * b.w;
+        return this.setElements(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44);
+    };
+    /**
+     * Adds the outer product of two vectors (a*b^T) to this matrix.
+     * @param {Vector4} a The first vector.
+     * @param {Vector4} b The second vector.
+     * @param {number} scalar The number to scale the matrix by (defaults to 1).
+     */
+    Matrix4.prototype.addOuterProduct = function (a, b, scalar) {
+        if (scalar === void 0) { scalar = 1; }
+        // computes [this + alpha * (ab^T)]
+        var te = this._elements;
+        var alpha = scalar;
+        var n11 = alpha * a.x * b.x;
+        var n12 = alpha * a.x * b.y;
+        var n13 = alpha * a.x * b.z;
+        var n14 = alpha * a.x * b.w;
+        var n21 = alpha * a.y * b.x;
+        var n22 = alpha * a.y * b.y;
+        var n23 = alpha * a.y * b.z;
+        var n24 = alpha * a.y * b.w;
+        var n31 = alpha * a.z * b.x;
+        var n32 = alpha * a.z * b.y;
+        var n33 = alpha * a.z * b.z;
+        var n34 = alpha * a.z * b.w;
+        var n41 = alpha * a.w * b.x;
+        var n42 = alpha * a.w * b.y;
+        var n43 = alpha * a.w * b.z;
+        var n44 = alpha * a.w * b.w;
+        te[0] += n11;
+        te[1] += n21;
+        te[2] += n31;
+        te[3] += n41;
+        te[4] += n12;
+        te[5] += n22;
+        te[6] += n32;
+        te[7] += n42;
+        te[8] += n13;
+        te[9] += n23;
+        te[10] += n33;
+        te[11] += n43;
+        te[12] += n14;
+        te[13] += n24;
+        te[14] += n34;
+        te[15] += n44;
+        return this;
+    };
+    /**
    * Swaps rows in-place in the matrix. Zero is the first row.
    */
     Matrix4.prototype.swapRows = function (i, j) {

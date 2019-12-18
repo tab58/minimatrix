@@ -573,9 +573,10 @@ var Matrix3 = /** @class */ (function () {
      * @param {Vector3} b The second vector.
      * @param {number} scalar The number to scale the matrix by (defaults to 1).
      */
-    Matrix3.prototype.getOuterProduct = function (a, b, scalar) {
+    Matrix3.prototype.setOuterProduct = function (a, b, scalar) {
+        if (scalar === void 0) { scalar = 1; }
         // computes alpha * (ab^T)
-        var alpha = (scalar === undefined ? 1 : scalar);
+        var alpha = scalar;
         var n11 = alpha * a.x * b.x;
         var n12 = alpha * a.x * b.y;
         var n13 = alpha * a.x * b.z;
@@ -594,9 +595,10 @@ var Matrix3 = /** @class */ (function () {
      * @param {number} scalar The number to scale the matrix by (defaults to 1).
      */
     Matrix3.prototype.addOuterProduct = function (a, b, scalar) {
+        if (scalar === void 0) { scalar = 1; }
         // computes [this + alpha * (ab^T)]
         var te = this._elements;
-        var alpha = (scalar === undefined ? 1 : scalar);
+        var alpha = scalar;
         var n11 = alpha * a.x * b.x;
         var n12 = alpha * a.x * b.y;
         var n13 = alpha * a.x * b.z;

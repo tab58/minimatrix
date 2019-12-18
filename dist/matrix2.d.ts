@@ -163,14 +163,14 @@ export declare class Matrix2 implements Matrix {
      * @param {Vector2} b The second vector.
      * @param {number} scalar The number to scale the matrix by (defaults to 1).
      */
-    getOuterProduct(a: Vector2, b: Vector2, scalar: number): this;
+    setOuterProduct(a: Vector2, b: Vector2, scalar?: number): this;
     /**
      * Adds the outer product of two vectors (a*b^T) to this matrix.
      * @param {Vector2} a The first vector.
      * @param {Vector2} b The second vector.
      * @param {number} scalar The number to scale the matrix by (defaults to 1).
      */
-    addOuterProduct(a: Vector2, b: Vector2, scalar: number): this;
+    addOuterProduct(a: Vector2, b: Vector2, scalar?: number): this;
     /**
      * Adds 2 matrices together and optionally scales the result.
      * @param {Matrix2} a The first matrix.
