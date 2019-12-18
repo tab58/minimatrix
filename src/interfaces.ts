@@ -110,7 +110,7 @@ export interface Matrix {
    * @param {number[]} array The array to populate the matrix values into.
    * @param {number} offset The numeric array offset.
    */
-  toArray (array: number[], offset: number): number[];
+  toArray (array?: number[], offset?: number): number[];
 
   /**
    * Adds 2 matrices together and optionally scales the result.
