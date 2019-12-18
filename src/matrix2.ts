@@ -433,8 +433,8 @@ export class Matrix2 implements Matrix {
    * @param {Vector2} b The second vector.
    * @param {number} scalar The number to scale the matrix by (defaults to 1).
    */
-  getOuterProduct (a: Vector2, b: Vector2, scalar: number): this {
-    const alpha = (scalar === undefined ? 1 : scalar);
+  setOuterProduct (a: Vector2, b: Vector2, scalar: number = 1): this {
+    const alpha = scalar;
     const n11 = alpha * a.x * b.x;
     const n12 = alpha * a.x * b.y;
     const n21 = alpha * a.y * b.x;
@@ -448,9 +448,9 @@ export class Matrix2 implements Matrix {
    * @param {Vector2} b The second vector.
    * @param {number} scalar The number to scale the matrix by (defaults to 1).
    */
-  addOuterProduct (a: Vector2, b: Vector2, scalar: number): this {
+  addOuterProduct (a: Vector2, b: Vector2, scalar: number = 1): this {
     const te = this._elements;
-    const alpha = (scalar === undefined ? 1 : scalar);
+    const alpha = scalar;
     const n11 = alpha * a.x * b.x;
     const n12 = alpha * a.x * b.y;
     const n21 = alpha * a.y * b.x;

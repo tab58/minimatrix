@@ -595,9 +595,9 @@ export class Matrix3 implements Matrix {
    * @param {Vector3} b The second vector.
    * @param {number} scalar The number to scale the matrix by (defaults to 1).
    */
-  getOuterProduct (a: Vector3, b: Vector3, scalar: number): this {
+  setOuterProduct (a: Vector3, b: Vector3, scalar: number = 1): this {
     // computes alpha * (ab^T)
-    const alpha = (scalar === undefined ? 1 : scalar);
+    const alpha = scalar;
     const n11 = alpha * a.x * b.x;
     const n12 = alpha * a.x * b.y;
     const n13 = alpha * a.x * b.z;
@@ -616,10 +616,10 @@ export class Matrix3 implements Matrix {
    * @param {Vector3} b The second vector.
    * @param {number} scalar The number to scale the matrix by (defaults to 1).
    */
-  addOuterProduct (a: Vector3, b: Vector3, scalar: number): this {
+  addOuterProduct (a: Vector3, b: Vector3, scalar: number = 1): this {
     // computes [this + alpha * (ab^T)]
     const te = this._elements;
-    const alpha = (scalar === undefined ? 1 : scalar);
+    const alpha = scalar;
     const n11 = alpha * a.x * b.x;
     const n12 = alpha * a.x * b.y;
     const n13 = alpha * a.x * b.z;

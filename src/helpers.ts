@@ -27,6 +27,52 @@ export class LinAlgHelpers {
   }
 
   /**
+   * Computes the outer product ab^T and applies it to a matrix.
+   * @param a 
+   * @param b 
+   * @param scalar 
+   */
+  public static setMatrixOuterProduct <T extends Vector, U extends Matrix>(A: U, a: T, b: T, scalar?: number): U {
+    const d = a.dimension;
+    if (A.rowDimension !== b.dimension || A.colDimension !== a.dimension) {
+      throw new Error('LinAlgHelpers.setOuterProduct(): vector dimensions do not match with matrix.');
+    } 
+    switch (d) {
+      case 2:
+        return (A as any).setOuterProduct(a as any, b as any, scalar) as U;
+      case 3:
+        return (A as any).setOuterProduct(a as any, b as any, scalar) as U;
+      case 4:
+        return (A as any).setOuterProduct(a as any, b as any, scalar) as U;
+      default:
+        throw new Error(`LinAlgHelpers.setOuterProduct(): vector dimension (${d}) is not Vector2, Vector3, or Vector4.`);
+    }
+  }
+
+  /**
+   * Computes the outer product ab^T and applies it to a matrix.
+   * @param a 
+   * @param b 
+   * @param scalar 
+   */
+  public static addMatrixOuterProduct <T extends Vector, U extends Matrix>(A: U, a: T, b: T, scalar?: number): U {
+    const d = a.dimension;
+    if (A.rowDimension !== b.dimension || A.colDimension !== a.dimension) {
+      throw new Error('LinAlgHelpers.addOuterProduct(): vector dimensions do not match with matrix.');
+    } 
+    switch (d) {
+      case 2:
+        return (A as any).addOuterProduct(a as any, b as any, scalar) as U;
+      case 3:
+        return (A as any).addOuterProduct(a as any, b as any, scalar) as U;
+      case 4:
+        return (A as any).addOuterProduct(a as any, b as any, scalar) as U;
+      default:
+        throw new Error(`LinAlgHelpers.addOuterProduct(): vector dimension (${d}) is not Vector2, Vector3, or Vector4.`);
+    }
+  }
+
+  /**
    * Gets a row from the matrix as a vector.
    * @param m The matrix.
    * @param i The row number (zero-based index).

@@ -211,6 +211,87 @@ export class Matrix4 implements Matrix {
 
     return this;
 	}
+
+	  /**
+   * Computes the outer product of two vectors (a*b^T).
+   * @param {Vector4} a The first vector.
+   * @param {Vector4} b The second vector.
+   * @param {number} scalar The number to scale the matrix by (defaults to 1).
+   */
+  setOuterProduct (a: Vector4, b: Vector4, scalar: number = 1): this {
+    // computes alpha * (ab^T)
+    const alpha = scalar;
+    const n11 = alpha * a.x * b.x;
+    const n12 = alpha * a.x * b.y;
+		const n13 = alpha * a.x * b.z;
+		const n14 = alpha * a.x * b.w;
+		
+    const n21 = alpha * a.y * b.x;
+    const n22 = alpha * a.y * b.y;
+		const n23 = alpha * a.y * b.z;
+		const n24 = alpha * a.y * b.w;
+		
+		const n31 = alpha * a.z * b.x;
+    const n32 = alpha * a.z * b.y;
+		const n33 = alpha * a.z * b.z;
+		const n34 = alpha * a.z * b.w;
+
+		const n41 = alpha * a.w * b.x;
+    const n42 = alpha * a.w * b.y;
+		const n43 = alpha * a.w * b.z;
+		const n44 = alpha * a.w * b.w;
+		
+    return this.setElements(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44);
+  }
+
+  /**
+   * Adds the outer product of two vectors (a*b^T) to this matrix.
+   * @param {Vector4} a The first vector.
+   * @param {Vector4} b The second vector.
+   * @param {number} scalar The number to scale the matrix by (defaults to 1).
+   */
+  addOuterProduct (a: Vector4, b: Vector4, scalar: number = 1): this {
+    // computes [this + alpha * (ab^T)]
+    const te = this._elements;
+    const alpha = scalar;
+    const n11 = alpha * a.x * b.x;
+    const n12 = alpha * a.x * b.y;
+		const n13 = alpha * a.x * b.z;
+		const n14 = alpha * a.x * b.w;
+		
+    const n21 = alpha * a.y * b.x;
+    const n22 = alpha * a.y * b.y;
+		const n23 = alpha * a.y * b.z;
+		const n24 = alpha * a.y * b.w;
+		
+		const n31 = alpha * a.z * b.x;
+    const n32 = alpha * a.z * b.y;
+		const n33 = alpha * a.z * b.z;
+		const n34 = alpha * a.z * b.w;
+
+		const n41 = alpha * a.w * b.x;
+    const n42 = alpha * a.w * b.y;
+		const n43 = alpha * a.w * b.z;
+		const n44 = alpha * a.w * b.w;
+
+    te[ 0 ] += n11;
+    te[ 1 ] += n21;
+    te[ 2 ] += n31;
+    te[ 3 ] += n41;
+		te[ 4 ] += n12;
+    te[ 5 ] += n22;
+    te[ 6 ] += n32;
+    te[ 7 ] += n42;
+		te[ 8 ] += n13;
+		te[ 9 ] += n23;
+		te[ 10 ] += n33;
+		te[ 11 ] += n43;
+		te[ 12 ] += n14;
+		te[ 13 ] += n24;
+		te[ 14 ] += n34;
+		te[ 15 ] += n44;
+    return this;
+  }
 	
 	/**
    * Swaps rows in-place in the matrix. Zero is the first row.
