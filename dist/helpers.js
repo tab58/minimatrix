@@ -155,6 +155,27 @@ var LinAlgHelpers = /** @class */ (function () {
                 throw new Error("LinAlgHelpers.transformVector(): vector size (" + n + ") not a Vector2, Vector3, or Vector4.");
         }
     };
+    /**
+   * Transforms (multiplies) a vector by a matrix.
+   * @param m The matrix to transform the vector by.
+   * @param v The vector to transform.
+   */
+    LinAlgHelpers.transformRowVector = function (m, v) {
+        if (m.rowDimension !== v.dimension) {
+            throw new Error("LinAlgHelpers.transformVector(): matrix row (" + m.rowDimension + ") and vector (" + v.dimension + ") dimensions are not equal.");
+        }
+        var n = m.rowDimension;
+        switch (n) {
+            case 2:
+                return m.transformRowVector2(v.clone());
+            case 3:
+                return m.transformRowVector3(v.clone());
+            case 4:
+                return m.transformRowVector4(v.clone());
+            default:
+                throw new Error("LinAlgHelpers.transformRowVector(): vector size (" + n + ") not a Vector2, Vector3, or Vector4.");
+        }
+    };
     return LinAlgHelpers;
 }());
 exports.LinAlgHelpers = LinAlgHelpers;

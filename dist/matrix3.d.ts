@@ -1,4 +1,4 @@
-import { Matrix } from './interfaces';
+import { MathMatrix } from './interfaces';
 import { Vector2 } from './vector2';
 import { Vector3 } from './vector3';
 import { Complex } from './complex';
@@ -6,7 +6,7 @@ import { Complex } from './complex';
  * A 3x3 matrix stored in column-major order.
  * @class Matrix3
  */
-export declare class Matrix3 implements Matrix {
+export declare class Matrix3 implements MathMatrix {
     private _elements;
     private _tempElements;
     readonly rowDimension: number;
@@ -102,7 +102,13 @@ export declare class Matrix3 implements Matrix {
      */
     transformVector2(a: Vector2): Vector2;
     /**
-     * Multiplies a vector by a 3x3 matrix.
+     * Left-multiplies a vector by a 3x3 matrix (result is x^T*A).
+     * @param {Vector3} a The vector to transform.
+     * @returns {Vector3} The original vector, transformed.
+     */
+    transformRowVector3(a: Vector3): Vector3;
+    /**
+     * Right-multiplies a vector by a 3x3 matrix (result is Ax).
      * @param {Vector3} a The vector to transform.
      * @returns {Vector3} The original vector, transformed.
      */

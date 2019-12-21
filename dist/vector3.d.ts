@@ -1,9 +1,9 @@
-import { Vector } from './interfaces';
+import { MathVector } from './interfaces';
 import { Matrix3 } from './matrix3';
 /**
  * A 2-dimensional vector.
  */
-export declare class Vector3 implements Vector {
+export declare class Vector3 implements MathVector {
     private _x;
     private _y;
     private _z;
@@ -337,9 +337,9 @@ export declare class Vector3 implements Vector {
     toArray(array?: number[], offset?: number): number[];
     /**
      * Rotates a vector by an angle about another vector.
-     * @param {Vector} center The center of rotation.
+     * @param {MathVector} center The center of rotation.
      * @param {number} angle The angle in radians to rotate the vector by.
-     * @returns {Vector} This vector.
+     * @returns {MathVector} This vector.
      */
     rotateAround(axis: this, angle: number): this;
 }

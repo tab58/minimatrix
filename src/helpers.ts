@@ -4,7 +4,9 @@ import { Vector4 } from './vector4';
 import { Matrix2 } from './matrix2';
 import { Matrix3 } from './matrix3';
 import { Matrix4 } from './matrix4';
-import { Vector, Matrix } from './interfaces';
+
+type Vector = Vector2 | Vector3 | Vector4;
+type Matrix = Matrix2 | Matrix3 | Matrix4;
 
 /** Helpers for common linear algebra functions. */
 export class LinAlgHelpers {
@@ -32,41 +34,41 @@ export class LinAlgHelpers {
    * @param b 
    * @param scalar 
    */
-  public static setMatrixOuterProduct <T extends Vector, U extends Matrix>(A: U, a: T, b: T, scalar?: number): U {
+  public static setMatrixOuterProduct (A: Matrix, a: Vector, b: Vector, scalar?: number): Matrix {
     const d = a.dimension;
     if (A.rowDimension !== b.dimension || A.colDimension !== a.dimension) {
       throw new Error('LinAlgHelpers.setOuterProduct(): vector dimensions do not match with matrix.');
     } 
     switch (d) {
       case 2:
-        return (A as any).setOuterProduct(a as any, b as any, scalar) as U;
+        return (A as any).setOuterProduct(a as any, b as any, scalar);
       case 3:
-        return (A as any).setOuterProduct(a as any, b as any, scalar) as U;
+        return (A as any).setOuterProduct(a as any, b as any, scalar);
       case 4:
-        return (A as any).setOuterProduct(a as any, b as any, scalar) as U;
+        return (A as any).setOuterProduct(a as any, b as any, scalar);
       default:
         throw new Error(`LinAlgHelpers.setOuterProduct(): vector dimension (${d}) is not Vector2, Vector3, or Vector4.`);
     }
   }
 
   /**
-   * Computes the outer product ab^T and applies it to a matrix.
+   * Computes the outer product alpha*(ab^T) and adds it to a matrix.
    * @param a 
    * @param b 
    * @param scalar 
    */
-  public static addMatrixOuterProduct <T extends Vector, U extends Matrix>(A: U, a: T, b: T, scalar?: number): U {
+  public static addMatrixOuterProduct (A: Matrix, a: Vector, b: Vector, scalar?: number): Matrix {
     const d = a.dimension;
     if (A.rowDimension !== b.dimension || A.colDimension !== a.dimension) {
       throw new Error('LinAlgHelpers.addOuterProduct(): vector dimensions do not match with matrix.');
     } 
     switch (d) {
       case 2:
-        return (A as any).addOuterProduct(a as any, b as any, scalar) as U;
+        return A.addOuterProduct(a as any, b as any, scalar);
       case 3:
-        return (A as any).addOuterProduct(a as any, b as any, scalar) as U;
+        return (A as any).addOuterProduct(a as any, b as any, scalar);
       case 4:
-        return (A as any).addOuterProduct(a as any, b as any, scalar) as U;
+        return (A as any).addOuterProduct(a as any, b as any, scalar);
       default:
         throw new Error(`LinAlgHelpers.addOuterProduct(): vector dimension (${d}) is not Vector2, Vector3, or Vector4.`);
     }
@@ -156,6 +158,28 @@ export class LinAlgHelpers {
         return (m as Matrix4).transformVector4((v as Vector4).clone());
       default:
         throw new Error(`LinAlgHelpers.transformVector(): vector size (${n}) not a Vector2, Vector3, or Vector4.`);
+    }
+  }
+
+    /**
+   * Transforms (multiplies) a vector by a matrix.
+   * @param m The matrix to transform the vector by.
+   * @param v The vector to transform.
+   */
+  public static transformRowVector (m: Matrix, v: Vector): Vector {
+    if (m.rowDimension !== v.dimension) {
+      throw new Error(`LinAlgHelpers.transformVector(): matrix row (${m.rowDimension}) and vector (${v.dimension}) dimensions are not equal.`);
+    }
+    const n = m.rowDimension;
+    switch (n) {
+      case 2:
+        return (m as Matrix2).transformRowVector2((v as Vector2).clone());
+      case 3:
+        return (m as Matrix3).transformRowVector3((v as Vector3).clone());
+      case 4:
+        return (m as Matrix4).transformRowVector4((v as Vector4).clone());
+      default:
+        throw new Error(`LinAlgHelpers.transformRowVector(): vector size (${n}) not a Vector2, Vector3, or Vector4.`);
     }
   }
 }

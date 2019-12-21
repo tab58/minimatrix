@@ -9,7 +9,7 @@
  * @author tschw
  */
 import _Math from './core';
-import { Matrix } from './interfaces';
+import { MathMatrix } from './interfaces';
 import { Vector2 } from './vector2';
 import { Vector3 } from './vector3';
 import { formatPrintNumber } from './utils';
@@ -20,7 +20,7 @@ import { Complex } from './complex';
  * A 3x3 matrix stored in column-major order.
  * @class Matrix3
  */
-export class Matrix3 implements Matrix {
+export class Matrix3 implements MathMatrix {
   private _elements: number[];
   private _tempElements: number[];
 
@@ -296,7 +296,36 @@ export class Matrix3 implements Matrix {
   }
 
   /**
-   * Multiplies a vector by a 3x3 matrix.
+   * Left-multiplies a vector by a 3x3 matrix (result is x^T*A).
+   * @param {Vector3} a The vector to transform.
+   * @returns {Vector3} The original vector, transformed.
+   */
+  transformRowVector3 (a: Vector3): Vector3 {
+    const ae = this._elements;
+    const x = a.x;
+    const y = a.y;
+    const z = a.z;
+
+    let a1 = ae[ 0 ];
+    let a2 = ae[ 1 ];
+    let a3 = ae[ 2 ];
+    const _x = a1 * x + a2 * y + a3 * z;
+
+    a1 = ae[ 3 ];
+    a2 = ae[ 4 ];
+    a3 = ae[ 5 ];
+    const _y = a1 * x + a2 * y + a3 * z;
+
+    a1 = ae[ 6 ];
+    a2 = ae[ 7 ];
+    a3 = ae[ 8 ];
+    const _z = a1 * x + a2 * y + a3 * z;
+    
+    return a.set(_x, _y, _z);
+  }
+
+  /**
+   * Right-multiplies a vector by a 3x3 matrix (result is Ax).
    * @param {Vector3} a The vector to transform.
    * @returns {Vector3} The original vector, transformed.
    */
@@ -611,7 +640,7 @@ export class Matrix3 implements Matrix {
   }
 
   /**
-   * Adds the outer product of two vectors (a*b^T) to this matrix.
+   * Adds the outer product of two vectors alpha*(a*b^T) to this matrix.
    * @param {Vector3} a The first vector.
    * @param {Vector3} b The second vector.
    * @param {number} scalar The number to scale the matrix by (defaults to 1).

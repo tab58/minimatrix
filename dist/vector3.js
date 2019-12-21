@@ -624,9 +624,9 @@ var Vector3 = /** @class */ (function () {
     };
     /**
      * Rotates a vector by an angle about another vector.
-     * @param {Vector} center The center of rotation.
+     * @param {MathVector} center The center of rotation.
      * @param {number} angle The angle in radians to rotate the vector by.
-     * @returns {Vector} This vector.
+     * @returns {MathVector} This vector.
      */
     Vector3.prototype.rotateAround = function (axis, angle) {
         // Rodrigues formula: v' = v * cos(t) + (k X v) * sin(t) + k * (k . v) * (1 - cos(t))

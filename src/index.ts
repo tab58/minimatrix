@@ -1,5 +1,5 @@
 import * as Compare from './compare';
-import { Vector, Matrix } from './interfaces'; 
+// import { MathVector, MathMatrix } from './interfaces';
 import { Complex } from './complex';
 import { Matrix2 } from './matrix2';
 import { Matrix3 } from './matrix3';
@@ -18,7 +18,7 @@ export {
   Vector4,
   Complex,
   Compare,
-  Vector,
-  Matrix,
+  // MathVector as Vector,
+  // MathMatrix as Matrix,
   LinAlgHelpers
 };

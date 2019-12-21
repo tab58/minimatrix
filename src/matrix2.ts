@@ -7,14 +7,14 @@
  * @author tschw
  */
 import { Vector2 } from './vector2';
-import { Matrix } from './interfaces';
+import { MathMatrix } from './interfaces';
 import { formatPrintNumber } from './utils';
 
 /**
  * A 2x2 matrix stored in column-major order.
  * @class Matrix2
  */
-export class Matrix2 implements Matrix {
+export class Matrix2 implements MathMatrix {
   private _elements: number[];
   private _tempElements: number[];
 
@@ -213,7 +213,25 @@ export class Matrix2 implements Matrix {
   }
 
   /**
-   * Multiplies a vector by a 2x2 matrix.
+   * Left-multiplies a vector by a 2x2 matrix (result is v^T*A).
+   * @param {Vector2} a The vector to transform.
+   * @returns {Vector2} This vector.
+   */
+  transformRowVector2 (v: Vector2): Vector2 {
+    const ae = this._elements;
+    const a11 = ae[ 0 ];
+    const a12 = ae[ 2 ];
+    const a21 = ae[ 1 ];
+    const a22 = ae[ 3 ];
+    const x = v.x;
+    const y = v.y;
+    const _x = a11 * x + a21 * y;
+    const _y = a12 * x + a22 * y;
+    return v.set(_x, _y);
+  }
+
+  /**
+   * Right-multiplies a vector by a 2x2 matrix (result is Av).
    * @param {Vector2} a The vector to transform.
    * @returns {Vector2} This vector.
    */
@@ -443,7 +461,7 @@ export class Matrix2 implements Matrix {
   }
 
   /**
-   * Adds the outer product of two vectors (a*b^T) to this matrix.
+   * Adds the outer product of two vectors alpha*(a*b^T) to this matrix.
    * @param {Vector2} a The first vector.
    * @param {Vector2} b The second vector.
    * @param {number} scalar The number to scale the matrix by (defaults to 1).

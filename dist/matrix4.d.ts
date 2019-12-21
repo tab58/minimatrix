@@ -1,7 +1,7 @@
 import { Vector3 } from './vector3';
 import { Vector4 } from './vector4';
-import { Matrix } from './interfaces';
-export declare class Matrix4 implements Matrix {
+import { MathMatrix } from './interfaces';
+export declare class Matrix4 implements MathMatrix {
     private _elements;
     private _tempElements;
     readonly rowDimension: number;
@@ -70,6 +70,17 @@ export declare class Matrix4 implements Matrix {
     multiply(m: this): this;
     premultiply(m: this): this;
     transformVector3(v: Vector3): Vector3;
+    /**
+   * Left-multiplies a vector by a 4x4 matrix (result is x^T*A).
+   * @param {Vector4} a The vector to transform.
+   * @returns {Vector4} The original vector, transformed.
+   */
+    transformRowVector4(v: Vector4): Vector4;
+    /**
+   * Right-multiplies a vector by a 4x4 matrix (result is Ax).
+   * @param {Vector4} a The vector to transform.
+   * @returns {Vector4} The original vector, transformed.
+   */
     transformVector4(v: Vector4): Vector4;
     multiplyMatrices(a: this, b: this): this;
     multiplyScalar(s: number): this;

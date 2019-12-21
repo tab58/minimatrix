@@ -7,19 +7,23 @@
  * @author zz85 / http://www.lab4games.net/zz85/blog
  */
 import _Math from './core';
-import { Vector } from './interfaces';
+import { MathVector } from './interfaces';
 import { Matrix2 } from './matrix2';
 import { Matrix3 } from './matrix3';
 
 /**
  * A 2-dimensional vector.
  */
-export class Vector2 implements Vector {
-  private _x: number;
-  private _y: number;
+export class Vector2 implements MathVector {
+  private _components: number[];
 
-  public get x (): number { return this._x; }
-  public get y (): number { return this._y; }
+  private get _x (): number { return this._components[0]; }
+  private get _y (): number { return this._components[1]; }
+  private set _x (value: number) { this._components[0] = value; }
+  private set _y (value: number) { this._components[1] = value; }
+
+  public get x (): number { return this._components[0]; }
+  public get y (): number { return this._components[1]; }
 
   public readonly dimension: number = 2;
 
@@ -29,8 +33,7 @@ export class Vector2 implements Vector {
    * @param {number} y The y-component value.
    */
   constructor (x: number = 0, y: number = 0) {
-    this._x = x;
-    this._y = y;
+    this._components = [x, y];
   }
 
   /**

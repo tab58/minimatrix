@@ -291,7 +291,31 @@ var Matrix3 = /** @class */ (function () {
         return a.set(_x, _y);
     };
     /**
-     * Multiplies a vector by a 3x3 matrix.
+     * Left-multiplies a vector by a 3x3 matrix (result is x^T*A).
+     * @param {Vector3} a The vector to transform.
+     * @returns {Vector3} The original vector, transformed.
+     */
+    Matrix3.prototype.transformRowVector3 = function (a) {
+        var ae = this._elements;
+        var x = a.x;
+        var y = a.y;
+        var z = a.z;
+        var a1 = ae[0];
+        var a2 = ae[1];
+        var a3 = ae[2];
+        var _x = a1 * x + a2 * y + a3 * z;
+        a1 = ae[3];
+        a2 = ae[4];
+        a3 = ae[5];
+        var _y = a1 * x + a2 * y + a3 * z;
+        a1 = ae[6];
+        a2 = ae[7];
+        a3 = ae[8];
+        var _z = a1 * x + a2 * y + a3 * z;
+        return a.set(_x, _y, _z);
+    };
+    /**
+     * Right-multiplies a vector by a 3x3 matrix (result is Ax).
      * @param {Vector3} a The vector to transform.
      * @returns {Vector3} The original vector, transformed.
      */

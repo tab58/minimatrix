@@ -196,7 +196,24 @@ var Matrix2 = /** @class */ (function () {
         return this;
     };
     /**
-     * Multiplies a vector by a 2x2 matrix.
+     * Left-multiplies a vector by a 2x2 matrix (result is v^T*A).
+     * @param {Vector2} a The vector to transform.
+     * @returns {Vector2} This vector.
+     */
+    Matrix2.prototype.transformRowVector2 = function (v) {
+        var ae = this._elements;
+        var a11 = ae[0];
+        var a12 = ae[2];
+        var a21 = ae[1];
+        var a22 = ae[3];
+        var x = v.x;
+        var y = v.y;
+        var _x = a11 * x + a21 * y;
+        var _y = a12 * x + a22 * y;
+        return v.set(_x, _y);
+    };
+    /**
+     * Right-multiplies a vector by a 2x2 matrix (result is Av).
      * @param {Vector2} a The vector to transform.
      * @returns {Vector2} This vector.
      */

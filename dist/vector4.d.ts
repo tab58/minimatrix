@@ -1,6 +1,6 @@
 import { Matrix4 } from './matrix4';
-import { Vector } from './interfaces';
-export declare class Vector4 implements Vector {
+import { MathVector } from './interfaces';
+export declare class Vector4 implements MathVector {
     private _x;
     private _y;
     private _z;

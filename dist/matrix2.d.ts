@@ -1,10 +1,10 @@
 import { Vector2 } from './vector2';
-import { Matrix } from './interfaces';
+import { MathMatrix } from './interfaces';
 /**
  * A 2x2 matrix stored in column-major order.
  * @class Matrix2
  */
-export declare class Matrix2 implements Matrix {
+export declare class Matrix2 implements MathMatrix {
     private _elements;
     private _tempElements;
     readonly rowDimension: number;
@@ -80,7 +80,13 @@ export declare class Matrix2 implements Matrix {
      */
     copy(m: this): this;
     /**
-     * Multiplies a vector by a 2x2 matrix.
+     * Left-multiplies a vector by a 2x2 matrix (result is v^T*A).
+     * @param {Vector2} a The vector to transform.
+     * @returns {Vector2} This vector.
+     */
+    transformRowVector2(v: Vector2): Vector2;
+    /**
+     * Right-multiplies a vector by a 2x2 matrix (result is Av).
      * @param {Vector2} a The vector to transform.
      * @returns {Vector2} This vector.
      */

@@ -1,10 +1,10 @@
-import { Vector } from './interfaces';
+import { MathVector } from './interfaces';
 import { Matrix2 } from './matrix2';
 import { Matrix3 } from './matrix3';
 /**
  * A 2-dimensional vector.
  */
-export declare class Vector2 implements Vector {
+export declare class Vector2 implements MathVector {
     private _x;
     private _y;
     get x(): number;

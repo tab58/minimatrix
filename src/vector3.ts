@@ -9,7 +9,7 @@
  * @author WestLangley / http://github.com/WestLangley
  */
 import _Math from './core';
-import { Vector } from './interfaces';
+import { MathVector } from './interfaces';
 import { Matrix3 } from './matrix3';
 
 const vec3HelperFunctions = {
@@ -21,21 +21,24 @@ const vec3HelperFunctions = {
 /**
  * A 2-dimensional vector.
  */
-export class Vector3 implements Vector {
-  private _x: number;
-  private _y: number;
-  private _z: number;
+export class Vector3 implements MathVector {
+  private _components: number[];
 
-  public get x (): number { return this._x; }
-  public get y (): number { return this._y; }
-  public get z (): number { return this._z; }
+  private get _x (): number { return this._components[0]; }
+  private get _y (): number { return this._components[1]; }
+  private get _z (): number { return this._components[2]; }
+  private set _x (value: number) { this._components[0] = value; }
+  private set _y (value: number) { this._components[1] = value; }
+  private set _z (value: number) { this._components[2] = value; }
+
+  public get x (): number { return this._components[0]; }
+  public get y (): number { return this._components[1]; }
+  public get z (): number { return this._components[2]; }
 
   public readonly dimension: number = 3;
 
   constructor (x: number = 0, y: number = 0, z: number = 0) {
-    this._x = x;
-    this._y = y;
-    this._z = z;
+    this._components = [x, y, z];
   }
 
   /**
@@ -640,9 +643,9 @@ export class Vector3 implements Vector {
   
   /**
    * Rotates a vector by an angle about another vector.
-   * @param {Vector} center The center of rotation.
+   * @param {MathVector} center The center of rotation.
    * @param {number} angle The angle in radians to rotate the vector by.
-   * @returns {Vector} This vector.
+   * @returns {MathVector} This vector.
    */
   rotateAround (axis: this, angle: number): this {
     // Rodrigues formula: v' = v * cos(t) + (k X v) * sin(t) + k * (k . v) * (1 - cos(t))

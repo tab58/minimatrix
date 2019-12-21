@@ -1,4 +1,11 @@
-import { Vector, Matrix } from './interfaces';
+import { Vector2 } from './vector2';
+import { Vector3 } from './vector3';
+import { Vector4 } from './vector4';
+import { Matrix2 } from './matrix2';
+import { Matrix3 } from './matrix3';
+import { Matrix4 } from './matrix4';
+declare type Vector = Vector2 | Vector3 | Vector4;
+declare type Matrix = Matrix2 | Matrix3 | Matrix4;
 /** Helpers for common linear algebra functions. */
 export declare class LinAlgHelpers {
     /**
@@ -12,14 +19,14 @@ export declare class LinAlgHelpers {
      * @param b
      * @param scalar
      */
-    static setMatrixOuterProduct<T extends Vector, U extends Matrix>(A: U, a: T, b: T, scalar?: number): U;
+    static setMatrixOuterProduct(A: Matrix, a: Vector, b: Vector, scalar?: number): Matrix;
     /**
      * Computes the outer product ab^T and applies it to a matrix.
      * @param a
      * @param b
      * @param scalar
      */
-    static addMatrixOuterProduct<T extends Vector, U extends Matrix>(A: U, a: T, b: T, scalar?: number): U;
+    static addMatrixOuterProduct(A: Matrix, a: Vector, b: Vector, scalar?: number): Matrix;
     /**
      * Gets a row from the matrix as a vector.
      * @param m The matrix.
@@ -45,4 +52,11 @@ export declare class LinAlgHelpers {
      * @param v The vector to transform.
      */
     static transformVector(m: Matrix, v: Vector): Vector;
+    /**
+   * Transforms (multiplies) a vector by a matrix.
+   * @param m The matrix to transform the vector by.
+   * @param v The vector to transform.
+   */
+    static transformRowVector(m: Matrix, v: Vector): Vector;
 }
+export {};

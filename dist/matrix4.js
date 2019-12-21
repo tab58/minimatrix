@@ -350,6 +350,28 @@ var Matrix4 = /** @class */ (function () {
         var _z = e[2] * x + e[6] * y + e[10] * z + e[14];
         return v.set(_x, _y, _z);
     };
+    /**
+   * Left-multiplies a vector by a 4x4 matrix (result is x^T*A).
+   * @param {Vector4} a The vector to transform.
+   * @returns {Vector4} The original vector, transformed.
+   */
+    Matrix4.prototype.transformRowVector4 = function (v) {
+        var x = v.x;
+        var y = v.y;
+        var z = v.z;
+        var w = v.w;
+        var e = this._elements;
+        var _x = e[0] * x + e[1] * y + e[2] * z + e[3] * w;
+        var _y = e[4] * x + e[5] * y + e[6] * z + e[7] * w;
+        var _z = e[8] * x + e[9] * y + e[10] * z + e[11] * w;
+        var _w = e[12] * x + e[13] * y + e[14] * z + e[15] * w;
+        return v.set(_x, _y, _z, _w);
+    };
+    /**
+   * Right-multiplies a vector by a 4x4 matrix (result is Ax).
+   * @param {Vector4} a The vector to transform.
+   * @returns {Vector4} The original vector, transformed.
+   */
     Matrix4.prototype.transformVector4 = function (v) {
         var x = v.x;
         var y = v.y;

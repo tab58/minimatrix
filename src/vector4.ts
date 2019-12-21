@@ -7,13 +7,19 @@
  */
 import _Math from './core';
 import { Matrix4 } from './matrix4';
-import { Vector } from './interfaces';
+import { MathVector } from './interfaces';
 
-export class Vector4 implements Vector {
-  private _x: number;
-  private _y: number;
-  private _z: number;
-  private _w: number;
+export class Vector4 implements MathVector {
+	private _components: number[];
+
+  private get _x (): number { return this._components[0]; }
+  private get _y (): number { return this._components[1]; }
+  private get _z (): number { return this._components[2]; }
+  private get _w (): number { return this._components[3]; }
+  private set _x (value: number) { this._components[0] = value; }
+  private set _y (value: number) { this._components[1] = value; }
+  private set _z (value: number) { this._components[2] = value; }
+  private set _w (value: number) { this._components[3] = value; }
 
   public get x (): number { return this._x; }
   public get y (): number { return this._y; }
@@ -23,10 +29,7 @@ export class Vector4 implements Vector {
   public readonly dimension: number = 4;
   
   constructor (x: number = 0, y: number = 0, z: number = 0, w: number = 0) {
-    this._x = x;
-    this._y = y;
-    this._z = z;
-    this._w = w;
+		this._components = [x, y, z, w];
   }
 
   set (x: number, y: number, z: number, w: number): this {

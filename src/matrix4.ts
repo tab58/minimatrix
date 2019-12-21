@@ -13,10 +13,10 @@
 import _Math from './core';
 import { Vector3 } from './vector3';
 import { Vector4 } from './vector4';
-import { Matrix } from './interfaces';
+import { MathMatrix } from './interfaces';
 import { formatPrintNumber } from './utils';
 
-export class Matrix4 implements Matrix {
+export class Matrix4 implements MathMatrix {
   private _elements: number[];
   private _tempElements: number[];
 
@@ -245,7 +245,7 @@ export class Matrix4 implements Matrix {
   }
 
   /**
-   * Adds the outer product of two vectors (a*b^T) to this matrix.
+   * Adds the outer product of two vectors alpha*(a*b^T) to this matrix.
    * @param {Vector4} a The first vector.
    * @param {Vector4} b The second vector.
    * @param {number} scalar The number to scale the matrix by (defaults to 1).
@@ -373,6 +373,30 @@ export class Matrix4 implements Matrix {
 		return v.set(_x, _y, _z);
 	}
 
+	/**
+   * Left-multiplies a vector by a 4x4 matrix (result is x^T*A).
+   * @param {Vector4} a The vector to transform.
+   * @returns {Vector4} The original vector, transformed.
+   */
+	transformRowVector4 (v: Vector4): Vector4 {
+		const x = v.x;
+		const y = v.y;
+		const z = v.z;
+		const w = v.w;
+		const e = this._elements;
+		
+		const _x = e[ 0 ] * x + e[ 1 ] * y + e[ 2 ] * z + e[ 3 ] * w;
+		const _y = e[ 4 ] * x + e[ 5 ] * y + e[ 6 ] * z + e[ 7 ] * w;
+		const _z = e[ 8 ] * x + e[ 9 ] * y + e[ 10 ] * z + e[ 11 ] * w;
+		const _w = e[ 12 ] * x + e[ 13 ] * y + e[ 14 ] * z + e[ 15 ] * w;
+		return v.set(_x, _y, _z, _w);
+	}
+
+	/**
+   * Right-multiplies a vector by a 4x4 matrix (result is Ax).
+   * @param {Vector4} a The vector to transform.
+   * @returns {Vector4} The original vector, transformed.
+   */
 	transformVector4 (v: Vector4): Vector4 {
 		const x = v.x;
 		const y = v.y;
