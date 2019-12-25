@@ -13,9 +13,9 @@ import { MathVector } from './interfaces';
 import { Matrix3 } from './matrix3';
 
 const vec3HelperFunctions = {
-  clampScalar: (..._: any[]): any => {},
-  projectOnPlane: (..._: any[]): any => {},
-  reflect: (..._: any[]): any => {}
+  clampScalar: 0 as any,
+  projectOnPlane: 0 as any,
+  reflect: 0 as any
 };
 
 /**
@@ -25,10 +25,12 @@ export class Vector3 implements MathVector {
   private _components: number[];
 
   private get _x (): number { return this._components[0]; }
-  private get _y (): number { return this._components[1]; }
-  private get _z (): number { return this._components[2]; }
   private set _x (value: number) { this._components[0] = value; }
+
+  private get _y (): number { return this._components[1]; }
   private set _y (value: number) { this._components[1] = value; }
+
+  private get _z (): number { return this._components[2]; }
   private set _z (value: number) { this._components[2] = value; }
 
   public get x (): number { return this._components[0]; }
@@ -37,7 +39,7 @@ export class Vector3 implements MathVector {
 
   public readonly dimension: number = 3;
 
-  constructor (x: number = 0, y: number = 0, z: number = 0) {
+  constructor (x = 0, y = 0, z = 0) {
     this._components = [x, y, z];
   }
 
@@ -261,7 +263,7 @@ export class Vector3 implements MathVector {
    * @return {Vector3} This vector.
    */
   multiplyMatrix3 (m: Matrix3): this {
-    return m.transformVector3(this) as this;
+    return m.transformVector(this) as this;
   }
 
   /**
@@ -315,7 +317,7 @@ export class Vector3 implements MathVector {
    * Calculates the outer product of the matrix.
    * @param scalar A scalar to multiply the outer product by.
    */
-  getOuterProduct (scalar: number = 1): Matrix3 {
+  getOuterProduct (scalar = 1): Matrix3 {
     const u1 = this._x;
     const u2 = this._y;
     const u3 = this._z;
@@ -621,7 +623,7 @@ export class Vector3 implements MathVector {
    * @param {number} offset The offset to start from in the array. Default is zero.
    * @returns {Vector3} This vector.
    */
-  fromArray (array: number[], offset: number = 0): this {
+  fromArray (array: number[], offset = 0): this {
     this._x = array[ offset ];
     this._y = array[ offset + 1 ];
     this._z = array[ offset + 2 ];
@@ -634,7 +636,7 @@ export class Vector3 implements MathVector {
    * @param {number} offset The offset to start from in the array. Default is zero.
    * @returns {number[]} The array argument.
    */
-  toArray (array: number[] = [], offset: number = 0): number[] {
+  toArray (array: number[] = [], offset = 0): number[] {
     array[ offset ] = this._x;
     array[ offset + 1 ] = this._y;
     array[ offset + 2 ] = this._z;
@@ -649,12 +651,11 @@ export class Vector3 implements MathVector {
    */
   rotateAround (axis: this, angle: number): this {
     // Rodrigues formula: v' = v * cos(t) + (k X v) * sin(t) + k * (k . v) * (1 - cos(t))
-    const v = this;
     const c = _Math.cos(angle);
     const s = _Math.sin(angle);
     const k = axis.clone().normalize();
-    const kxv = k.clone().cross(v).multiplyScalar(s);
-    const kdv = k.dot(v) * (1 - c);
+    const kxv = k.clone().cross(this).multiplyScalar(s);
+    const kdv = k.dot(this) * (1 - c);
     const kkv = k.multiplyScalar(kdv);
     
     return this.multiplyScalar(c)  // v * cos(t)
@@ -669,7 +670,7 @@ export class Vector3 implements MathVector {
  * @param {number} maxVal The maximum value.
  * @returns {Vector3} This vector.
  */
-vec3HelperFunctions.clampScalar = (function () {
+vec3HelperFunctions.clampScalar = (function (): (minVal: number, maxVal: number, vector: Vector3) => Vector3 {
   const min = new Vector3();
   const max = new Vector3();
   return function clampScalar (minVal: number, maxVal: number, vector: Vector3): Vector3 {
@@ -685,7 +686,7 @@ vec3HelperFunctions.clampScalar = (function () {
  * @param {Vector3} vector The vector to project.
  * @returns {Vector3} This vector.
  */
-vec3HelperFunctions.projectOnPlane = (function () {
+vec3HelperFunctions.projectOnPlane = (function (): (planeNormal: Vector3, vector: Vector3) => Vector3 {
   const v = new Vector3();
   const n = new Vector3();
   return function projectOnPlane (planeNormal: Vector3, vector: Vector3): Vector3 {
@@ -700,10 +701,10 @@ vec3HelperFunctions.projectOnPlane = (function () {
  * @param {Vector3} normal The plane normal.
  * @param {Vector3} vector This vector.
  */
-vec3HelperFunctions.reflect = (function () {
+vec3HelperFunctions.reflect = (function (): (normal: Vector3, vector: Vector3) => Vector3 {
   // reflect incident vector off plane orthogonal to normal
   const n = new Vector3();
-  return function reflect (normal: Vector3, vector: Vector3) {
+  return function reflect (normal: Vector3, vector: Vector3): Vector3 {
     n.copy(normal).normalize();
     const d = 2 * vector.dot(n);
     n.multiplyScalar(d);

@@ -259,7 +259,7 @@ const core = {
     return Math.max(min, _Math.min(max, value));
   },
 
-  hypot: function (w: number, z: number) {
+  hypot: function (w: number, z: number): number {
     // rewritten to deal with overflow/underflow
     const a = w;
     const b = z;
@@ -273,7 +273,7 @@ const core = {
     return u * _Math.sqrt(1 + t * t);
   },
 
-  // compute euclidian modulo of m % n
+  // compute Euclidean modulo of m % n
   // https://en.wikipedia.org/wiki/Modulo_operation
 
   euclideanModulo: function (n: number, m: number): number {
@@ -281,17 +281,17 @@ const core = {
   },
 
   // Linear mapping from range <a1, a2> to range <b1, b2>
-  mapLinear: function (x: number, a1: number, a2: number, b1: number, b2: number) {
+  mapLinear: function (x: number, a1: number, a2: number, b1: number, b2: number): number {
     return b1 + (x - a1) * (b2 - b1) / (a2 - a1);
   },
 
   // https://en.wikipedia.org/wiki/Linear_interpolation
-  lerp: function (x: number, y: number, t: number) {
+  lerp: function (x: number, y: number, t: number): number {
     return (1.0 - t) * x + t * y;
   },
 
   // http://en.wikipedia.org/wiki/Smoothstep
-  smoothstep: function (x: number, min: number, max: number) {
+  smoothstep: function (x: number, min: number, max: number): number {
     if (x <= min) {
       return 0;
     }
@@ -302,7 +302,7 @@ const core = {
     return x * x * (3 - 2 * x);
   },
 
-  smootherstep: function (x: number, min: number, max: number) {
+  smootherstep: function (x: number, min: number, max: number): number {
     if (x <= min) {
       return 0;
     }
@@ -314,38 +314,38 @@ const core = {
   },
 
   // Random integer from <low, high> interval
-  randInt: function (low: number, high: number) {
+  randInt: function (low: number, high: number): number {
     return low + _Math.floor(_Math.random() * (high - low + 1));
   },
 
   // Random float from <low, high> interval
 
-  randFloat: function (low: number, high: number) {
+  randFloat: function (low: number, high: number): number {
     return low + _Math.random() * (high - low);
   },
 
   // Random float from <-range/2, range/2> interval
-  randFloatSpread: function (range: number) {
+  randFloatSpread: function (range: number): number {
     return range * (0.5 - _Math.random());
   },
 
-  degToRad: function (degrees: number) {
+  degToRad: function (degrees: number): number {
     return degrees * core.DEG2RAD;
   },
 
-  radToDeg: function (radians: number) {
+  radToDeg: function (radians: number): number {
     return radians * core.RAD2DEG;
   },
 
-  isPowerOfTwo: function (value: number) {
+  isPowerOfTwo: function (value: number): boolean {
     return (value & (value - 1)) === 0 && value !== 0;
   },
 
-  nearestPowerOfTwo: function (value: number) {
+  nearestPowerOfTwo: function (value: number): number {
     return _Math.pow(2, _Math.round(_Math.log(value) / _Math.LN2));
   },
 
-  nextPowerOfTwo: (value: number) => {
+  nextPowerOfTwo: (value: number): number => {
     value--;
     value |= value >> 1;
     value |= value >> 2;

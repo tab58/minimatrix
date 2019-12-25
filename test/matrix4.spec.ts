@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Matrix4 } from '../src/index';
+import { Matrix4, Vector3, Vector4 } from '../src/index';
 
 const EPS = 1e-14;
 
@@ -129,6 +129,151 @@ describe('Matrix4', () => {
         expect(elems[i]).to.be.eql(elemArray[offset + i]);  
       }
     });
+    it('should swap rows in a matrix', () => {
+      const A = new Matrix4();
+      A.setElements(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53);
+      A.swapRows(0, 2);
+      expect(A.get(2, 0)).to.be.eql(2);
+      expect(A.get(2, 1)).to.be.eql(3);
+      expect(A.get(2, 2)).to.be.eql(5);
+      expect(A.get(2, 3)).to.be.eql(7);
+      expect(A.get(1, 0)).to.be.eql(11);
+      expect(A.get(1, 1)).to.be.eql(13);
+      expect(A.get(1, 2)).to.be.eql(17);
+      expect(A.get(1, 3)).to.be.eql(19);
+      expect(A.get(0, 0)).to.be.eql(23);
+      expect(A.get(0, 1)).to.be.eql(29);
+      expect(A.get(0, 2)).to.be.eql(31);
+      expect(A.get(0, 3)).to.be.eql(37);
+      expect(A.get(3, 0)).to.be.eql(41);
+      expect(A.get(3, 1)).to.be.eql(43);
+      expect(A.get(3, 2)).to.be.eql(47);
+      expect(A.get(3, 3)).to.be.eql(53);
+
+      expect(A.swapRows.bind(A, 0, 5)).to.throw(`swapRows(): row index out of bounds.`);
+      expect(A.swapRows.bind(A, 5, 0)).to.throw(`swapRows(): row index out of bounds.`);
+      expect(A.swapRows.bind(A, 4, 5)).to.throw(`swapRows(): row index out of bounds.`);
+    });
+    it('should swap columns in a matrix', () => {
+      const A = new Matrix4();
+      A.setElements(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53);
+      A.swapColumns(0, 2);
+      expect(A.get(0, 2)).to.be.eql(2);
+      expect(A.get(0, 1)).to.be.eql(3);
+      expect(A.get(0, 0)).to.be.eql(5);
+      expect(A.get(0, 3)).to.be.eql(7);
+      
+      expect(A.get(1, 2)).to.be.eql(11);
+      expect(A.get(1, 1)).to.be.eql(13);
+      expect(A.get(1, 0)).to.be.eql(17);
+      expect(A.get(1, 3)).to.be.eql(19);
+      
+      expect(A.get(2, 2)).to.be.eql(23);
+      expect(A.get(2, 1)).to.be.eql(29);
+      expect(A.get(2, 0)).to.be.eql(31);
+      expect(A.get(2, 3)).to.be.eql(37);
+
+      expect(A.get(3, 2)).to.be.eql(41);
+      expect(A.get(3, 1)).to.be.eql(43);
+      expect(A.get(3, 0)).to.be.eql(47);
+      expect(A.get(3, 3)).to.be.eql(53);
+
+      expect(A.swapColumns.bind(A, 0, 4)).to.throw(`swapColumns(): column index out of bounds.`);
+      expect(A.swapColumns.bind(A, 4, 0)).to.throw(`swapColumns(): column index out of bounds.`);
+      expect(A.swapColumns.bind(A, 4, 5)).to.throw(`swapColumns(): column index out of bounds.`);
+    });
+    it('should get a row from the matrix', () => {
+      const A = new Matrix4();
+      A.setElements(11, 13, 17, 19,
+        23, 29, 31, 37,
+        41, 43, 47, 53,
+        59, 61, 67, 71);
+      expect(A.getRow(0)).to.be.eql(new Vector4(11, 13, 17, 19));
+      expect(A.getRow(1)).to.be.eql(new Vector4(23, 29, 31, 37));
+      expect(A.getRow(2)).to.be.eql(new Vector4(41, 43, 47, 53));
+      expect(A.getRow(3)).to.be.eql(new Vector4(59, 61, 67, 71));
+      
+      expect(A.getRow.bind(A, 4)).to.throw('getRow(): no row defined at 4.');
+    });
+    it('should get a column from the matrix', () => {
+      const A = new Matrix4();
+      A.setElements(11, 13, 17, 19,
+        23, 29, 31, 37,
+        41, 43, 47, 53,
+        59, 61, 67, 71);
+      expect(A.getColumn(0)).to.be.eql(new Vector4(11, 23, 41, 59));
+      expect(A.getColumn(1)).to.be.eql(new Vector4(13, 29, 43, 61));
+      expect(A.getColumn(2)).to.be.eql(new Vector4(17, 31, 47, 67));
+      expect(A.getColumn(3)).to.be.eql(new Vector4(19, 37, 53, 71));
+
+      expect(A.getColumn.bind(A, 4)).to.throw('getColumn(): no column defined at 4.');
+    });
+    it('should get a value from the matrix', () => {
+      const A = new Matrix4();
+      A.setElements(11, 13, 17, 19,
+        23, 29, 31, 37,
+        41, 43, 47, 53,
+        59, 61, 67, 71);
+      expect(A.get(0, 3)).to.be.eql(19);
+      expect(A.get(2, 2)).to.be.eql(47);
+    });
+    it('should set a value of the matrix', () => {
+      const A = new Matrix4();
+      A.setElements(11, 13, 17, 19,
+        23, 29, 31, 37,
+        41, 43, 47, 53,
+        59, 61, 67, 71);
+      A.set(1, 2, 73);
+
+      expect(A.get(0, 0)).to.be.eql(11);
+      expect(A.get(0, 1)).to.be.eql(13);      
+      expect(A.get(0, 2)).to.be.eql(17);
+      expect(A.get(0, 3)).to.be.eql(19);
+
+      expect(A.get(1, 0)).to.be.eql(23);
+      expect(A.get(1, 1)).to.be.eql(29);      
+      expect(A.get(1, 2)).to.be.eql(73);
+      expect(A.get(1, 3)).to.be.eql(37);
+      
+      expect(A.get(2, 0)).to.be.eql(41);
+      expect(A.get(2, 1)).to.be.eql(43);      
+      expect(A.get(2, 2)).to.be.eql(47);
+      expect(A.get(2, 3)).to.be.eql(53);
+      
+      expect(A.get(3, 0)).to.be.eql(59);
+      expect(A.get(3, 1)).to.be.eql(61);      
+      expect(A.get(3, 2)).to.be.eql(67);
+      expect(A.get(3, 3)).to.be.eql(71);
+    });
+    it('should copy the position from another matrix', () => {
+      const A = new Matrix4();
+      A.setElements(11, 13, 17, 19,
+        23, 29, 31, 37,
+        41, 43, 47, 53,
+        59, 61, 67, 71);
+      const B = new Matrix4();
+      B.copyPosition(A);
+      
+      expect(B.get(0, 0)).to.be.eql(1);
+      expect(B.get(0, 1)).to.be.eql(0);      
+      expect(B.get(0, 2)).to.be.eql(0);
+      expect(B.get(0, 3)).to.be.eql(19);
+
+      expect(B.get(1, 0)).to.be.eql(0);
+      expect(B.get(1, 1)).to.be.eql(1);      
+      expect(B.get(1, 2)).to.be.eql(0);
+      expect(B.get(1, 3)).to.be.eql(37);
+      
+      expect(B.get(2, 0)).to.be.eql(0);
+      expect(B.get(2, 1)).to.be.eql(0);      
+      expect(B.get(2, 2)).to.be.eql(1);
+      expect(B.get(2, 3)).to.be.eql(53);
+      
+      expect(B.get(3, 0)).to.be.eql(0);
+      expect(B.get(3, 1)).to.be.eql(0);      
+      expect(B.get(3, 2)).to.be.eql(0);
+      expect(B.get(3, 3)).to.be.eql(1);
+    });
   });
   describe('Arithmetic Operations', () => {
     it('should add a matrix to another', () => {
@@ -248,6 +393,10 @@ describe('Matrix4', () => {
       expect(Math.abs(a[13] - -3/22) < EPS).to.be.true;
       expect(Math.abs(a[14] - -9/88) < EPS).to.be.true;
       expect(Math.abs(a[15] - 7/88) < EPS).to.be.true;
+
+      const B = new Matrix4();
+      B.setElements(0, 0, 0, 0, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53);
+      expect(B.invert.bind(B, true)).to.throw('Matrix4.getInverse(): matrix is degenerate.');
     });
     it('should multiply 2 matrices together', () => {
       const a = new Matrix4();
@@ -283,6 +432,208 @@ describe('Matrix4', () => {
       a.setElements(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53);
       console.log(a.prettyPrint());
     });
+    it('should scale the matrix', () => {
+      const A = new Matrix4();
+      A.setElements(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 0, 0, 0, 1);
+      A.scale(new Vector3(2, 3, 5));
+      expect(A.get(0, 0)).to.be.eql(2 * 2);
+      expect(A.get(0, 1)).to.be.eql(3 * 3);
+      expect(A.get(0, 2)).to.be.eql(5 * 5);
+      expect(A.get(0, 3)).to.be.eql(7);
+
+      expect(A.get(1, 0)).to.be.eql(11 * 2);
+      expect(A.get(1, 1)).to.be.eql(13 * 3);
+      expect(A.get(1, 2)).to.be.eql(17 * 5);
+      expect(A.get(1, 3)).to.be.eql(19);
+      
+      expect(A.get(2, 0)).to.be.eql(23 * 2);
+      expect(A.get(2, 1)).to.be.eql(29 * 3);
+      expect(A.get(2, 2)).to.be.eql(31 * 5);
+      expect(A.get(2, 3)).to.be.eql(37);
+
+      expect(A.get(3, 0)).to.be.eql(0);
+      expect(A.get(3, 1)).to.be.eql(0);
+      expect(A.get(3, 2)).to.be.eql(0);
+      expect(A.get(3, 3)).to.be.eql(1);
+    });
+    it('should make a 3D projective translation matrix', () => {
+      const A = new Matrix4();
+      A.makeTranslation(2, 3, 5);
+      expect(A.get(0, 0)).to.be.eql(1);
+      expect(A.get(0, 1)).to.be.eql(0);
+      expect(A.get(0, 2)).to.be.eql(0);
+      expect(A.get(0, 3)).to.be.eql(2);
+
+      expect(A.get(1, 0)).to.be.eql(0);
+      expect(A.get(1, 1)).to.be.eql(1);
+      expect(A.get(1, 2)).to.be.eql(0);
+      expect(A.get(1, 3)).to.be.eql(3);
+      
+      expect(A.get(2, 0)).to.be.eql(0);
+      expect(A.get(2, 1)).to.be.eql(0);
+      expect(A.get(2, 2)).to.be.eql(1);
+      expect(A.get(2, 3)).to.be.eql(5);
+
+      expect(A.get(3, 0)).to.be.eql(0);
+      expect(A.get(3, 1)).to.be.eql(0);
+      expect(A.get(3, 2)).to.be.eql(0);
+      expect(A.get(3, 3)).to.be.eql(1);
+    });
+    it('should make a 3D projective X-rotation matrix', () => {
+      const A = new Matrix4();
+      const t = 45 * Math.PI / 180;
+      A.makeRotationX(t);
+      const c = Math.cos(t);
+      const s = Math.sin(t);
+      expect(A.get(0, 0)).to.be.eql(1);
+      expect(A.get(0, 1)).to.be.eql(0);
+      expect(A.get(0, 2)).to.be.eql(0);
+      expect(A.get(0, 3)).to.be.eql(0);
+
+      expect(A.get(1, 0)).to.be.eql(0);
+      expect(A.get(1, 1)).to.be.eql(c);
+      expect(A.get(1, 2)).to.be.eql(-s);
+      expect(A.get(1, 3)).to.be.eql(0);
+      
+      expect(A.get(2, 0)).to.be.eql(0);
+      expect(A.get(2, 1)).to.be.eql(s);
+      expect(A.get(2, 2)).to.be.eql(c);
+      expect(A.get(2, 3)).to.be.eql(0);
+
+      expect(A.get(3, 0)).to.be.eql(0);
+      expect(A.get(3, 1)).to.be.eql(0);
+      expect(A.get(3, 2)).to.be.eql(0);
+      expect(A.get(3, 3)).to.be.eql(1);
+    });
+    it('should make a 3D projective Y-rotation matrix', () => {
+      const A = new Matrix4();
+      const t = 45 * Math.PI / 180;
+      A.makeRotationY(t);
+      const c = Math.cos(t);
+      const s = Math.sin(t);
+      expect(A.get(0, 0)).to.be.eql(c);
+      expect(A.get(0, 1)).to.be.eql(0);
+      expect(A.get(0, 2)).to.be.eql(s);
+      expect(A.get(0, 3)).to.be.eql(0);
+
+      expect(A.get(1, 0)).to.be.eql(0);
+      expect(A.get(1, 1)).to.be.eql(1);
+      expect(A.get(1, 2)).to.be.eql(0);
+      expect(A.get(1, 3)).to.be.eql(0);
+      
+      expect(A.get(2, 0)).to.be.eql(-s);
+      expect(A.get(2, 1)).to.be.eql(0);
+      expect(A.get(2, 2)).to.be.eql(c);
+      expect(A.get(2, 3)).to.be.eql(0);
+
+      expect(A.get(3, 0)).to.be.eql(0);
+      expect(A.get(3, 1)).to.be.eql(0);
+      expect(A.get(3, 2)).to.be.eql(0);
+      expect(A.get(3, 3)).to.be.eql(1);
+    });
+    it('should make a 3D projective Z-rotation matrix', () => {
+      const A = new Matrix4();
+      const t = 45 * Math.PI / 180;
+      A.makeRotationZ(t);
+      const c = Math.cos(t);
+      const s = Math.sin(t);
+      expect(A.get(0, 0)).to.be.eql(c);
+      expect(A.get(0, 1)).to.be.eql(-s);
+      expect(A.get(0, 2)).to.be.eql(0);
+      expect(A.get(0, 3)).to.be.eql(0);
+
+      expect(A.get(1, 0)).to.be.eql(s);
+      expect(A.get(1, 1)).to.be.eql(c);
+      expect(A.get(1, 2)).to.be.eql(0);
+      expect(A.get(1, 3)).to.be.eql(0);
+      
+      expect(A.get(2, 0)).to.be.eql(0);
+      expect(A.get(2, 1)).to.be.eql(0);
+      expect(A.get(2, 2)).to.be.eql(1);
+      expect(A.get(2, 3)).to.be.eql(0);
+
+      expect(A.get(3, 0)).to.be.eql(0);
+      expect(A.get(3, 1)).to.be.eql(0);
+      expect(A.get(3, 2)).to.be.eql(0);
+      expect(A.get(3, 3)).to.be.eql(1);
+    });
+    it('should make a 3D projective rotation matrix around an axis by an angle', () => {
+      const xAxis = new Vector3(1, 0, 0);
+      const yAxis = new Vector3(0, 1, 0);
+      const zAxis = new Vector3(0, 0, 1);
+      const t = 45 * Math.PI / 180;
+
+      const A = new Matrix4();
+      const B = new Matrix4();
+      expect(A.makeRotationAxis(xAxis, t)).to.be.eql(B.makeRotationX(t));
+      expect(A.makeRotationAxis(yAxis, t)).to.be.eql(B.makeRotationY(t));
+      expect(A.makeRotationAxis(zAxis, t)).to.be.eql(B.makeRotationZ(t));
+    });
+    it('should make a 3D projective scaling matrix', () => {
+      const s = new Vector3(2, 3, 5);
+      const A = new Matrix4().makeScale(s.x, s.y, s.z);
+      
+      expect(A.get(0, 0)).to.be.eql(s.x);
+      expect(A.get(0, 1)).to.be.eql(0);
+      expect(A.get(0, 2)).to.be.eql(0);
+      expect(A.get(0, 3)).to.be.eql(0);
+
+      expect(A.get(1, 0)).to.be.eql(0);
+      expect(A.get(1, 1)).to.be.eql(s.y);
+      expect(A.get(1, 2)).to.be.eql(0);
+      expect(A.get(1, 3)).to.be.eql(0);
+      
+      expect(A.get(2, 0)).to.be.eql(0);
+      expect(A.get(2, 1)).to.be.eql(0);
+      expect(A.get(2, 2)).to.be.eql(s.z);
+      expect(A.get(2, 3)).to.be.eql(0);
+
+      expect(A.get(3, 0)).to.be.eql(0);
+      expect(A.get(3, 1)).to.be.eql(0);
+      expect(A.get(3, 2)).to.be.eql(0);
+      expect(A.get(3, 3)).to.be.eql(1);
+    });
+    it('should make a 3D projective shearing matrix', () => {
+      const x = 2;
+      const y = 3;
+      const z = 5;
+      const A = new Matrix4().makeShear(x, y, z);
+      
+      expect(A.get(0, 0)).to.be.eql(1);
+      expect(A.get(0, 1)).to.be.eql(y);
+      expect(A.get(0, 2)).to.be.eql(z);
+      expect(A.get(0, 3)).to.be.eql(0);
+
+      expect(A.get(1, 0)).to.be.eql(x);
+      expect(A.get(1, 1)).to.be.eql(1);
+      expect(A.get(1, 2)).to.be.eql(z);
+      expect(A.get(1, 3)).to.be.eql(0);
+      
+      expect(A.get(2, 0)).to.be.eql(x);
+      expect(A.get(2, 1)).to.be.eql(y);
+      expect(A.get(2, 2)).to.be.eql(1);
+      expect(A.get(2, 3)).to.be.eql(0);
+
+      expect(A.get(3, 0)).to.be.eql(0);
+      expect(A.get(3, 1)).to.be.eql(0);
+      expect(A.get(3, 2)).to.be.eql(0);
+      expect(A.get(3, 3)).to.be.eql(1);
+    });
+    it('should apply a function to the matrix elements', () => {
+      const A = new Matrix4();
+      A.setElements(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53);
+      A.applyFunction((elems: number[]) => {
+        for (let i = 0; i < elems.length; ++i) {
+          elems[i] *= 2;
+        }
+      });
+
+      const B = new Matrix4();
+      B.setElements(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53)
+        .multiplyScalar(2);
+
+      expect(A.toArray()).to.be.eql(B.toArray());
+    });
   });
   describe('Linear Algebra Functions', () => {
     it('should compute the determinant', () => {
@@ -308,6 +659,93 @@ describe('Matrix4', () => {
       a.setElements(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53);
       const trace = a.trace();
       expect(trace).to.be.eql(99);
+    });
+    it('should transform a row vector (x^T * A)', () => {
+      const x = new Vector4(2, 3, 5, 7);
+      const A = new Matrix4().setElements(11, 13, 17, 19,
+        23, 29, 31, 37,
+        41, 43, 47, 53,
+        59, 61, 67, 71);
+      const y = A.transformRowVector(x);
+
+      expect(y.getComponent(0)).to.be.eql(709);
+      expect(y.getComponent(1)).to.be.eql(755);
+      expect(y.getComponent(2)).to.be.eql(831);
+      expect(y.getComponent(3)).to.be.eql(911);
+    });
+    it('should transform a column vector (A * x)', () => {
+      const x = new Vector4(2, 3, 5, 7);
+      const A = new Matrix4().setElements(11, 13, 17, 19,
+        23, 29, 31, 37,
+        41, 43, 47, 53,
+        59, 61, 67, 71);
+      const y = A.transformVector(x);
+
+      expect(y.getComponent(0)).to.be.eql(279);
+      expect(y.getComponent(1)).to.be.eql(547);
+      expect(y.getComponent(2)).to.be.eql(817);
+      expect(y.getComponent(3)).to.be.eql(1133);
+    });
+    it('should set the position of the transformation matrix', () => {
+      const v = new Vector3(2, 3, 5);
+      const A = new Matrix4();
+      A.setPosition(v.x, v.y, v.z);
+      expect(A.get(0, 3)).to.be.eql(v.x);
+      expect(A.get(1, 3)).to.be.eql(v.y);
+      expect(A.get(2, 3)).to.be.eql(v.z);
+    });
+    it('should calculate the outer product correctly', () => {
+      const A = new Matrix4();
+      const u = new Vector4(2, 3, 5, 7);
+      const v = new Vector4(11, 13, 17, 23);
+      const s = 2;
+      A.setOuterProduct(u, v, s);
+      expect(A.get(0, 0)).to.be.eql(22 * s);
+      expect(A.get(0, 1)).to.be.eql(26 * s);
+      expect(A.get(0, 2)).to.be.eql(34 * s);
+      expect(A.get(0, 3)).to.be.eql(46 * s);
+
+      expect(A.get(1, 0)).to.be.eql(33 * s);
+      expect(A.get(1, 1)).to.be.eql(39 * s);
+      expect(A.get(1, 2)).to.be.eql(51 * s);
+      expect(A.get(1, 3)).to.be.eql(69 * s);
+      
+      expect(A.get(2, 0)).to.be.eql(55 * s);
+      expect(A.get(2, 1)).to.be.eql(65 * s);
+      expect(A.get(2, 2)).to.be.eql(85 * s);
+      expect(A.get(2, 3)).to.be.eql(115 * s);
+
+      expect(A.get(3, 0)).to.be.eql(77 * s);
+      expect(A.get(3, 1)).to.be.eql(91 * s);
+      expect(A.get(3, 2)).to.be.eql(119 * s);
+      expect(A.get(3, 3)).to.be.eql(161 * s);
+    });
+    it('should calculate and add an outer product correctly', () => {
+      const a = 29;
+      const A = new Matrix4().setElements(a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a);
+      const u = new Vector4(2, 3, 5, 7);
+      const v = new Vector4(11, 13, 17, 23);
+      const s = 3;
+      A.addOuterProduct(u, v, s);
+      expect(A.get(0, 0)).to.be.eql(22 * s + a);
+      expect(A.get(0, 1)).to.be.eql(26 * s + a);
+      expect(A.get(0, 2)).to.be.eql(34 * s + a);
+      expect(A.get(0, 3)).to.be.eql(46 * s + a);
+
+      expect(A.get(1, 0)).to.be.eql(33 * s + a);
+      expect(A.get(1, 1)).to.be.eql(39 * s + a);
+      expect(A.get(1, 2)).to.be.eql(51 * s + a);
+      expect(A.get(1, 3)).to.be.eql(69 * s + a);
+      
+      expect(A.get(2, 0)).to.be.eql(55 * s + a);
+      expect(A.get(2, 1)).to.be.eql(65 * s + a);
+      expect(A.get(2, 2)).to.be.eql(85 * s + a);
+      expect(A.get(2, 3)).to.be.eql(115 * s + a);
+
+      expect(A.get(3, 0)).to.be.eql(77 * s + a);
+      expect(A.get(3, 1)).to.be.eql(91 * s + a);
+      expect(A.get(3, 2)).to.be.eql(119 * s + a);
+      expect(A.get(3, 3)).to.be.eql(161 * s + a);
     });
   });
 });

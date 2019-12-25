@@ -18,14 +18,13 @@ import { Complex } from './complex';
 
 /**
  * A 3x3 matrix stored in column-major order.
- * @class Matrix3
  */
 export class Matrix3 implements MathMatrix {
   private _elements: number[];
   private _tempElements: number[];
 
-  public readonly rowDimension: number = 3;
-  public readonly colDimension: number = 3;
+  public readonly rows: number = 3;
+  public readonly columns: number = 3;
 
   public readonly E0 = new Vector3(1, 0, 0);
   public readonly E1 = new Vector3(0, 1, 0);
@@ -42,13 +41,13 @@ export class Matrix3 implements MathMatrix {
   }
 
   set (i: number, j: number, value: number): this {
-    const n = this.colDimension;
+    const n = this.rows;
     this._elements[i + j * n] = value;
     return this;
   }
 
   get (i: number, j: number): number {
-    const n = this.colDimension;
+    const n = this.rows;
     return this._elements[i + j * n];
   }
 
@@ -225,7 +224,7 @@ export class Matrix3 implements MathMatrix {
    * @param {Matrix3} b The second matrix.
    * @param {number} scalar The number to scale the result by.
    */
-  addMatrices (a: this, b: this, scalar: number = 1): this {
+  addMatrices (a: this, b: this, scalar = 1): this {
     const alpha = scalar;
     const ae = a._elements;
     const be = b._elements;
@@ -300,7 +299,7 @@ export class Matrix3 implements MathMatrix {
    * @param {Vector3} a The vector to transform.
    * @returns {Vector3} The original vector, transformed.
    */
-  transformRowVector3 (a: Vector3): Vector3 {
+  transformRowVector (a: Vector3): Vector3 {
     const ae = this._elements;
     const x = a.x;
     const y = a.y;
@@ -329,7 +328,7 @@ export class Matrix3 implements MathMatrix {
    * @param {Vector3} a The vector to transform.
    * @returns {Vector3} The original vector, transformed.
    */
-  transformVector3 (a: Vector3): Vector3 {
+  transformVector (a: Vector3): Vector3 {
     const ae = this._elements;
     const x = a.x;
     const y = a.y;
@@ -448,7 +447,7 @@ export class Matrix3 implements MathMatrix {
    * Inverts this matrix.
    * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
    */
-  invert (throwOnDegenerate: boolean = false): this {
+  invert (throwOnDegenerate = false): this {
     return this.getInverse(this, throwOnDegenerate);
   }
 
@@ -504,7 +503,7 @@ export class Matrix3 implements MathMatrix {
    * @param {Matrix3} matrix The given matrix.
    * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
    */
-  getInverse (matrix: this, throwOnDegenerate: boolean, singularTol: number = 1e-14): this {
+  getInverse (matrix: this, throwOnDegenerate: boolean, singularTol = 1e-14): this {
     const det = matrix.determinant();
     if (_Math.abs(det) <= singularTol) {
       const msg = `Matrix3.getInverse(): matrix is degenerate.`;
@@ -512,6 +511,7 @@ export class Matrix3 implements MathMatrix {
         throw new Error(msg);
       } else {
         console.warn(msg);
+        return this.identity();
       }      
     }
     return matrix.adjugate().multiplyScalar(1.0 / det);
@@ -542,26 +542,11 @@ export class Matrix3 implements MathMatrix {
   }
 
   /**
-   * Compares the equality with a given matrix (strict).
-   * @param {Matrix3} matrix The given matrix.
-   */
-  equals (matrix: this): boolean {
-    const te = this._elements;
-    const me = matrix._elements;
-    for (let i = 0; i < 9; i++) {
-      if (te[i] !== me[i]) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  /**
    * Loads values from an array into a matrix.
-   * @param {number[]} array The array to populate the matrix from.
-   * @param {number} offset The numeric array offset.
+   * @param array The array to populate the matrix from.
+   * @param offset The numeric array offset.
    */
-  fromArray (array: number[], offset: number = 0): this {
+  fromArray (array: number[], offset = 0): this {
     for (let i = 0; i < 9; i++) {
       this._elements[ i ] = array[i + offset];
     }
@@ -570,10 +555,10 @@ export class Matrix3 implements MathMatrix {
 
   /**
    * Loads values into an array into a matrix.
-   * @param {number[]} array The array to populate the matrix values into.
-   * @param {number} offset The numeric array offset.
+   * @param array The array to populate the matrix values into.
+   * @param offset The numeric array offset.
    */
-  toArray (array: number[] = [], offset: number = 0): number[] {
+  toArray (array: number[] = [], offset = 0): number[] {
     const te = this._elements;
 
     array[ offset ] = te[ 0 ];
@@ -620,11 +605,11 @@ export class Matrix3 implements MathMatrix {
 
   /**
    * Computes the outer product of two vectors (a*b^T).
-   * @param {Vector3} a The first vector.
-   * @param {Vector3} b The second vector.
-   * @param {number} scalar The number to scale the matrix by (defaults to 1).
+   * @param a The first vector.
+   * @param b The second vector.
+   * @param scalar The number to scale the matrix by (defaults to 1).
    */
-  setOuterProduct (a: Vector3, b: Vector3, scalar: number = 1): this {
+  setOuterProduct (a: Vector3, b: Vector3, scalar = 1): this {
     // computes alpha * (ab^T)
     const alpha = scalar;
     const n11 = alpha * a.x * b.x;
@@ -641,11 +626,11 @@ export class Matrix3 implements MathMatrix {
 
   /**
    * Adds the outer product of two vectors alpha*(a*b^T) to this matrix.
-   * @param {Vector3} a The first vector.
-   * @param {Vector3} b The second vector.
-   * @param {number} scalar The number to scale the matrix by (defaults to 1).
+   * @param a The first vector.
+   * @param b The second vector.
+   * @param scalar The number to scale the matrix by (defaults to 1).
    */
-  addOuterProduct (a: Vector3, b: Vector3, scalar: number = 1): this {
+  addOuterProduct (a: Vector3, b: Vector3, scalar = 1): this {
     // computes [this + alpha * (ab^T)]
     const te = this._elements;
     const alpha = scalar;
@@ -726,8 +711,8 @@ export class Matrix3 implements MathMatrix {
     const ee = this._elements;
     const te = this._tempElements;
     const n = ee.length;
-    const r = this.rowDimension;
-    const c = this.colDimension;
+    const r = this.rows;
+    const c = this.columns;
 
     for (let i = 0; i < n; ++i) { te[i] = ee[i]; }
     fn.call(null, te, r, c);

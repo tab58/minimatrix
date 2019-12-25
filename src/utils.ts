@@ -8,7 +8,7 @@ import _Math from './core';
  */
 export const formatPrintNumber = (x: number): string => {
   const maxLen = 7;
-  let rawStr = '' + x;
+  const rawStr = '' + x;
 
   if (rawStr.length >= maxLen) {
     let str = rawStr.substring(0, maxLen);

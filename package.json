@@ -5,9 +5,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "mocha -r ts-node/register ./test/*.spec.ts",
+    "test": "nyc mocha -r ts-node/register ./test/*.spec.ts",
     "build": "npx tsc",
-    "release": "npx release-it"
+    "release": "npx release-it",
+    "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "repository": {
     "type": "git",
@@ -30,8 +31,12 @@
   "devDependencies": {
     "@types/chai": "^4.2.6",
     "@types/mocha": "^5.2.7",
+    "@typescript-eslint/eslint-plugin": "^2.13.0",
+    "@typescript-eslint/parser": "^2.13.0",
     "chai": "^4.1.0",
+    "eslint": "^6.8.0",
     "mocha": "^6.2.2",
+    "nyc": "^15.0.0",
     "release-it": "^12.4.3",
     "ts-node": "^8.5.4",
     "webpack": "^4.41.2"

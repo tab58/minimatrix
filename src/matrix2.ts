@@ -8,15 +8,14 @@
  */
 import { Vector2 } from './vector2';
 import { MathMatrix } from './interfaces';
+import { Matrix } from './matrix';
 import { formatPrintNumber } from './utils';
 
 /**
  * A 2x2 matrix stored in column-major order.
  * @class Matrix2
  */
-export class Matrix2 implements MathMatrix {
-  private _elements: number[];
-  private _tempElements: number[];
+export class Matrix2 extends Matrix implements MathMatrix {
 
   public readonly rowDimension: number = 2;
   public readonly colDimension: number = 2;
@@ -25,12 +24,8 @@ export class Matrix2 implements MathMatrix {
   public readonly E1 = new Vector2(0, 1);
   
   constructor () {
-    const a = [
-      1, 0,
-      0, 1
-    ];
-    this._elements = a;
-    this._tempElements = a.slice();
+    super(2, 2);
+    this.identity();
   }
 
   set (i: number, j: number, value: number): this {
@@ -120,7 +115,7 @@ export class Matrix2 implements MathMatrix {
       case 1:
         return new Vector2(te[1], te[3]);
       default:
-        throw new Error('getRow(): no row defined at ' + i + '.');
+        throw new Error(`getRow(): no row defined at ${i}.`);
     }
   }
 
@@ -137,7 +132,7 @@ export class Matrix2 implements MathMatrix {
       case 1:
         return new Vector2(te[2], te[3]);
       default:
-        throw new Error('getColumn(): no column defined at ' + i + '.');
+        throw new Error(`getColumn(): no column defined at ${i}.`);
     }
   }
 
@@ -167,7 +162,7 @@ export class Matrix2 implements MathMatrix {
   swapColumns (i: number, j: number): this {
     const A = this._elements;
     if (i > 1 || j > 1) {
-      throw new Error(`swapRows(): row index out of bounds.`);
+      throw new Error(`swapColumns(): column index out of bounds.`);
     }
     if (i !== j) {
       let tmp = A[2];
@@ -217,7 +212,7 @@ export class Matrix2 implements MathMatrix {
    * @param {Vector2} a The vector to transform.
    * @returns {Vector2} This vector.
    */
-  transformRowVector2 (v: Vector2): Vector2 {
+  transformRowVector (v: Vector2): Vector2 {
     const ae = this._elements;
     const a11 = ae[ 0 ];
     const a12 = ae[ 2 ];
@@ -235,7 +230,7 @@ export class Matrix2 implements MathMatrix {
    * @param {Vector2} a The vector to transform.
    * @returns {Vector2} This vector.
    */
-  transformVector2 (v: Vector2): Vector2 {
+  transformVector (v: Vector2): Vector2 {
     const ae = this._elements;
     const a11 = ae[ 0 ];
     const a12 = ae[ 2 ];
@@ -321,7 +316,7 @@ export class Matrix2 implements MathMatrix {
    * @param {Matrix2} matrix The given matrix.
    * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
    */
-  getInverse (matrix: this, throwOnDegenerate: boolean) {
+  getInverse (matrix: this, throwOnDegenerate: boolean): this {
     const me = matrix._elements;
     const te = this._elements;
     const a = me[ 0 ];
@@ -337,8 +332,8 @@ export class Matrix2 implements MathMatrix {
         throw new Error(msg);
       } else {
         console.warn(msg);
+        return this.identity();
       }
-      return this.identity();
     }
 
     const detInv = 1.0 / det;
@@ -354,7 +349,7 @@ export class Matrix2 implements MathMatrix {
    * Inverts this matrix.
    * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
    */
-  invert (throwOnDegenerate: boolean = false): this {
+  invert (throwOnDegenerate = false): this {
     return this.getInverse(this, throwOnDegenerate);
   }
 
@@ -363,7 +358,7 @@ export class Matrix2 implements MathMatrix {
    */
   transpose (): this {
     const m = this._elements;
-    let tmp = m[ 1 ];
+    const tmp = m[ 1 ];
     m[ 1 ] = m[ 2 ];
     m[ 2 ] = tmp;
     return this;
@@ -405,21 +400,6 @@ export class Matrix2 implements MathMatrix {
   }
 
   /**
-   * Compares the equality with a given matrix (strict).
-   * @param {Matrix2} matrix The given matrix.
-   */
-  equals (matrix: this): boolean {
-    const te = this._elements;
-    const me = matrix._elements;
-    for (let i = 0; i < 4; i++) {
-      if (te[i] !== me[i]) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  /**
    * Loads values from an array into a matrix.
    * @param array The array to populate the matrix from.
    * @param offset The numeric array offset.
@@ -436,7 +416,7 @@ export class Matrix2 implements MathMatrix {
    * @param {number[]} array The array to populate the matrix values into.
    * @param {number} offset The numeric array offset.
    */
-  toArray (array: number[] = [], offset: number = 0): number[] {
+  toArray (array: number[] = [], offset = 0): number[] {
     const te = this._elements;
     array[ offset ] = te[ 0 ];
     array[ offset + 1 ] = te[ 1 ];
@@ -451,7 +431,7 @@ export class Matrix2 implements MathMatrix {
    * @param {Vector2} b The second vector.
    * @param {number} scalar The number to scale the matrix by (defaults to 1).
    */
-  setOuterProduct (a: Vector2, b: Vector2, scalar: number = 1): this {
+  setOuterProduct (a: Vector2, b: Vector2, scalar = 1): this {
     const alpha = scalar;
     const n11 = alpha * a.x * b.x;
     const n12 = alpha * a.x * b.y;
@@ -462,11 +442,11 @@ export class Matrix2 implements MathMatrix {
 
   /**
    * Adds the outer product of two vectors alpha*(a*b^T) to this matrix.
-   * @param {Vector2} a The first vector.
-   * @param {Vector2} b The second vector.
-   * @param {number} scalar The number to scale the matrix by (defaults to 1).
+   * @param a The first vector.
+   * @param b The second vector.
+   * @param scalar The number to scale the matrix by (defaults to 1).
    */
-  addOuterProduct (a: Vector2, b: Vector2, scalar: number = 1): this {
+  addOuterProduct (a: Vector2, b: Vector2, scalar = 1): this {
     const te = this._elements;
     const alpha = scalar;
     const n11 = alpha * a.x * b.x;
@@ -482,11 +462,11 @@ export class Matrix2 implements MathMatrix {
 
   /**
    * Adds 2 matrices together and optionally scales the result.
-   * @param {Matrix2} a The first matrix.
-   * @param {Matrix2} b The second matrix.
-   * @param {number} scalar The number to scale the result by.
+   * @param a The first matrix.
+   * @param b The second matrix.
+   * @param scalar The number to scale the result by.
    */
-  addMatrices (a: this, b: this, scalar: number = 1): this {
+  addMatrices (a: this, b: this, scalar = 1): this {
     const alpha = scalar;
     const ae = a._elements;
     const be = b._elements;

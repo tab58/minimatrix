@@ -1,7 +1,7 @@
 import _Math from './core';
 import { Vector2 } from './vector2';
 
-function newtonsCubeIteration (A: Complex, xn: Complex, xn1: Complex) {
+function newtonsCubeIteration (A: Complex, xn: Complex, xn1: Complex): void {
   xn1.copy(A)
     .divide(xn)
     .divide(xn)
@@ -10,7 +10,7 @@ function newtonsCubeIteration (A: Complex, xn: Complex, xn1: Complex) {
     .scale(1 / 3);
 }
 
-function newtonsCube (A: Complex, x0: Complex) {
+function newtonsCube (A: Complex, x0: Complex): Complex {
   const xn = x0.clone();
   const xn1 = x0.clone();
   let diff = 0;
@@ -46,12 +46,14 @@ export class Complex {
   }
 
   /**
-   * Creates a Complex number from a given vector in the complex plane.
+   * Copies a Complex number from a given vector in the complex plane.
    * @param v The given vector.
    * @returns This complex number.
    */
   fromVector2 (v: Vector2): this {
-    return new Complex(v.x, v.y) as this;
+    this._real = v.x;
+    this._imag = v.y;
+    return this;
   }
 
   /**
@@ -182,9 +184,9 @@ export class Complex {
 
   /**
    * Determines if this complex number is equal to the given complex number.
-   * @param {Complex} C The given complex number.
-   * @param {number} tol The numerical tolerance.
-   * @returns {boolean} True if the magnitudes are within the numerical tolerance of each other, false if not.
+   * @param C The given complex number.
+   * @param tol The numerical tolerance.
+   * @returns True if the magnitudes are within the numerical tolerance of each other, false if not.
    */
   equal (C: this, tol = 0): boolean {
     const x = this._real - C.real;

@@ -3,12 +3,12 @@ export interface MathMatrix {
   /**
    * The number of rows in the matrix.
    */
-  rowDimension: number;
+  rows: number;
 
   /**
    * The number of columns in the matrix.
    */
-  colDimension: number;
+  columns: number;
 
   /**
    * Sets the matrix as the identity matrix.
@@ -92,12 +92,6 @@ export interface MathMatrix {
    * @returns {number} The matrix trace.
    */
   trace (): number;
-
-  /**
-   * Compares the equality with a given matrix (strict).
-   * @param {MathMatrix} m The given matrix.
-   */
-  equals (m: this): boolean;
 
   /**
    * Loads values from an array into a matrix.

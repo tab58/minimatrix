@@ -7,33 +7,31 @@
  * @author zz85 / http://www.lab4games.net/zz85/blog
  */
 import _Math from './core';
-import { MathVector } from './interfaces';
+import { Vector } from './vector';
 import { Matrix2 } from './matrix2';
 import { Matrix3 } from './matrix3';
 
 /**
  * A 2-dimensional vector.
  */
-export class Vector2 implements MathVector {
-  private _components: number[];
-
+export class Vector2 extends Vector {
   private get _x (): number { return this._components[0]; }
-  private get _y (): number { return this._components[1]; }
   private set _x (value: number) { this._components[0] = value; }
+  
+  private get _y (): number { return this._components[1]; }
   private set _y (value: number) { this._components[1] = value; }
 
   public get x (): number { return this._components[0]; }
   public get y (): number { return this._components[1]; }
 
-  public readonly dimension: number = 2;
-
   /**
    * @constructor
-   * @param {number} x The x-component value.
-   * @param {number} y The y-component value.
+   * @param x The x-component value.
+   * @param y The y-component value.
    */
-  constructor (x: number = 0, y: number = 0) {
-    this._components = [x, y];
+  constructor (x = 0, y = 0) {
+    super(2);
+    this.set(x, y);
   }
 
   /**
@@ -89,7 +87,7 @@ export class Vector2 implements MathVector {
     switch (idx) {
       case 0: this._x = val; break;
       case 1: this._y = val; break;
-      default: throw new Error('index is out of range: ' + idx);
+      default: throw new Error('setComponent(): index is out of range: ' + idx);
     }
     return this;
   }
@@ -103,7 +101,7 @@ export class Vector2 implements MathVector {
     switch (index) {
       case 0: return this.x;
       case 1: return this.y;
-      default: throw new Error('index is out of range: ' + index);
+      default: throw new Error('getComponent(): index is out of range: ' + index);
     }
   }
 
@@ -246,7 +244,7 @@ export class Vector2 implements MathVector {
    * @returns {Vector2} This vector.
    */
   multiplyMatrix2 (m: Matrix2): this {
-    return m.transformVector2(this) as this;
+    return m.transformVector(this) as this;
   }
 
   /**
@@ -282,7 +280,7 @@ export class Vector2 implements MathVector {
    * Calculates the outer product of the matrix.
    * @param scalar A scalar to multiply the outer product by.
    */
-  getOuterProduct (scalar: number = 1): Matrix2 {
+  getOuterProduct (scalar = 1): Matrix2 {
     const u1 = this._x;
     const u2 = this._y;
     return new Matrix2()
@@ -546,7 +544,7 @@ export class Vector2 implements MathVector {
    * @param {number} offset The offset to start from in the array. Default is zero.
    * @returns {Vector2} This vector.
    */
-  toArray (array: number[] = [], offset: number = 0): number[] {
+  toArray (array: number[] = [], offset = 0): number[] {
     array[offset] = this.x;
     array[offset + 1] = this.y;
     return array;

@@ -20,8 +20,8 @@ export class Matrix4 implements MathMatrix {
   private _elements: number[];
   private _tempElements: number[];
 
-  public readonly rowDimension: number = 4;
-  public readonly colDimension: number = 4;
+  public readonly rows: number = 4;
+  public readonly columns: number = 4;
 
 	public readonly E0 = new Vector4(1, 0, 0, 0);
   public readonly E1 = new Vector4(0, 1, 0, 0);
@@ -40,13 +40,13 @@ export class Matrix4 implements MathMatrix {
 	}
 
   set (i: number, j: number, value: number): this {
-    const n = this.colDimension;
+    const n = this.rows;
     this._elements[i + j * n] = value;
     return this;
   }
 
   get (i: number, j: number): number {
-    const n = this.colDimension;
+    const n = this.rows;
     return this._elements[i + j * n];
 	}
 	
@@ -96,7 +96,7 @@ export class Matrix4 implements MathMatrix {
   setElements (n11: number, n12: number, n13: number, n14: number,
     n21: number, n22: number, n23: number, n24: number,
     n31: number, n32: number, n33: number, n34: number,
-    n41: number, n42: number, n43: number, n44: number) {
+    n41: number, n42: number, n43: number, n44: number): this {
 		const te = this._elements;
 		te[ 0 ] = n11; te[ 4 ] = n12; te[ 8 ] = n13; te[ 12 ] = n14;
 		te[ 1 ] = n21; te[ 5 ] = n22; te[ 9 ] = n23; te[ 13 ] = n24;
@@ -105,7 +105,7 @@ export class Matrix4 implements MathMatrix {
 		return this;
 	}
 
-	identity () {
+	identity (): this {
 		this.setElements(
 			1, 0, 0, 0,
 			0, 1, 0, 0,
@@ -152,7 +152,7 @@ export class Matrix4 implements MathMatrix {
    * @param {Matrix4} b The second matrix.
    * @param {number} scalar The number to scale the result by.
    */
-  addMatrices (a: this, b: this, scalar: number = 1): this {
+  addMatrices (a: this, b: this, scalar = 1): this {
     const alpha = scalar;
     const ae = a._elements;
     const be = b._elements;
@@ -212,13 +212,13 @@ export class Matrix4 implements MathMatrix {
     return this;
 	}
 
-	  /**
+	/**
    * Computes the outer product of two vectors (a*b^T).
    * @param {Vector4} a The first vector.
    * @param {Vector4} b The second vector.
    * @param {number} scalar The number to scale the matrix by (defaults to 1).
    */
-  setOuterProduct (a: Vector4, b: Vector4, scalar: number = 1): this {
+  setOuterProduct (a: Vector4, b: Vector4, scalar = 1): this {
     // computes alpha * (ab^T)
     const alpha = scalar;
     const n11 = alpha * a.x * b.x;
@@ -246,11 +246,11 @@ export class Matrix4 implements MathMatrix {
 
   /**
    * Adds the outer product of two vectors alpha*(a*b^T) to this matrix.
-   * @param {Vector4} a The first vector.
-   * @param {Vector4} b The second vector.
-   * @param {number} scalar The number to scale the matrix by (defaults to 1).
+   * @param a The first vector.
+   * @param b The second vector.
+   * @param scalar The number to scale the matrix by (defaults to 1).
    */
-  addOuterProduct (a: Vector4, b: Vector4, scalar: number = 1): this {
+  addOuterProduct (a: Vector4, b: Vector4, scalar = 1): this {
     // computes [this + alpha * (ab^T)]
     const te = this._elements;
     const alpha = scalar;
@@ -334,24 +334,6 @@ export class Matrix4 implements MathMatrix {
     return this;
   }
 
-	extractBasis (xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): this {
-		const te = this._elements;
-		xAxis.fromArray(te, 0);
-		yAxis.fromArray(te, 4);
-		zAxis.fromArray(te, 8);
-		return this;
-	}
-
-	makeBasis (xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): this {
-		this.setElements(
-			xAxis.x, yAxis.x, zAxis.x, 0,
-			xAxis.y, yAxis.y, zAxis.y, 0,
-			xAxis.z, yAxis.z, zAxis.z, 0,
-			0, 0, 0, 1
-		);
-		return this;
-	}
-
 	multiply (m: this): this {
 		return this.multiplyMatrices( this, m );
 	}
@@ -360,25 +342,12 @@ export class Matrix4 implements MathMatrix {
 		return this.multiplyMatrices( m, this );
 	}
 
-	transformVector3 (v: Vector3): Vector3 {
-		const x = v.x;
-		const y = v.y;
-		const z = v.z;
-		const w = 1;
-		const e = this._elements;
-		
-		const _x = e[ 0 ] * x + e[ 4 ] * y + e[ 8 ] * z + e[ 12 ];
-		const _y = e[ 1 ] * x + e[ 5 ] * y + e[ 9 ] * z + e[ 13 ];
-		const _z = e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z + e[ 14 ];
-		return v.set(_x, _y, _z);
-	}
-
 	/**
    * Left-multiplies a vector by a 4x4 matrix (result is x^T*A).
    * @param {Vector4} a The vector to transform.
    * @returns {Vector4} The original vector, transformed.
    */
-	transformRowVector4 (v: Vector4): Vector4 {
+	transformRowVector (v: Vector4): Vector4 {
 		const x = v.x;
 		const y = v.y;
 		const z = v.z;
@@ -397,7 +366,7 @@ export class Matrix4 implements MathMatrix {
    * @param {Vector4} a The vector to transform.
    * @returns {Vector4} The original vector, transformed.
    */
-	transformVector4 (v: Vector4): Vector4 {
+	transformVector (v: Vector4): Vector4 {
 		const x = v.x;
 		const y = v.y;
 		const z = v.z;
@@ -473,35 +442,35 @@ export class Matrix4 implements MathMatrix {
 		return (
 			n41 * (
 				+ n14 * n23 * n32
-				 - n13 * n24 * n32
-				 - n14 * n22 * n33
-				 + n12 * n24 * n33
-				 + n13 * n22 * n34
-				 - n12 * n23 * n34
+				- n13 * n24 * n32
+				- n14 * n22 * n33
+				+ n12 * n24 * n33
+				+ n13 * n22 * n34
+				- n12 * n23 * n34
 			) +
 			n42 * (
 				+ n11 * n23 * n34
-				 - n11 * n24 * n33
-				 + n14 * n21 * n33
-				 - n13 * n21 * n34
-				 + n13 * n24 * n31
-				 - n14 * n23 * n31
+				- n11 * n24 * n33
+				+ n14 * n21 * n33
+				- n13 * n21 * n34
+				+ n13 * n24 * n31
+				- n14 * n23 * n31
 			) +
 			n43 * (
 				+ n11 * n24 * n32
-				 - n11 * n22 * n34
-				 - n14 * n21 * n32
-				 + n12 * n21 * n34
-				 + n14 * n22 * n31
-				 - n12 * n24 * n31
+				- n11 * n22 * n34
+				- n14 * n21 * n32
+				+ n12 * n21 * n34
+				+ n14 * n22 * n31
+				- n12 * n24 * n31
 			) +
 			n44 * (
 				- n13 * n22 * n31
-				 - n11 * n23 * n32
-				 + n11 * n22 * n33
-				 + n13 * n21 * n32
-				 - n12 * n21 * n33
-				 + n12 * n23 * n31
+				- n11 * n23 * n32
+				+ n11 * n22 * n33
+				+ n13 * n21 * n32
+				- n12 * n21 * n33
+				+ n12 * n23 * n31
 			)
 		);
 	}
@@ -530,7 +499,7 @@ export class Matrix4 implements MathMatrix {
 		return this;
 	}
 
-	setPosition (x: number, y: number, z: number) {
+	setPosition (x: number, y: number, z: number): this {
 		const te = this._elements;
 		te[ 12 ] = x;
 		te[ 13 ] = y;
@@ -588,11 +557,11 @@ export class Matrix4 implements MathMatrix {
 		return this;
 	}
 
-	invert (throwOnDegenerate: boolean = false): this {
+	invert (throwOnDegenerate = false): this {
 		return this.getInverse(this, throwOnDegenerate);
 	}
 
-	getInverse (m: this, throwOnDegenerate: boolean, singularTol: number = 1e-14): this {
+	getInverse (m: this, throwOnDegenerate: boolean, singularTol = 1e-14): this {
 		// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
 		const te = this._elements;
 		const	me = m._elements;
@@ -644,7 +613,8 @@ export class Matrix4 implements MathMatrix {
 		return this;
 	}
 
-	scale (v: Vector3) {
+	/** Scales a 3D projective transformation matrix. */
+	scale (v: Vector3): this {
 		const te = this._elements;
 		const x = v.x, y = v.y, z = v.z;
 
@@ -666,7 +636,7 @@ export class Matrix4 implements MathMatrix {
 		return this;
 	}
 
-	makeRotationX (theta: number ): this {
+	makeRotationX (theta: number): this {
 		const c = _Math.cos(theta);
 		const s = _Math.sin(theta);
 		this.setElements(
@@ -682,10 +652,10 @@ export class Matrix4 implements MathMatrix {
 		const c = _Math.cos(theta);
 		const s = _Math.sin(theta);
 		this.setElements(
-			 c, 0, s, 0,
-			 0, 1, 0, 0,
-			- s, 0, c, 0,
-			 0, 0, 0, 1
+			c, 0, s, 0,
+			0, 1, 0, 0,
+			-s, 0, c, 0,
+			0, 0, 0, 1
 		);
 		return this;
 	}
@@ -694,7 +664,7 @@ export class Matrix4 implements MathMatrix {
 		const c = _Math.cos(theta);
 		const s = _Math.sin(theta);
 		this.setElements(
-			c, - s, 0, 0,
+			c, -s, 0, 0,
 			s, c, 0, 0,
 			0, 0, 1, 0,
 			0, 0, 0, 1
@@ -738,24 +708,14 @@ export class Matrix4 implements MathMatrix {
 		return this;
 	}
 
-	equals (matrix: this): boolean {
-		const te = this._elements;
-		const me = matrix._elements;
-
-		for (let i = 0; i < 16; i++) {
-			if (te[i] !== me[i]) return false;
-		}
-		return true;
-	}
-
-	fromArray (array: number[], offset: number = 0) {
+	fromArray (array: number[], offset = 0): this {
 		for (let i = 0; i < 16; i++) {
 			this._elements[i] = array[i + offset];
 		}
 		return this;
 	}
 
-	toArray (array: number[] = [], offset: number = 0) {
+	toArray (array: number[] = [], offset = 0): number[] {
 		const te = this._elements;
 
 		array[ offset ] = te[ 0 ];
@@ -800,8 +760,8 @@ export class Matrix4 implements MathMatrix {
     const ee = this._elements;
     const te = this._tempElements;
 		const n = ee.length;
-    const r = this.rowDimension;
-		const c = this.colDimension;
+    const r = this.rows;
+		const c = this.columns;
 
     for (let i = 0; i < n; ++i) { te[i] = ee[i]; }
     fn.call(null, te, r, c);

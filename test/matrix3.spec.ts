@@ -118,6 +118,8 @@ describe('Matrix3', () => {
       expect(a.getRow(0)).to.be.eql(new Vector3(2, 3, 4));
       expect(a.getRow(1)).to.be.eql(new Vector3(5, 6, 7));
       expect(a.getRow(2)).to.be.eql(new Vector3(8, 9, 10));
+      
+      expect(a.getRow.bind(a, 3)).to.throw('getRow(): no row defined at 3.');
     });
     it('should get a column from the matrix', () => {
       const a = new Matrix3();
@@ -125,11 +127,94 @@ describe('Matrix3', () => {
       expect(a.getColumn(0)).to.be.eql(new Vector3(2, 5, 8));
       expect(a.getColumn(1)).to.be.eql(new Vector3(3, 6, 9));
       expect(a.getColumn(2)).to.be.eql(new Vector3(4, 7, 10));
+
+      expect(a.getColumn.bind(a, 3)).to.throw('getColumn(): no column defined at 3.');
     });
     it('should print the matrix', () => {
       const a = new Matrix3();
       a.setElements(3.123456789, 1102345.123456789, 7.123456789e-15, 11.123456789, 1, 12, 123, 1234, 12345);
       console.log(a.prettyPrint());
+    });
+    it('should set a matrix column with a vector', () => {
+      const c0 = new Vector3(3, 7, 11);
+      const A = new Matrix3();
+      A.setElements(13, 17, 19, 23, 29, 31, 37, 41, 43);
+      A.setColumn(0, c0);
+      expect(A.get(0, 0)).to.be.eql(3);
+      expect(A.get(0, 1)).to.be.eql(17);
+      expect(A.get(0, 2)).to.be.eql(19);
+      expect(A.get(1, 0)).to.be.eql(7);
+      expect(A.get(1, 1)).to.be.eql(29);
+      expect(A.get(1, 2)).to.be.eql(31);
+      expect(A.get(2, 0)).to.be.eql(11);
+      expect(A.get(2, 1)).to.be.eql(41);
+      expect(A.get(2, 2)).to.be.eql(43);
+    });
+    it('should set a matrix row with a vector', () => {
+      const r0 = new Vector3(3, 7, 11);
+
+      const A = new Matrix3();
+      A.setElements(13, 17, 19, 23, 29, 31, 37, 41, 43);
+      A.setRow(0, r0);
+      expect(A.get(0, 0)).to.be.eql(3);
+      expect(A.get(0, 1)).to.be.eql(7);
+      expect(A.get(0, 2)).to.be.eql(11);
+      expect(A.get(1, 0)).to.be.eql(23);
+      expect(A.get(1, 1)).to.be.eql(29);
+      expect(A.get(1, 2)).to.be.eql(31);
+      expect(A.get(2, 0)).to.be.eql(37);
+      expect(A.get(2, 1)).to.be.eql(41);
+      expect(A.get(2, 2)).to.be.eql(43);
+    });
+    it('should set a single matrix element', () => {
+      const A = new Matrix3();
+      A.setElements(13, 17, 19, 23, 29, 31, 37, 41, 43);
+      A.set(1, 0, 7);
+      expect(A.get(0, 0)).to.be.eql(13);
+      expect(A.get(0, 1)).to.be.eql(17);
+      expect(A.get(0, 2)).to.be.eql(19);
+      expect(A.get(1, 0)).to.be.eql(7);
+      expect(A.get(1, 1)).to.be.eql(29);
+      expect(A.get(1, 2)).to.be.eql(31);
+      expect(A.get(2, 0)).to.be.eql(37);
+      expect(A.get(2, 1)).to.be.eql(41);
+      expect(A.get(2, 2)).to.be.eql(43);
+    });
+    it('should swap rows in a matrix', () => {
+      const A = new Matrix3();
+      A.setElements(13, 17, 19, 23, 29, 31, 37, 41, 43);
+      A.swapRows(0, 2);
+      expect(A.get(2, 0)).to.be.eql(13);
+      expect(A.get(2, 1)).to.be.eql(17);
+      expect(A.get(2, 2)).to.be.eql(19);
+      expect(A.get(1, 0)).to.be.eql(23);
+      expect(A.get(1, 1)).to.be.eql(29);
+      expect(A.get(1, 2)).to.be.eql(31);
+      expect(A.get(0, 0)).to.be.eql(37);
+      expect(A.get(0, 1)).to.be.eql(41);
+      expect(A.get(0, 2)).to.be.eql(43);
+
+      expect(A.swapRows.bind(A, 0, 3)).to.throw(`swapRows(): row index out of bounds.`);
+      expect(A.swapRows.bind(A, 3, 0)).to.throw(`swapRows(): row index out of bounds.`);
+      expect(A.swapRows.bind(A, 4, 5)).to.throw(`swapRows(): row index out of bounds.`);
+    });
+    it('should swap columns in a matrix', () => {
+      const A = new Matrix3();
+      A.setElements(13, 17, 19, 23, 29, 31, 37, 41, 43);
+      A.swapColumns(0, 2);
+      expect(A.get(0, 2)).to.be.eql(13);
+      expect(A.get(0, 1)).to.be.eql(17);
+      expect(A.get(0, 0)).to.be.eql(19);
+      expect(A.get(1, 2)).to.be.eql(23);
+      expect(A.get(1, 1)).to.be.eql(29);
+      expect(A.get(1, 0)).to.be.eql(31);
+      expect(A.get(2, 2)).to.be.eql(37);
+      expect(A.get(2, 1)).to.be.eql(41);
+      expect(A.get(2, 0)).to.be.eql(43);
+
+      expect(A.swapColumns.bind(A, 0, 3)).to.throw(`swapColumns(): column index out of bounds.`);
+      expect(A.swapColumns.bind(A, 3, 0)).to.throw(`swapColumns(): column index out of bounds.`);
+      expect(A.swapColumns.bind(A, 4, 5)).to.throw(`swapColumns(): column index out of bounds.`);
     });
   });
   describe('Arithmetic Operations', () => {
@@ -214,6 +299,24 @@ describe('Matrix3', () => {
       const f = b.clone().premultiply(a);
       expect(f).to.be.eql(c);
     });
+    it('should be able to apply a function to the elements of a matrix', () => {
+      const A = new Matrix3();
+      A.setElements(13, 17, 19, 23, 29, 31, 37, 41, 43)
+        .applyFunction((elems: number[]) => {
+          for (let i = 0; i < elems.length; ++i) {
+            elems[i] *= 2;
+          }
+        });
+      expect(A.get(0, 0)).to.be.eql(13 * 2);
+      expect(A.get(0, 1)).to.be.eql(17 * 2);
+      expect(A.get(0, 2)).to.be.eql(19 * 2);
+      expect(A.get(1, 0)).to.be.eql(23 * 2);
+      expect(A.get(1, 1)).to.be.eql(29 * 2);
+      expect(A.get(1, 2)).to.be.eql(31 * 2);
+      expect(A.get(2, 0)).to.be.eql(37 * 2);
+      expect(A.get(2, 1)).to.be.eql(41 * 2);
+      expect(A.get(2, 2)).to.be.eql(43 * 2);
+    });
   });
   describe('Linear Algebra Functions', () => {
     it('should compute a skew-symmetric matrix from a Vector3', () => {
@@ -231,21 +334,24 @@ describe('Matrix3', () => {
       expect(det).to.be.eql(-78);
     });
     it('should compute the matrix inverse', () => {
-      const a = new Matrix3();
-      a.setElements(3, 0, 2, 2, 0, -2, 0, 1, 1);
-      const c = a.clone().getInverse(a, false);
-      const b = new Matrix3();
-      b.setElements(0.2, 0.2, 0, -0.2, 0.3, 1, 0.2, -0.3, 0);
-      const C = c.toArray();
-      const B = b.toArray();
-      const A = a.toArray();
+      const A = new Matrix3();
+      A.setElements(3, 0, 2, 2, 0, -2, 0, 1, 1);
+      const C = A.clone().getInverse(A, false);
+      const B = new Matrix3();
+      B.setElements(0.2, 0.2, 0, -0.2, 0.3, 1, 0.2, -0.3, 0);
+      const c = C.toArray();
+      const b = B.toArray();
+      const a = A.toArray();
       for (let i = 0; i < 9; ++i) {
-        expect(Math.abs(C[i] - B[i]) < EPS);
+        expect(Math.abs(c[i] - b[i]) < EPS);
       }
-      a.invert();
+      A.invert();
       for (let i = 0; i < 9; ++i) {
-        expect(Math.abs(A[i] - B[i]) < EPS);
+        expect(Math.abs(a[i] - b[i]) < EPS);
       }
+
+      const D = new Matrix3().setElements(3, 0, 2, 2, 0, -2, 1, 0, 1);
+      expect(() => D.invert(true)).to.throw(`Matrix3.getInverse(): matrix is degenerate.`);
     });
     it('should compute the adjugate matrix', () => {
       const a = new Matrix3();
@@ -268,6 +374,57 @@ describe('Matrix3', () => {
       a.setElements(3, 2, 4, 2, 0, 2, 4, 2, 3);
       const eigenInfo = a.getEigenvalues();
       expect(eigenInfo.map((c: Complex): number => c.real).sort()).to.be.eql([-1, -1, 8]);
+    });
+    it('should transform a row vector (x^T * A)', () => {
+      const x = new Vector3(2, 3, 5);
+      const A = new Matrix3().setElements(7, 11, 13, 19, 23, 29, 31, 37, 41);
+      const y = A.transformRowVector(x);
+
+      expect(y.getComponent(0)).to.be.eql(226);
+      expect(y.getComponent(1)).to.be.eql(276);
+      expect(y.getComponent(2)).to.be.eql(318);
+    });
+    it('should transform a column vector (A * x)', () => {
+      const x = new Vector3(2, 3, 5);
+      const A = new Matrix3().setElements(7, 11, 13, 19, 23, 29, 31, 37, 41);
+      const y = A.transformVector(x);
+
+      expect(y.getComponent(0)).to.be.eql(112);
+      expect(y.getComponent(1)).to.be.eql(252);
+      expect(y.getComponent(2)).to.be.eql(378);
+    });
+    it('should calculate the outer product correctly', () => {
+      const A = new Matrix3();
+      const a = new Vector3(3, 5, 7);
+      const b = new Vector3(11, 13, 19);
+      const s = 2;
+      A.setOuterProduct(a, b, s);
+      expect(A.get(0, 0)).to.be.eql(33 * s);
+      expect(A.get(0, 1)).to.be.eql(39 * s);
+      expect(A.get(0, 2)).to.be.eql(57 * s);
+      expect(A.get(1, 0)).to.be.eql(55 * s);
+      expect(A.get(1, 1)).to.be.eql(65 * s);
+      expect(A.get(1, 2)).to.be.eql(95 * s);
+      expect(A.get(2, 0)).to.be.eql(77 * s);
+      expect(A.get(2, 1)).to.be.eql(91 * s);
+      expect(A.get(2, 2)).to.be.eql(133 * s);
+    });
+    it('should calculate and add an outer product correctly', () => {
+      const a = 13;
+      const A = new Matrix3().setElements(a, a, a, a, a, a, a, a, a);
+      const u = new Vector3(3, 5, 7);
+      const v = new Vector3(11, 13, 19);
+      const s = 3;
+      A.addOuterProduct(u, v, s);
+      expect(A.get(0, 0)).to.be.eql(33 * s + a);
+      expect(A.get(0, 1)).to.be.eql(39 * s + a);
+      expect(A.get(0, 2)).to.be.eql(57 * s + a);
+      expect(A.get(1, 0)).to.be.eql(55 * s + a);
+      expect(A.get(1, 1)).to.be.eql(65 * s + a);
+      expect(A.get(1, 2)).to.be.eql(95 * s + a);
+      expect(A.get(2, 0)).to.be.eql(77 * s + a);
+      expect(A.get(2, 1)).to.be.eql(91 * s + a);
+      expect(A.get(2, 2)).to.be.eql(133 * s + a);
     });
   });
 });
