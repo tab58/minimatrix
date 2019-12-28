@@ -163,11 +163,7 @@ export class Vector4 implements MathVector {
    * @returns {Vector3} This vector.
    */
   multiply (v: this): this {
-    this._x *= v.x;
-    this._y *= v.y;
-    this._z *= v.z;
-    this._w *= v.w;
-    return this;
+    return this.multiplyVectors(this, v);
   }
 
 	multiplyScalar (scalar: number): this {
@@ -244,100 +240,6 @@ export class Vector4 implements MathVector {
     return dx * dx + dy * dy + dz * dz + dw * dw;
   }
 
-	setAxisAngleFromRotationMatrix (m: Matrix4): this {
-		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/index.htm
-		// assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
-
-		let angle, x, y, z;		// variables for result
-		const epsilon = 0.01;		// margin to allow for rounding errors
-		const epsilon2 = 0.1;		// margin to distinguish between 0 and 180 degrees
-
-		const	te = m.toArray();
-		const	m11 = te[ 0 ], m12 = te[ 4 ], m13 = te[ 8 ],
-			m21 = te[ 1 ], m22 = te[ 5 ], m23 = te[ 9 ],
-			m31 = te[ 2 ], m32 = te[ 6 ], m33 = te[ 10 ];
-
-		if ( ( _Math.abs( m12 - m21 ) < epsilon ) &&
-			( _Math.abs( m13 - m31 ) < epsilon ) &&
-			( _Math.abs( m23 - m32 ) < epsilon ) ) {
-
-			// singularity found
-			// first check for identity matrix which must have +1 for all terms
-			// in leading diagonal and zero in other terms
-
-			if ( ( _Math.abs( m12 + m21 ) < epsilon2 ) &&
-				( _Math.abs( m13 + m31 ) < epsilon2 ) &&
-				( _Math.abs( m23 + m32 ) < epsilon2 ) &&
-				( _Math.abs( m11 + m22 + m33 - 3 ) < epsilon2 ) ) {
-
-				// this singularity is identity matrix so angle = 0
-				this.set( 1, 0, 0, 0 );
-				return this; // zero angle, arbitrary axis
-			}
-			// otherwise this singularity is angle = 180
-			angle = _Math.PI;
-			const xx = ( m11 + 1 ) / 2;
-			const yy = ( m22 + 1 ) / 2;
-			const zz = ( m33 + 1 ) / 2;
-			const xy = ( m12 + m21 ) / 4;
-			const xz = ( m13 + m31 ) / 4;
-			const yz = ( m23 + m32 ) / 4;
-			if ( ( xx > yy ) && ( xx > zz ) ) {
-				// m11 is the largest diagonal term
-				if ( xx < epsilon ) {
-					x = 0;
-					y = 0.707106781;
-					z = 0.707106781;
-				} else {
-					x = _Math.sqrt( xx );
-					y = xy / x;
-					z = xz / x;
-				}
-			} else if ( yy > zz ) {
-				// m22 is the largest diagonal term
-				if ( yy < epsilon ) {
-					x = 0.707106781;
-					y = 0;
-					z = 0.707106781;
-				} else {
-					y = _Math.sqrt( yy );
-					x = xy / y;
-					z = yz / y;
-				}
-			} else {
-				// m33 is the largest diagonal term so base result on this
-				if ( zz < epsilon ) {
-					x = 0.707106781;
-					y = 0.707106781;
-					z = 0;
-				} else {
-					z = _Math.sqrt( zz );
-					x = xz / z;
-					y = yz / z;
-				}
-			}
-			this.set( x, y, z, angle );
-			return this; // return 180 deg rotation
-		}
-
-		// as we have reached here there are no singularities so we can handle normally
-		let s = _Math.sqrt( ( m32 - m23 ) * ( m32 - m23 ) +
-			( m13 - m31 ) * ( m13 - m31 ) +
-			( m21 - m12 ) * ( m21 - m12 ) ); // used to normalize
-
-		if ( _Math.abs( s ) < 0.001 ) {
-      s = 1;
-    } 
-
-		// prevent divide by zero, should not happen if matrix is orthogonal and should be
-		// caught by singularity test above, but I've left it in just in case
-		this._x = ( m32 - m23 ) / s;
-		this._y = ( m13 - m31 ) / s;
-		this._z = ( m21 - m12 ) / s;
-		this._w = _Math.acos( ( m11 + m22 + m33 - 1 ) / 2 );
-		return this;
-	}
-
 	/**
    * Calculates the outer product of the matrix.
    * @param scalar A scalar to multiply the outer product by.
@@ -390,7 +292,7 @@ export class Vector4 implements MathVector {
 
 	clampLength (min: number, max: number): this {
 		const length = this.length();
-		return this.divideScalar(length).multiplyScalar(_Math.max(min, _Math.min(max, length)));
+		return this.multiplyScalar(_Math.max(min, _Math.min(max, length)) / length);
 	}
 
 	floor (): this {
@@ -465,12 +367,8 @@ export class Vector4 implements MathVector {
 		return this.subVectors(v2, v1).multiplyScalar(alpha).add(v1);
 	}
 
-	equals (v: this): boolean {
-		return (( v.x === this.x ) && ( v.y === this.y ) && ( v.z === this.z ) && ( v.w === this.w ));
-	}
-
 	fromArray (array: number[], offset = 0): this {
-		this._x = array[offset ];
+		this._x = array[offset];
 		this._y = array[offset + 1];
 		this._z = array[offset + 2];
 		this._w = array[offset + 3];

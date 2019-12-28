@@ -15,12 +15,16 @@ describe('Vector3', () => {
       expect(v.getComponent(0)).to.be.eql(5);
       expect(v.getComponent(1)).to.be.eql(7);
       expect(v.getComponent(2)).to.be.eql(11);
+      expect(v.getComponent.bind(v, 3)).to.throw('index is out of range: 3');
     });
     it('should be set from an array', () => {
       const a = [0.4, 1.5, 2.6, 3.7];
       const b = new Vector3(0, 0, 0);
       b.fromArray(a, 1);
       expect(b).to.be.eql(new Vector3(1.5, 2.6, 3.7));
+      const c = new Vector3(0, 0, 0);
+      c.fromArray(a);
+      expect(c).to.be.eql(new Vector3(0.4, 1.5, 2.6));
     });
     it('should have properties overwritten when set', () => {
       const v = new Vector3(5, 7, 11);
@@ -36,25 +40,26 @@ describe('Vector3', () => {
       const v = new Vector3(5, 7, 11);
       v.setX(13);
       expect(v).to.be.eql(new Vector3(13, 7, 11));
-      const w = new Vector3(5, 7, 11);
-      w.setComponent(0, 13);
-      expect(w).to.be.eql(new Vector3(13, 7, 11));
     });
     it('should have just Y coordinate overwritten', () => {
       const v = new Vector3(5, 7, 13);
       v.setY(11);
       expect(v).to.be.eql(new Vector3(5, 11, 13));
-      const w = new Vector3(5, 7, 13);
-      w.setComponent(1, 11);
-      expect(w).to.be.eql(new Vector3(5, 11, 13));
     });
     it('should have just Z coordinate overwritten', () => {
       const v = new Vector3(5, 7, 13);
       v.setZ(11);
       expect(v).to.be.eql(new Vector3(5, 7, 11));
-      const w = new Vector3(5, 7, 13);
-      w.setComponent(2, 11);
-      expect(w).to.be.eql(new Vector3(5, 7, 11));
+    });
+    it('should be able to set components by index', () => {
+      const w = new Vector3(5, 7, 11);
+      w.setComponent(0, 13);
+      expect(w).to.be.eql(new Vector3(13, 7, 11));
+      w.setComponent(1, 19);
+      expect(w).to.be.eql(new Vector3(13, 19, 11));
+      w.setComponent(2, 23);
+      expect(w).to.be.eql(new Vector3(13, 19, 23));
+      expect(w.setComponent.bind(w, 3)).to.throw('index is out of range: 3');
     });
     it('should be duplicated with clone()', () => {
       const v = new Vector3(5, 7, 11);
@@ -155,6 +160,15 @@ describe('Vector3', () => {
       const a = new Vector3(1.5, -0.5, 2);
       a.clamp(min, max);
       expect(a).to.be.eql(new Vector3(1, 0, 1));
+      
+      a.set(1.5, -0.5, 2);
+      a.clampScalar(-1, 1);
+      expect(a).to.be.eql(new Vector3(1, -0.5, 1));
+    });
+    it('should clamp the length to a scalar', () => {
+      const v = new Vector3(3, 4, 5);
+      v.clampLength(0, 1);
+      expect(Math.abs(1 - v.length())).to.be.lessThan(EPS);
     });
     it('should round components to the lowest integer values', () => {
       const a = new Vector3(1.5, -0.5, 2.3);
@@ -175,6 +189,10 @@ describe('Vector3', () => {
       const a = new Vector3(-1.7, 1.7, 2.3);
       a.roundToZero();
       expect(a).to.be.eql(new Vector3(-1, 1, 2));
+
+      const b = new Vector3(1.7, -1.7, -2.3);
+      b.roundToZero();
+      expect(b).to.be.eql(new Vector3(1, -1, -2));
     });
     it('should negate the components of a vector', () => {
       const a = new Vector3(1.7, -2.1, -1);
@@ -239,12 +257,6 @@ describe('Vector3', () => {
       const f = a.toArray(e);
       expect(f).to.be.eql([1.5, 2.6, 3.7, 3]);
     });
-
-    it('should threshold near zero values to zero', () => {
-      const a = new Vector3(1, 5e-15, 2e-14);
-      a.thresholdValuesToZero(EPS);
-      expect(a).to.be.eql(new Vector3(1, 0, 2e-14));
-    });
   });
   describe('Linear Algebra Operations', () => {
     it('should be transformed a 3x3 matrix', () => {
@@ -290,6 +302,28 @@ describe('Vector3', () => {
       const b = new Vector3(2, 0, 0);
       const c = a.clone().projectOnVector(b);
       expect(c).to.be.eql(new Vector3(1, 0, 0));
+    });
+    it('should project a vector onto a plane', () => {
+      const v = new Vector3(1, 1, 1);
+      const p = new Vector3(0, 0, 1);
+      v.projectOnPlane(p);
+      expect(v).to.be.eql(new Vector3(1, 1, 0));
+    });
+    it('should rotate a vector about another vector', () => {
+      const v = new Vector3(1, 1, 1);
+      const r = new Vector3(0, 0, 1);
+      v.rotateAround(r, Math.PI / 2);
+      const d = v.distanceTo(new Vector3(-1, 1, 1));
+      expect(d).to.be.lessThan(EPS);
+    });
+    it('should calculate an outer (dyadic) product', () => {
+      const s = 3;
+      const v = new Vector3(3, 5, 7);
+      const m = new Matrix3().setElements(s * 3 * 3, s * 3 * 5, s * 3 * 7,
+        s * 5 * 3, s * 5 * 5, s * 5 * 7,
+        s * 7 * 3, s * 7 * 5, s * 7 * 7);
+      const mv = v.getOuterProduct(s);
+      expect(mv).to.be.eql(m);
     });
   });
 });

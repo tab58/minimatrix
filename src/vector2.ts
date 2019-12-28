@@ -210,9 +210,7 @@ export class Vector2 extends Vector {
    * @returns {Vector2} This vector.
    */
   multiply (v: this): this {
-    this._x *= v.x;
-    this._y *= v.y;
-    return this;
+    return this.multiplyVectors(this, v);
   }
 
   /**
@@ -481,17 +479,6 @@ export class Vector2 extends Vector {
   }
 
   /**
-   * Determines equality between this vector and the given vector.
-   * @param {Vector2} v The given vector.
-   * @param {number} tol The numerical tolerance.
-   * @returns {boolean} True if all the component value differences are below the numeric tolerance, false if not.
-   */
-  equals (v: this, tol = 0): boolean {
-    return (_Math.abs(v.x - this.x) < tol &&
-            _Math.abs(v.y - this.y) < tol);
-  }
-
-  /**
    * Sets the length of this vector/
    * @param {number} length The new length of the vector.
    * @returns {Vector2} This vector.
@@ -525,14 +512,11 @@ export class Vector2 extends Vector {
 
   /**
    * Loads a vector from an array.
-   * @param {number[]} array The array with values.
-   * @param {number} offset The offset to start from in the array. Default is zero.
-   * @returns {Vector2} This vector.
+   * @param array The array with values.
+   * @param offset The offset to start from in the array. Default is zero.
+   * @returns This vector.
    */
-  fromArray (array: number[], offset: number): this {
-    if (offset === undefined) {
-      offset = 0;
-    }
+  fromArray (array: number[], offset = 0): this {
     this._x = array[offset];
     this._y = array[offset + 1];
     return this;
@@ -540,9 +524,9 @@ export class Vector2 extends Vector {
 
   /**
    * Loads an array from this vector.
-   * @param {number[]} array The array to put the values in.
-   * @param {number} offset The offset to start from in the array. Default is zero.
-   * @returns {Vector2} This vector.
+   * @param array The array to put the values in.
+   * @param offset The offset to start from in the array. Default is zero.
+   * @returns This vector.
    */
   toArray (array: number[] = [], offset = 0): number[] {
     array[offset] = this.x;

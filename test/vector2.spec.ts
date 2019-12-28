@@ -8,12 +8,18 @@ describe('Vector2', () => {
       const v = new Vector2(5, 7);
       expect(v.x).to.be.eql(5);
       expect(v.y).to.be.eql(7);
+      
+      const b = new Vector2();
+      expect(b).to.be.eql(new Vector2(0, 0));
     });
     it('should be set from an array', () => {
       const a = [0.4, 1.5, 2.6];
-      const b = new Vector2(0, 0);
+      const b = new Vector2();
       b.fromArray(a, 1);
       expect(b).to.be.eql(new Vector2(1.5, 2.6));
+      
+      b.fromArray(a);
+      expect(b).to.be.eql(new Vector2(0.4, 1.5));
     });
     it('should have properties overwritten when set', () => {
       const v = new Vector2(5, 7);
@@ -46,6 +52,20 @@ describe('Vector2', () => {
       w.copy(v);
       expect(w.x).to.be.eql(v.x);
       expect(w.y).to.be.eql(v.y);
+    });
+    it('should get a component from the vector', () => {
+      const v = new Vector2(2, 3);
+      expect(v.getComponent(0)).to.be.eql(2);
+      expect(v.getComponent(1)).to.be.eql(3);
+      expect(v.getComponent.bind(v, 2)).to.throw('getComponent(): index is out of range: 2');
+    });
+    it('should set a component in the vector', () => {
+      const v = new Vector2(2, 3);
+      v.setComponent(0, 5);
+      expect(v.getComponent(0)).to.be.eql(5);
+      v.setComponent(1, 7);
+      expect(v.getComponent(1)).to.be.eql(7);
+      expect(v.setComponent.bind(v, 2, 11)).to.throw('setComponent(): index is out of range: 2');
     });
   });
   describe('Arithmetic Operations', () => {
@@ -152,6 +172,9 @@ describe('Vector2', () => {
       const a = new Vector2(-1.7, 1.7);
       a.roundToZero();
       expect(a).to.be.eql(new Vector2(-1, 1));
+      const b = new Vector2(1.4, -1.4);
+      b.roundToZero();
+      expect(b).to.be.eql(new Vector2(1, -1));
     });
     it('should negate the components of a vector', () => {
       const a = new Vector2(1.7, -2.1);
@@ -162,11 +185,17 @@ describe('Vector2', () => {
       const a = new Vector2(3, 4);
       const lenSq = a.lengthSq();
       expect(lenSq).to.be.eql(25);
+
+      const b = new Vector2(0, 0);
+      expect(b.lengthSq()).to.be.eql(0);
     });
     it('should compute the vector length', () => {
       const a = new Vector2(3, 4);
       const len = a.length();
       expect(len).to.be.eql(5);
+
+      const b = new Vector2(0, 0);
+      expect(b.length()).to.be.eql(0);
     });
     it('should normalize the vector', () => {
       const a = new Vector2(3, 4);
@@ -259,6 +288,31 @@ describe('Vector2', () => {
       a.rotateAround(new Vector2(1, 1), Math.PI / 2);
       expect(Math.abs(a.x - 0) < EPS);
       expect(Math.abs(a.y - 1) < EPS);
+    });
+    it('should compute the angle on the plane the vector lies in', () => {
+      const v1 = new Vector2(1, 1);
+      const a1 = v1.angle();
+      const t1 = 45 * Math.PI / 180;
+      expect(Math.abs(t1 - a1)).to.be.lessThan(EPS);
+
+      const v2 = new Vector2(1, -1);
+      const a2 = v2.angle();
+      const t2 = 315 * Math.PI / 180;
+      expect(Math.abs(t2 - a2)).to.be.lessThan(EPS);
+    });
+    it('should compute the angle between two vectors', () => {
+      const a = new Vector2(1, 0);
+      const b = new Vector2(1, 1);
+      const u = 45 * Math.PI / 180;
+      const v = a.angleTo(b)
+      expect(Math.abs(u - v)).to.be.lessThan(EPS);
+    });
+    it('should compute the outer (dyadic) product', () => {
+      const v = new Vector2(3, 5);
+      const s = 2;
+      const mv = v.getOuterProduct(s);
+      const m2 = new Matrix2().setElements(s * 3 * 3, s * 3 * 5, s * 5 * 3, s * 5 * 5);
+      expect(mv).to.be.eql(m2);
     });
   });
 });

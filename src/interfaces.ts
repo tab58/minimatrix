@@ -374,14 +374,6 @@ export interface MathVector {
   distanceToSquared (v: this): number;
 
   /**
-   * Determines equality between this vector and the given vector.
-   * @param {MathVector} v The given vector.
-   * @param {number} tol The numerical tolerance.
-   * @returns {boolean} True if all the component value differences are below the numeric tolerance, false if not.
-   */
-  equals (v: this, tol?: number): boolean;
-
-  /**
    * Sets the length of this vector/
    * @param {number} length The new length of the vector.
    * @returns {MathVector} This vector.

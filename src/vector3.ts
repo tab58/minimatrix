@@ -251,10 +251,7 @@ export class Vector3 implements MathVector {
    * @returns {Vector3} This vector.
    */
   multiply (v: this): this {
-    this._x *= v.x;
-    this._y *= v.y;
-    this._z *= v.z;
-    return this;
+    return this.multiplyVectors(this, v);
   }
 
   /**
@@ -560,18 +557,6 @@ export class Vector3 implements MathVector {
   }
 
   /**
-   * Assigns zero to component values below the numerical tolerance.
-   * @param {number} tol The numerical tolerance.
-   * @returns {Vector3} This vector.
-   */
-  thresholdValuesToZero (tol: number): this {
-    this._x = (_Math.abs(this._x) < tol ? 0 : this._x);
-    this._y = (_Math.abs(this._y) < tol ? 0 : this._y);
-    this._z = (_Math.abs(this._z) < tol ? 0 : this._z);
-    return this;
-  }
-
-  /**
    * Calculates the angle between this vector and the given vector.
    * @param {Vector3} v The given vector.
    * @returns {number} The angle.
@@ -606,22 +591,10 @@ export class Vector3 implements MathVector {
   }
 
   /**
-   * Determines equality between this vector and the given vector.
-   * @param {Vector3} v The given vector.
-   * @param {number} tol The numerical tolerance.
-   * @returns {boolean} True if all the component value differences are below the numeric tolerance, false if not.
-   */
-  equals (v: this, tol = 0): boolean {
-    return (_Math.abs(v.x - this._x) < tol &&
-            _Math.abs(v.y - this._y) < tol &&
-            _Math.abs(v.z - this._z) < tol);
-  }
-
-  /**
    * Loads a vector from an array.
-   * @param {number} array The array with values.
-   * @param {number} offset The offset to start from in the array. Default is zero.
-   * @returns {Vector3} This vector.
+   * @param array The array with values.
+   * @param offset The offset to start from in the array. Default is zero.
+   * @returns This vector.
    */
   fromArray (array: number[], offset = 0): this {
     this._x = array[ offset ];
@@ -632,9 +605,9 @@ export class Vector3 implements MathVector {
 
   /**
    * Loads an array from this vector.
-   * @param {number[]} array The array to put the values in.
-   * @param {number} offset The offset to start from in the array. Default is zero.
-   * @returns {number[]} The array argument.
+   * @param array The array to put the values in.
+   * @param offset The offset to start from in the array. Default is zero.
+   * @returns The array argument.
    */
   toArray (array: number[] = [], offset = 0): number[] {
     array[ offset ] = this._x;

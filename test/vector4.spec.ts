@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Vector4 } from '../src/index';
+import { Vector4, Matrix4 } from '../src/index';
 
 describe('Vector4', () => {
   const EPS = 1e-14;
@@ -10,6 +10,7 @@ describe('Vector4', () => {
       expect(v.y).to.be.eql(7);
       expect(v.z).to.be.eql(11);
       expect(v.w).to.be.eql(13);
+      expect(new Vector4()).to.be.eql(new Vector4(0, 0, 0, 0));
     });
     it('should be able to get individual components', () => {
       const v = new Vector4(5, 7, 11, 13);
@@ -17,12 +18,16 @@ describe('Vector4', () => {
       expect(v.getComponent(1)).to.be.eql(7);
       expect(v.getComponent(2)).to.be.eql(11);
       expect(v.getComponent(3)).to.be.eql(13);
+      expect(v.getComponent.bind(v, 4)).to.throw('index is out of range: 4');
     });
     it('should be set from an array', () => {
       const a = [0.4, 1.5, 2.6, 3.7, 4.8];
       const b = new Vector4(0, 0, 0, 0);
       b.fromArray(a, 1);
       expect(b).to.be.eql(new Vector4(1.5, 2.6, 3.7, 4.8));
+      const c = new Vector4(0, 0, 0, 0);
+      c.fromArray(a);
+      expect(c).to.be.eql(new Vector4(0.4, 1.5, 2.6, 3.7));
     });
     it('should have properties overwritten when set', () => {
       const v = new Vector4(5, 7, 11, 13);
@@ -38,33 +43,33 @@ describe('Vector4', () => {
       const v = new Vector4(5, 7, 11, 13);
       v.setX(17);
       expect(v).to.be.eql(new Vector4(17, 7, 11, 13));
-      const w = new Vector4(5, 7, 11, 13);
-      w.setComponent(0, 17);
-      expect(w).to.be.eql(new Vector4(17, 7, 11, 13));
     });
     it('should have just Y coordinate overwritten', () => {
       const v = new Vector4(5, 7, 11, 13);
       v.setY(17);
       expect(v).to.be.eql(new Vector4(5, 17, 11, 13));
-      const w = new Vector4(5, 7, 11, 13);
-      w.setComponent(1, 17);
-      expect(w).to.be.eql(new Vector4(5, 17, 11, 13));
     });
     it('should have just Z coordinate overwritten', () => {
       const v = new Vector4(5, 7, 11, 13);
       v.setZ(17);
       expect(v).to.be.eql(new Vector4(5, 7, 17, 13));
-      const w = new Vector4(5, 7, 11, 13);
-      w.setComponent(2, 17);
-      expect(w).to.be.eql(new Vector4(5, 7, 17, 13));
     });
     it('should have just W coordinate overwritten', () => {
       const v = new Vector4(5, 7, 11, 13);
       v.setW(17);
       expect(v).to.be.eql(new Vector4(5, 7, 11, 17));
+    });
+    it('should set components via index', () => {
       const w = new Vector4(5, 7, 11, 13);
-      w.setComponent(3, 17);
-      expect(w).to.be.eql(new Vector4(5, 7, 11, 17));
+      w.setComponent(0, 17);
+      expect(w).to.be.eql(new Vector4(17, 7, 11, 13));
+      w.setComponent(1, 19);
+      expect(w).to.be.eql(new Vector4(17, 19, 11, 13));
+      w.setComponent(2, 23);
+      expect(w).to.be.eql(new Vector4(17, 19, 23, 13));
+      w.setComponent(3, 29);
+      expect(w).to.be.eql(new Vector4(17, 19, 23, 29));
+      expect(w.setComponent.bind(w, 4)).to.throw('index is out of range: 4');
     });
     it('should be duplicated with clone()', () => {
       const v = new Vector4(5, 7, 11, 13);
@@ -167,6 +172,16 @@ describe('Vector4', () => {
       const a = new Vector4(1.5, -0.5, 2, 0.55);
       a.clamp(min, max);
       expect(a).to.be.eql(new Vector4(1, 0, 1, 0.55));
+
+      a.set(1.5, -0.5, 2, 0.55);
+      a.clampScalar(0, 1);
+      expect(a).to.be.eql(new Vector4(1, 0, 1, 0.55));
+    });
+    it('should clamp the length between two scalar values', () => {
+      const v = new Vector4(1, 1, 1, 1);
+      v.clampLength(0, 1);
+      const l = v.length();
+      expect(Math.abs(l - 1)).to.be.lessThan(EPS);
     });
     it('should round components to the lowest integer values', () => {
       const a = new Vector4(1.5, -0.5, 2.3, -2.5);
@@ -187,6 +202,9 @@ describe('Vector4', () => {
       const a = new Vector4(-1.7, 1.7, 2.3, 4.1);
       a.roundToZero();
       expect(a).to.be.eql(new Vector4(-1, 1, 2, 4));
+      a.set(1.7, -1.7, -2.3, -4.1);
+      a.roundToZero();
+      expect(a).to.be.eql(new Vector4(1, -1, -2, -4));
     });
     it('should negate the components of a vector', () => {
       const a = new Vector4(1.7, -2.1, -1, 3);
@@ -210,6 +228,12 @@ describe('Vector4', () => {
       expect(Math.abs(a.y - 4 / Math.sqrt(99)) < EPS);
       expect(Math.abs(a.z - 5 / Math.sqrt(99)) < EPS);
       expect(Math.abs(a.z - 7 / Math.sqrt(99)) < EPS);
+    });
+    it('should compute a dot product', () => {
+      const u = new Vector4(2, 3, 5, 7);
+      const v = new Vector4(11, 13, 19, 23);
+      const d = 2 * 11 + 3 * 13 + 5 * 19 + 7 * 23;
+      expect(u.dot(v)).to.be.eql(d);
     });
     it('should return the distance from the vector tip to another', () => {
       const a = new Vector4(3, 4, 5, 11);
@@ -252,5 +276,22 @@ describe('Vector4', () => {
       const f = a.toArray(e);
       expect(f).to.be.eql([1.5, 2.6, 3.7, 4.8, 4]);
     });
+    it('should compute the angle of a vector to another vector that both lie in the same plane', () => {
+      const u = new Vector4(1, 1, 1, 1);
+      const v = new Vector4(1, -1, 1, 1);
+      const a = u.angleTo(v);
+      const t = Math.PI / 3;
+      expect(Math.abs(a - t)).lessThan(EPS);
+    });
+    it('should compute the outer (dyadic) product', () => {
+      const s = 2;
+      const v = new Vector4(2, 3, 5, 7);
+      const mv = new Matrix4().setElements(s * 2 * 2, s * 2 * 3, s * 2 * 5, s * 2 * 7,
+        s * 3 * 2, s * 3 * 3, s * 3 * 5, s * 3 * 7,
+        s * 5 * 2, s * 5 * 3, s * 5 * 5, s * 5 * 7,
+        s * 7 * 2, s * 7 * 3, s * 7 * 5, s * 7 * 7);
+      const m = v.getOuterProduct(s);
+      expect(m).to.be.eql(mv);
+    })
   });
 });
