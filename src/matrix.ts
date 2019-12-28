@@ -103,7 +103,6 @@ export class Matrix {
     if (i !== j) {
       for (let k = 0; k < n; ++k) {
         const offset = k * n;
-
         const tmp = A[i + offset];
         A[i + offset] = A[j + offset];
         A[j + offset] = tmp;
@@ -162,9 +161,9 @@ export class Matrix {
 
   /**
    * Adds 2 matrices together and optionally scales the result: a + alpha * b.
-   * @param {Matrix} a The first matrix.
-   * @param {Matrix} b The second matrix.
-   * @param {number} scalar The number to scale the result by.
+   * @param a The first matrix.
+   * @param b The second matrix.
+   * @param scalar The number to scale the result by.
    */
   addMatrices (a: this, b: this, scalar = 1): this {
     if (a.rows === this.rows && a.columns === this.columns &&
@@ -268,16 +267,19 @@ export class Matrix {
       const r = a.columns;
       const ae = a._elements;
       const be = b._elements;
-      const te = this._elements;
+      const te = this._elements.slice();
       for (let i = 0; i < m; ++i) {
-        for (let j = 0; j < n; ++i) {
+        for (let j = 0; j < n; ++j) {
           let sum = 0;
-          for (let k = 0; k < r; ++i) {
-            sum += ae[i + k * r] * be[k + j * r];
+          for (let k = 0; k < r; ++k) {
+            const u = ae[i + k * r];
+            const v = be[k + j * r];
+            sum += u * v;
           }
           te[i + j * m] = sum;
         }
       }
+      this._elements = te;
       return this;
     } else {
       throw new Error(`Matrix.multiplyMatrices(): matrix dimensions do not agree.`);
@@ -392,7 +394,7 @@ export class Matrix {
       const row = [];
       const n = this.columns;
       for (let j = 0; j < n; ++j) {
-        row[i] = te[i + j * m];
+        row[j] = te[i + j * m];
       }
       return new Vector(n).setComponents(row);
     } else {
@@ -412,11 +414,11 @@ export class Matrix {
     if (i < n && i >= 0 && i === _Math.floor(i)) {
       const col = [];
       for (let j = 0; j < n; ++j) {
-        col[i] = te[j + i * m];
+        col[j] = te[j + i * m];
       }
       return new Vector(m).setComponents(col);
     } else {
-      throw new Error(`Matrix.getRow(): row index is out of bounds.`);
+      throw new Error(`Matrix.getColumn(): column index is out of bounds.`);
     }
   }
 
