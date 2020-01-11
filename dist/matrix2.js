@@ -1,4 +1,20 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 /*
  * Base code from THREE.js authors below.
@@ -8,24 +24,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @author bhouston / http://clara.io
  * @author tschw
  */
+var core_1 = __importDefault(require("./core"));
 var vector2_1 = require("./vector2");
+var matrix_1 = require("./matrix");
 var utils_1 = require("./utils");
 /**
  * A 2x2 matrix stored in column-major order.
  * @class Matrix2
  */
-var Matrix2 = /** @class */ (function () {
+var Matrix2 = /** @class */ (function (_super) {
+    __extends(Matrix2, _super);
     function Matrix2() {
-        this.rowDimension = 2;
-        this.colDimension = 2;
-        this.E0 = new vector2_1.Vector2(1, 0);
-        this.E1 = new vector2_1.Vector2(0, 1);
-        var a = [
-            1, 0,
-            0, 1
-        ];
-        this._elements = a;
-        this._tempElements = a.slice();
+        var _this = _super.call(this, 2, 2) || this;
+        _this.rowDimension = 2;
+        _this.colDimension = 2;
+        _this.E0 = new vector2_1.Vector2(1, 0);
+        _this.E1 = new vector2_1.Vector2(0, 1);
+        _this.identity();
+        return _this;
     }
     Matrix2.prototype.set = function (i, j, value) {
         var n = this.colDimension;
@@ -113,7 +129,7 @@ var Matrix2 = /** @class */ (function () {
             case 1:
                 return new vector2_1.Vector2(te[1], te[3]);
             default:
-                throw new Error('getRow(): no row defined at ' + i + '.');
+                throw new Error("getRow(): no row defined at " + i + ".");
         }
     };
     /**
@@ -129,7 +145,7 @@ var Matrix2 = /** @class */ (function () {
             case 1:
                 return new vector2_1.Vector2(te[2], te[3]);
             default:
-                throw new Error('getColumn(): no column defined at ' + i + '.');
+                throw new Error("getColumn(): no column defined at " + i + ".");
         }
     };
     /**
@@ -156,7 +172,7 @@ var Matrix2 = /** @class */ (function () {
     Matrix2.prototype.swapColumns = function (i, j) {
         var A = this._elements;
         if (i > 1 || j > 1) {
-            throw new Error("swapRows(): row index out of bounds.");
+            throw new Error("swapColumns(): column index out of bounds.");
         }
         if (i !== j) {
             var tmp = A[2];
@@ -200,7 +216,7 @@ var Matrix2 = /** @class */ (function () {
      * @param {Vector2} a The vector to transform.
      * @returns {Vector2} This vector.
      */
-    Matrix2.prototype.transformRowVector2 = function (v) {
+    Matrix2.prototype.transformRowVector = function (v) {
         var ae = this._elements;
         var a11 = ae[0];
         var a12 = ae[2];
@@ -217,7 +233,7 @@ var Matrix2 = /** @class */ (function () {
      * @param {Vector2} a The vector to transform.
      * @returns {Vector2} This vector.
      */
-    Matrix2.prototype.transformVector2 = function (v) {
+    Matrix2.prototype.transformVector = function (v) {
         var ae = this._elements;
         var a11 = ae[0];
         var a12 = ae[2];
@@ -295,7 +311,8 @@ var Matrix2 = /** @class */ (function () {
      * @param {Matrix2} matrix The given matrix.
      * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
      */
-    Matrix2.prototype.getInverse = function (matrix, throwOnDegenerate) {
+    Matrix2.prototype.getInverse = function (matrix, throwOnDegenerate, singularTol) {
+        if (singularTol === void 0) { singularTol = 1e-14; }
         var me = matrix._elements;
         var te = this._elements;
         var a = me[0];
@@ -303,15 +320,15 @@ var Matrix2 = /** @class */ (function () {
         var c = me[1];
         var d = me[3];
         var det = a * d - b * c;
-        if (det === 0) {
+        if (core_1.default.abs(det) <= singularTol) {
             var msg = 'Matrix2.getInverse(): cannot invert matrix, determinant is 0';
             if (throwOnDegenerate === true) {
                 throw new Error(msg);
             }
             else {
-                console.warn(msg);
+                console.error(msg);
+                return this.identity();
             }
-            return this.identity();
         }
         var detInv = 1.0 / det;
         te[0] = d * detInv;
@@ -322,11 +339,13 @@ var Matrix2 = /** @class */ (function () {
     };
     /**
      * Inverts this matrix.
-     * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
+       * @param singularTol The tolerance under which the determinant is considered zero.
+     * @param throwOnDegenerate Throws an Error() if true, prints console warning if not.
      */
-    Matrix2.prototype.invert = function (throwOnDegenerate) {
+    Matrix2.prototype.invert = function (singularTol, throwOnDegenerate) {
+        if (singularTol === void 0) { singularTol = 1e-14; }
         if (throwOnDegenerate === void 0) { throwOnDegenerate = false; }
-        return this.getInverse(this, throwOnDegenerate);
+        return this.getInverse(this, throwOnDegenerate, singularTol);
     };
     /**
      * Transposes this matrix in-place.
@@ -368,20 +387,6 @@ var Matrix2 = /** @class */ (function () {
     Matrix2.prototype.trace = function () {
         var te = this._elements;
         return te[0] + te[3];
-    };
-    /**
-     * Compares the equality with a given matrix (strict).
-     * @param {Matrix2} matrix The given matrix.
-     */
-    Matrix2.prototype.equals = function (matrix) {
-        var te = this._elements;
-        var me = matrix._elements;
-        for (var i = 0; i < 4; i++) {
-            if (te[i] !== me[i]) {
-                return false;
-            }
-        }
-        return true;
     };
     /**
      * Loads values from an array into a matrix.
@@ -426,10 +431,10 @@ var Matrix2 = /** @class */ (function () {
         return this.setElements(n11, n12, n21, n22);
     };
     /**
-     * Adds the outer product of two vectors (a*b^T) to this matrix.
-     * @param {Vector2} a The first vector.
-     * @param {Vector2} b The second vector.
-     * @param {number} scalar The number to scale the matrix by (defaults to 1).
+     * Adds the outer product of two vectors alpha*(a*b^T) to this matrix.
+     * @param a The first vector.
+     * @param b The second vector.
+     * @param scalar The number to scale the matrix by (defaults to 1).
      */
     Matrix2.prototype.addOuterProduct = function (a, b, scalar) {
         if (scalar === void 0) { scalar = 1; }
@@ -447,9 +452,9 @@ var Matrix2 = /** @class */ (function () {
     };
     /**
      * Adds 2 matrices together and optionally scales the result.
-     * @param {Matrix2} a The first matrix.
-     * @param {Matrix2} b The second matrix.
-     * @param {number} scalar The number to scale the result by.
+     * @param a The first matrix.
+     * @param b The second matrix.
+     * @param scalar The number to scale the result by.
      */
     Matrix2.prototype.addMatrices = function (a, b, scalar) {
         if (scalar === void 0) { scalar = 1; }
@@ -501,6 +506,6 @@ var Matrix2 = /** @class */ (function () {
         }
     };
     return Matrix2;
-}());
+}(matrix_1.Matrix));
 exports.Matrix2 = Matrix2;
 //# sourceMappingURL=matrix2.js.map

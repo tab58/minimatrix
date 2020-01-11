@@ -3,11 +3,11 @@ export interface MathMatrix {
     /**
      * The number of rows in the matrix.
      */
-    rowDimension: number;
+    rows: number;
     /**
      * The number of columns in the matrix.
      */
-    colDimension: number;
+    columns: number;
     /**
      * Sets the matrix as the identity matrix.
      */
@@ -58,7 +58,7 @@ export interface MathMatrix {
      * Inverts this matrix.
      * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
      */
-    invert(throwOnDegenerate: boolean): this;
+    invert(singularTol?: number, throwOnDegenerate?: boolean): this;
     /**
      * Transposes this matrix in-place.
      */
@@ -77,11 +77,6 @@ export interface MathMatrix {
      * @returns {number} The matrix trace.
      */
     trace(): number;
-    /**
-     * Compares the equality with a given matrix (strict).
-     * @param {MathMatrix} m The given matrix.
-     */
-    equals(m: this): boolean;
     /**
      * Loads values from an array into a matrix.
      * @param {number[]} array The array to populate the matrix from.
@@ -319,13 +314,6 @@ export interface MathVector {
      * @returns {number} The distance from point to point.
      */
     distanceToSquared(v: this): number;
-    /**
-     * Determines equality between this vector and the given vector.
-     * @param {MathVector} v The given vector.
-     * @param {number} tol The numerical tolerance.
-     * @returns {boolean} True if all the component value differences are below the numeric tolerance, false if not.
-     */
-    equals(v: this, tol?: number): boolean;
     /**
      * Sets the length of this vector/
      * @param {number} length The new length of the vector.

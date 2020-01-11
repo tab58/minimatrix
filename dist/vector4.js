@@ -19,11 +19,32 @@ var Vector4 = /** @class */ (function () {
         if (z === void 0) { z = 0; }
         if (w === void 0) { w = 0; }
         this.dimension = 4;
-        this._x = x;
-        this._y = y;
-        this._z = z;
-        this._w = w;
+        this._components = [x, y, z, w];
     }
+    Object.defineProperty(Vector4.prototype, "_x", {
+        get: function () { return this._components[0]; },
+        set: function (value) { this._components[0] = value; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector4.prototype, "_y", {
+        get: function () { return this._components[1]; },
+        set: function (value) { this._components[1] = value; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector4.prototype, "_z", {
+        get: function () { return this._components[2]; },
+        set: function (value) { this._components[2] = value; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector4.prototype, "_w", {
+        get: function () { return this._components[3]; },
+        set: function (value) { this._components[3] = value; },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Vector4.prototype, "x", {
         get: function () { return this._x; },
         enumerable: true,
@@ -166,11 +187,7 @@ var Vector4 = /** @class */ (function () {
      * @returns {Vector3} This vector.
      */
     Vector4.prototype.multiply = function (v) {
-        this._x *= v.x;
-        this._y *= v.y;
-        this._z *= v.z;
-        this._w *= v.w;
-        return this;
+        return this.multiplyVectors(this, v);
     };
     Vector4.prototype.multiplyScalar = function (scalar) {
         this._x *= scalar;
@@ -239,93 +256,6 @@ var Vector4 = /** @class */ (function () {
         var dw = this._w - v.w;
         return dx * dx + dy * dy + dz * dz + dw * dw;
     };
-    Vector4.prototype.setAxisAngleFromRotationMatrix = function (m) {
-        // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/index.htm
-        // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
-        var angle, x, y, z; // variables for result
-        var epsilon = 0.01; // margin to allow for rounding errors
-        var epsilon2 = 0.1; // margin to distinguish between 0 and 180 degrees
-        var te = m.toArray();
-        var m11 = te[0], m12 = te[4], m13 = te[8], m21 = te[1], m22 = te[5], m23 = te[9], m31 = te[2], m32 = te[6], m33 = te[10];
-        if ((core_1.default.abs(m12 - m21) < epsilon) &&
-            (core_1.default.abs(m13 - m31) < epsilon) &&
-            (core_1.default.abs(m23 - m32) < epsilon)) {
-            // singularity found
-            // first check for identity matrix which must have +1 for all terms
-            // in leading diagonal and zero in other terms
-            if ((core_1.default.abs(m12 + m21) < epsilon2) &&
-                (core_1.default.abs(m13 + m31) < epsilon2) &&
-                (core_1.default.abs(m23 + m32) < epsilon2) &&
-                (core_1.default.abs(m11 + m22 + m33 - 3) < epsilon2)) {
-                // this singularity is identity matrix so angle = 0
-                this.set(1, 0, 0, 0);
-                return this; // zero angle, arbitrary axis
-            }
-            // otherwise this singularity is angle = 180
-            angle = core_1.default.PI;
-            var xx = (m11 + 1) / 2;
-            var yy = (m22 + 1) / 2;
-            var zz = (m33 + 1) / 2;
-            var xy = (m12 + m21) / 4;
-            var xz = (m13 + m31) / 4;
-            var yz = (m23 + m32) / 4;
-            if ((xx > yy) && (xx > zz)) {
-                // m11 is the largest diagonal term
-                if (xx < epsilon) {
-                    x = 0;
-                    y = 0.707106781;
-                    z = 0.707106781;
-                }
-                else {
-                    x = core_1.default.sqrt(xx);
-                    y = xy / x;
-                    z = xz / x;
-                }
-            }
-            else if (yy > zz) {
-                // m22 is the largest diagonal term
-                if (yy < epsilon) {
-                    x = 0.707106781;
-                    y = 0;
-                    z = 0.707106781;
-                }
-                else {
-                    y = core_1.default.sqrt(yy);
-                    x = xy / y;
-                    z = yz / y;
-                }
-            }
-            else {
-                // m33 is the largest diagonal term so base result on this
-                if (zz < epsilon) {
-                    x = 0.707106781;
-                    y = 0.707106781;
-                    z = 0;
-                }
-                else {
-                    z = core_1.default.sqrt(zz);
-                    x = xz / z;
-                    y = yz / z;
-                }
-            }
-            this.set(x, y, z, angle);
-            return this; // return 180 deg rotation
-        }
-        // as we have reached here there are no singularities so we can handle normally
-        var s = core_1.default.sqrt((m32 - m23) * (m32 - m23) +
-            (m13 - m31) * (m13 - m31) +
-            (m21 - m12) * (m21 - m12)); // used to normalize
-        if (core_1.default.abs(s) < 0.001) {
-            s = 1;
-        }
-        // prevent divide by zero, should not happen if matrix is orthogonal and should be
-        // caught by singularity test above, but I've left it in just in case
-        this._x = (m32 - m23) / s;
-        this._y = (m13 - m31) / s;
-        this._z = (m21 - m12) / s;
-        this._w = core_1.default.acos((m11 + m22 + m33 - 1) / 2);
-        return this;
-    };
     /**
    * Calculates the outer product of the matrix.
    * @param scalar A scalar to multiply the outer product by.
@@ -371,7 +301,7 @@ var Vector4 = /** @class */ (function () {
     };
     Vector4.prototype.clampLength = function (min, max) {
         var length = this.length();
-        return this.divideScalar(length).multiplyScalar(core_1.default.max(min, core_1.default.min(max, length)));
+        return this.multiplyScalar(core_1.default.max(min, core_1.default.min(max, length)) / length);
     };
     Vector4.prototype.floor = function () {
         this._x = core_1.default.floor(this._x);
@@ -432,9 +362,6 @@ var Vector4 = /** @class */ (function () {
     };
     Vector4.prototype.lerpVectors = function (v1, v2, alpha) {
         return this.subVectors(v2, v1).multiplyScalar(alpha).add(v1);
-    };
-    Vector4.prototype.equals = function (v) {
-        return ((v.x === this.x) && (v.y === this.y) && (v.z === this.z) && (v.w === this.w));
     };
     Vector4.prototype.fromArray = function (array, offset) {
         if (offset === void 0) { offset = 0; }

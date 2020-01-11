@@ -1,19 +1,20 @@
-import { MathVector } from './interfaces';
+import { Vector } from './vector';
 import { Matrix2 } from './matrix2';
 import { Matrix3 } from './matrix3';
 /**
  * A 2-dimensional vector.
  */
-export declare class Vector2 implements MathVector {
-    private _x;
-    private _y;
+export declare class Vector2 extends Vector {
+    private get _x();
+    private set _x(value);
+    private get _y();
+    private set _y(value);
     get x(): number;
     get y(): number;
-    readonly dimension: number;
     /**
      * @constructor
-     * @param {number} x The x-component value.
-     * @param {number} y The y-component value.
+     * @param x The x-component value.
+     * @param y The y-component value.
      */
     constructor(x?: number, y?: number);
     /**
@@ -257,13 +258,6 @@ export declare class Vector2 implements MathVector {
      */
     distanceToSquared(v: this): number;
     /**
-     * Determines equality between this vector and the given vector.
-     * @param {Vector2} v The given vector.
-     * @param {number} tol The numerical tolerance.
-     * @returns {boolean} True if all the component value differences are below the numeric tolerance, false if not.
-     */
-    equals(v: this, tol?: number): boolean;
-    /**
      * Sets the length of this vector/
      * @param {number} length The new length of the vector.
      * @returns {Vector2} This vector.
@@ -286,16 +280,16 @@ export declare class Vector2 implements MathVector {
     lerpVectors(v1: this, v2: this, alpha: number): this;
     /**
      * Loads a vector from an array.
-     * @param {number[]} array The array with values.
-     * @param {number} offset The offset to start from in the array. Default is zero.
-     * @returns {Vector2} This vector.
+     * @param array The array with values.
+     * @param offset The offset to start from in the array. Default is zero.
+     * @returns This vector.
      */
-    fromArray(array: number[], offset: number): this;
+    fromArray(array: number[], offset?: number): this;
     /**
      * Loads an array from this vector.
-     * @param {number[]} array The array to put the values in.
-     * @param {number} offset The offset to start from in the array. Default is zero.
-     * @returns {Vector2} This vector.
+     * @param array The array to put the values in.
+     * @param offset The offset to start from in the array. Default is zero.
+     * @returns This vector.
      */
     toArray(array?: number[], offset?: number): number[];
     /**

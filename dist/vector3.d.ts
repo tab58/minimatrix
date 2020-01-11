@@ -4,9 +4,13 @@ import { Matrix3 } from './matrix3';
  * A 2-dimensional vector.
  */
 export declare class Vector3 implements MathVector {
-    private _x;
-    private _y;
-    private _z;
+    private _components;
+    private get _x();
+    private set _x(value);
+    private get _y();
+    private set _y(value);
+    private get _z();
+    private set _z(value);
     get x(): number;
     get y(): number;
     get z(): number;
@@ -289,12 +293,6 @@ export declare class Vector3 implements MathVector {
      */
     reflect(normal: this): this;
     /**
-     * Assigns zero to component values below the numerical tolerance.
-     * @param {number} tol The numerical tolerance.
-     * @returns {Vector3} This vector.
-     */
-    thresholdValuesToZero(tol: number): this;
-    /**
      * Calculates the angle between this vector and the given vector.
      * @param {Vector3} v The given vector.
      * @returns {number} The angle.
@@ -315,24 +313,17 @@ export declare class Vector3 implements MathVector {
      */
     distanceToSquared(v: this): number;
     /**
-     * Determines equality between this vector and the given vector.
-     * @param {Vector3} v The given vector.
-     * @param {number} tol The numerical tolerance.
-     * @returns {boolean} True if all the component value differences are below the numeric tolerance, false if not.
-     */
-    equals(v: this, tol?: number): boolean;
-    /**
      * Loads a vector from an array.
-     * @param {number} array The array with values.
-     * @param {number} offset The offset to start from in the array. Default is zero.
-     * @returns {Vector3} This vector.
+     * @param array The array with values.
+     * @param offset The offset to start from in the array. Default is zero.
+     * @returns This vector.
      */
     fromArray(array: number[], offset?: number): this;
     /**
      * Loads an array from this vector.
-     * @param {number[]} array The array to put the values in.
-     * @param {number} offset The offset to start from in the array. Default is zero.
-     * @returns {number[]} The array argument.
+     * @param array The array to put the values in.
+     * @param offset The offset to start from in the array. Default is zero.
+     * @returns The array argument.
      */
     toArray(array?: number[], offset?: number): number[];
     /**

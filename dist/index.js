@@ -9,7 +9,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Compare = __importStar(require("./compare"));
 exports.Compare = Compare;
-// import { MathVector, MathMatrix } from './interfaces';
 var complex_1 = require("./complex");
 exports.Complex = complex_1.Complex;
 var matrix2_1 = require("./matrix2");
@@ -24,6 +23,4 @@ var vector3_1 = require("./vector3");
 exports.Vector3 = vector3_1.Vector3;
 var vector4_1 = require("./vector4");
 exports.Vector4 = vector4_1.Vector4;
-var helpers_1 = require("./helpers");
-exports.LinAlgHelpers = helpers_1.LinAlgHelpers;
 //# sourceMappingURL=index.js.map

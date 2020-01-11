@@ -1,4 +1,17 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -12,30 +25,44 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @author zz85 / http://www.lab4games.net/zz85/blog
  */
 var core_1 = __importDefault(require("./core"));
+var vector_1 = require("./vector");
 var matrix2_1 = require("./matrix2");
 /**
  * A 2-dimensional vector.
  */
-var Vector2 = /** @class */ (function () {
+var Vector2 = /** @class */ (function (_super) {
+    __extends(Vector2, _super);
     /**
      * @constructor
-     * @param {number} x The x-component value.
-     * @param {number} y The y-component value.
+     * @param x The x-component value.
+     * @param y The y-component value.
      */
     function Vector2(x, y) {
         if (x === void 0) { x = 0; }
         if (y === void 0) { y = 0; }
-        this.dimension = 2;
-        this._x = x;
-        this._y = y;
+        var _this = _super.call(this, 2) || this;
+        _this.set(x, y);
+        return _this;
     }
+    Object.defineProperty(Vector2.prototype, "_x", {
+        get: function () { return this._components[0]; },
+        set: function (value) { this._components[0] = value; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector2.prototype, "_y", {
+        get: function () { return this._components[1]; },
+        set: function (value) { this._components[1] = value; },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Vector2.prototype, "x", {
-        get: function () { return this._x; },
+        get: function () { return this._components[0]; },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(Vector2.prototype, "y", {
-        get: function () { return this._y; },
+        get: function () { return this._components[1]; },
         enumerable: true,
         configurable: true
     });
@@ -92,7 +119,7 @@ var Vector2 = /** @class */ (function () {
             case 1:
                 this._y = val;
                 break;
-            default: throw new Error('index is out of range: ' + idx);
+            default: throw new Error('setComponent(): index is out of range: ' + idx);
         }
         return this;
     };
@@ -105,7 +132,7 @@ var Vector2 = /** @class */ (function () {
         switch (index) {
             case 0: return this.x;
             case 1: return this.y;
-            default: throw new Error('index is out of range: ' + index);
+            default: throw new Error('getComponent(): index is out of range: ' + index);
         }
     };
     /**
@@ -204,9 +231,7 @@ var Vector2 = /** @class */ (function () {
      * @returns {Vector2} This vector.
      */
     Vector2.prototype.multiply = function (v) {
-        this._x *= v.x;
-        this._y *= v.y;
-        return this;
+        return this.multiplyVectors(this, v);
     };
     /**
      * Scales this vector by a number.
@@ -235,7 +260,7 @@ var Vector2 = /** @class */ (function () {
      * @returns {Vector2} This vector.
      */
     Vector2.prototype.multiplyMatrix2 = function (m) {
-        return m.transformVector2(this);
+        return m.transformVector(this);
     };
     /**
      * Scales this vector as a projected vector (x, y, 1) by a 3x3 matrix.
@@ -451,17 +476,6 @@ var Vector2 = /** @class */ (function () {
         return dx * dx + dy * dy;
     };
     /**
-     * Determines equality between this vector and the given vector.
-     * @param {Vector2} v The given vector.
-     * @param {number} tol The numerical tolerance.
-     * @returns {boolean} True if all the component value differences are below the numeric tolerance, false if not.
-     */
-    Vector2.prototype.equals = function (v, tol) {
-        if (tol === void 0) { tol = 0; }
-        return (core_1.default.abs(v.x - this.x) < tol &&
-            core_1.default.abs(v.y - this.y) < tol);
-    };
-    /**
      * Sets the length of this vector/
      * @param {number} length The new length of the vector.
      * @returns {Vector2} This vector.
@@ -492,23 +506,21 @@ var Vector2 = /** @class */ (function () {
     };
     /**
      * Loads a vector from an array.
-     * @param {number[]} array The array with values.
-     * @param {number} offset The offset to start from in the array. Default is zero.
-     * @returns {Vector2} This vector.
+     * @param array The array with values.
+     * @param offset The offset to start from in the array. Default is zero.
+     * @returns This vector.
      */
     Vector2.prototype.fromArray = function (array, offset) {
-        if (offset === undefined) {
-            offset = 0;
-        }
+        if (offset === void 0) { offset = 0; }
         this._x = array[offset];
         this._y = array[offset + 1];
         return this;
     };
     /**
      * Loads an array from this vector.
-     * @param {number[]} array The array to put the values in.
-     * @param {number} offset The offset to start from in the array. Default is zero.
-     * @returns {Vector2} This vector.
+     * @param array The array to put the values in.
+     * @param offset The offset to start from in the array. Default is zero.
+     * @returns This vector.
      */
     Vector2.prototype.toArray = function (array, offset) {
         if (array === void 0) { array = []; }
@@ -547,6 +559,6 @@ var Vector2 = /** @class */ (function () {
         return this;
     };
     return Vector2;
-}());
+}(vector_1.Vector));
 exports.Vector2 = Vector2;
 //# sourceMappingURL=vector2.js.map

@@ -1,10 +1,15 @@
 import { Matrix4 } from './matrix4';
 import { MathVector } from './interfaces';
 export declare class Vector4 implements MathVector {
-    private _x;
-    private _y;
-    private _z;
-    private _w;
+    private _components;
+    private get _x();
+    private set _x(value);
+    private get _y();
+    private set _y(value);
+    private get _z();
+    private set _z(value);
+    private get _w();
+    private set _w(value);
     get x(): number;
     get y(): number;
     get z(): number;
@@ -69,7 +74,6 @@ export declare class Vector4 implements MathVector {
      * @returns {number} The distance from point to point.
      */
     distanceToSquared(v: this): number;
-    setAxisAngleFromRotationMatrix(m: Matrix4): this;
     /**
    * Calculates the outer product of the matrix.
    * @param scalar A scalar to multiply the outer product by.
@@ -92,7 +96,6 @@ export declare class Vector4 implements MathVector {
     setLength(length: number): this;
     lerp(v: this, alpha: number): this;
     lerpVectors(v1: this, v2: this, alpha: number): this;
-    equals(v: this): boolean;
     fromArray(array: number[], offset?: number): this;
     toArray(array?: number[], offset?: number): number[];
 }

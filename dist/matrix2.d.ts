@@ -1,12 +1,11 @@
 import { Vector2 } from './vector2';
 import { MathMatrix } from './interfaces';
+import { Matrix } from './matrix';
 /**
  * A 2x2 matrix stored in column-major order.
  * @class Matrix2
  */
-export declare class Matrix2 implements MathMatrix {
-    private _elements;
-    private _tempElements;
+export declare class Matrix2 extends Matrix implements MathMatrix {
     readonly rowDimension: number;
     readonly colDimension: number;
     readonly E0: Vector2;
@@ -84,13 +83,13 @@ export declare class Matrix2 implements MathMatrix {
      * @param {Vector2} a The vector to transform.
      * @returns {Vector2} This vector.
      */
-    transformRowVector2(v: Vector2): Vector2;
+    transformRowVector(v: Vector2): Vector2;
     /**
      * Right-multiplies a vector by a 2x2 matrix (result is Av).
      * @param {Vector2} a The vector to transform.
      * @returns {Vector2} This vector.
      */
-    transformVector2(v: Vector2): Vector2;
+    transformVector(v: Vector2): Vector2;
     /**
      * Right-multiplies the given matrix with this one (this * m).
      * @param {Matrix2} m The given matrix.
@@ -122,12 +121,13 @@ export declare class Matrix2 implements MathMatrix {
      * @param {Matrix2} matrix The given matrix.
      * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
      */
-    getInverse(matrix: this, throwOnDegenerate: boolean): this;
+    getInverse(matrix: this, throwOnDegenerate: boolean, singularTol?: number): this;
     /**
      * Inverts this matrix.
-     * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
+       * @param singularTol The tolerance under which the determinant is considered zero.
+     * @param throwOnDegenerate Throws an Error() if true, prints console warning if not.
      */
-    invert(throwOnDegenerate?: boolean): this;
+    invert(singularTol?: number, throwOnDegenerate?: boolean): this;
     /**
      * Transposes this matrix in-place.
      */
@@ -146,11 +146,6 @@ export declare class Matrix2 implements MathMatrix {
      * @returns {number} The matrix trace.
      */
     trace(): number;
-    /**
-     * Compares the equality with a given matrix (strict).
-     * @param {Matrix2} matrix The given matrix.
-     */
-    equals(matrix: this): boolean;
     /**
      * Loads values from an array into a matrix.
      * @param array The array to populate the matrix from.
@@ -171,17 +166,17 @@ export declare class Matrix2 implements MathMatrix {
      */
     setOuterProduct(a: Vector2, b: Vector2, scalar?: number): this;
     /**
-     * Adds the outer product of two vectors (a*b^T) to this matrix.
-     * @param {Vector2} a The first vector.
-     * @param {Vector2} b The second vector.
-     * @param {number} scalar The number to scale the matrix by (defaults to 1).
+     * Adds the outer product of two vectors alpha*(a*b^T) to this matrix.
+     * @param a The first vector.
+     * @param b The second vector.
+     * @param scalar The number to scale the matrix by (defaults to 1).
      */
     addOuterProduct(a: Vector2, b: Vector2, scalar?: number): this;
     /**
      * Adds 2 matrices together and optionally scales the result.
-     * @param {Matrix2} a The first matrix.
-     * @param {Matrix2} b The second matrix.
-     * @param {number} scalar The number to scale the result by.
+     * @param a The first matrix.
+     * @param b The second matrix.
+     * @param scalar The number to scale the result by.
      */
     addMatrices(a: this, b: this, scalar?: number): this;
     /**

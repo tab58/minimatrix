@@ -4,8 +4,8 @@ import { MathMatrix } from './interfaces';
 export declare class Matrix4 implements MathMatrix {
     private _elements;
     private _tempElements;
-    readonly rowDimension: number;
-    readonly colDimension: number;
+    readonly rows: number;
+    readonly columns: number;
     readonly E0: Vector4;
     readonly E1: Vector4;
     readonly E2: Vector4;
@@ -44,17 +44,17 @@ export declare class Matrix4 implements MathMatrix {
    */
     addMatrices(a: this, b: this, scalar?: number): this;
     /**
- * Computes the outer product of two vectors (a*b^T).
- * @param {Vector4} a The first vector.
- * @param {Vector4} b The second vector.
- * @param {number} scalar The number to scale the matrix by (defaults to 1).
- */
+   * Computes the outer product of two vectors (a*b^T).
+   * @param {Vector4} a The first vector.
+   * @param {Vector4} b The second vector.
+   * @param {number} scalar The number to scale the matrix by (defaults to 1).
+   */
     setOuterProduct(a: Vector4, b: Vector4, scalar?: number): this;
     /**
-     * Adds the outer product of two vectors (a*b^T) to this matrix.
-     * @param {Vector4} a The first vector.
-     * @param {Vector4} b The second vector.
-     * @param {number} scalar The number to scale the matrix by (defaults to 1).
+     * Adds the outer product of two vectors alpha*(a*b^T) to this matrix.
+     * @param a The first vector.
+     * @param b The second vector.
+     * @param scalar The number to scale the matrix by (defaults to 1).
      */
     addOuterProduct(a: Vector4, b: Vector4, scalar?: number): this;
     /**
@@ -65,23 +65,20 @@ export declare class Matrix4 implements MathMatrix {
      * Swaps columns in-place in the matrix. Zero is the first column.
      */
     swapColumns(i: number, j: number): this;
-    extractBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): this;
-    makeBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): this;
     multiply(m: this): this;
     premultiply(m: this): this;
-    transformVector3(v: Vector3): Vector3;
     /**
    * Left-multiplies a vector by a 4x4 matrix (result is x^T*A).
    * @param {Vector4} a The vector to transform.
    * @returns {Vector4} The original vector, transformed.
    */
-    transformRowVector4(v: Vector4): Vector4;
+    transformRowVector(v: Vector4): Vector4;
     /**
    * Right-multiplies a vector by a 4x4 matrix (result is Ax).
    * @param {Vector4} a The vector to transform.
    * @returns {Vector4} The original vector, transformed.
    */
-    transformVector4(v: Vector4): Vector4;
+    transformVector(v: Vector4): Vector4;
     multiplyMatrices(a: this, b: this): this;
     multiplyScalar(s: number): this;
     determinant(): number;
@@ -90,8 +87,14 @@ export declare class Matrix4 implements MathMatrix {
     setPosition(x: number, y: number, z: number): this;
     adjugate(): this;
     getAdjugate(matrix: this): this;
-    invert(throwOnDegenerate?: boolean): this;
+    /**
+   * Inverts this matrix.
+     * @param singularTol The tolerance under which the determinant is considered zero.
+   * @param throwOnDegenerate Throws an Error() if true, prints console warning if not.
+   */
+    invert(singularTol?: number, throwOnDegenerate?: boolean): this;
     getInverse(m: this, throwOnDegenerate: boolean, singularTol?: number): this;
+    /** Scales a 3D projective transformation matrix. */
     scale(v: Vector3): this;
     makeTranslation(x: number, y: number, z: number): this;
     makeRotationX(theta: number): this;
@@ -100,7 +103,6 @@ export declare class Matrix4 implements MathMatrix {
     makeRotationAxis(axis: Vector3, angle: number): this;
     makeScale(x: number, y: number, z: number): this;
     makeShear(x: number, y: number, z: number): this;
-    equals(matrix: this): boolean;
     fromArray(array: number[], offset?: number): this;
     toArray(array?: number[], offset?: number): number[];
     /**

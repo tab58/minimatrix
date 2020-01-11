@@ -20,8 +20,8 @@ var vector4_1 = require("./vector4");
 var utils_1 = require("./utils");
 var Matrix4 = /** @class */ (function () {
     function Matrix4() {
-        this.rowDimension = 4;
-        this.colDimension = 4;
+        this.rows = 4;
+        this.columns = 4;
         this.E0 = new vector4_1.Vector4(1, 0, 0, 0);
         this.E1 = new vector4_1.Vector4(0, 1, 0, 0);
         this.E2 = new vector4_1.Vector4(0, 0, 1, 0);
@@ -36,12 +36,12 @@ var Matrix4 = /** @class */ (function () {
         this._tempElements = a.slice();
     }
     Matrix4.prototype.set = function (i, j, value) {
-        var n = this.colDimension;
+        var n = this.rows;
         this._elements[i + j * n] = value;
         return this;
     };
     Matrix4.prototype.get = function (i, j) {
-        var n = this.colDimension;
+        var n = this.rows;
         return this._elements[i + j * n];
     };
     /**
@@ -211,11 +211,11 @@ var Matrix4 = /** @class */ (function () {
         return this;
     };
     /**
- * Computes the outer product of two vectors (a*b^T).
- * @param {Vector4} a The first vector.
- * @param {Vector4} b The second vector.
- * @param {number} scalar The number to scale the matrix by (defaults to 1).
- */
+   * Computes the outer product of two vectors (a*b^T).
+   * @param {Vector4} a The first vector.
+   * @param {Vector4} b The second vector.
+   * @param {number} scalar The number to scale the matrix by (defaults to 1).
+   */
     Matrix4.prototype.setOuterProduct = function (a, b, scalar) {
         if (scalar === void 0) { scalar = 1; }
         // computes alpha * (ab^T)
@@ -239,10 +239,10 @@ var Matrix4 = /** @class */ (function () {
         return this.setElements(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44);
     };
     /**
-     * Adds the outer product of two vectors (a*b^T) to this matrix.
-     * @param {Vector4} a The first vector.
-     * @param {Vector4} b The second vector.
-     * @param {number} scalar The number to scale the matrix by (defaults to 1).
+     * Adds the outer product of two vectors alpha*(a*b^T) to this matrix.
+     * @param a The first vector.
+     * @param b The second vector.
+     * @param scalar The number to scale the matrix by (defaults to 1).
      */
     Matrix4.prototype.addOuterProduct = function (a, b, scalar) {
         if (scalar === void 0) { scalar = 1; }
@@ -322,40 +322,18 @@ var Matrix4 = /** @class */ (function () {
         }
         return this;
     };
-    Matrix4.prototype.extractBasis = function (xAxis, yAxis, zAxis) {
-        var te = this._elements;
-        xAxis.fromArray(te, 0);
-        yAxis.fromArray(te, 4);
-        zAxis.fromArray(te, 8);
-        return this;
-    };
-    Matrix4.prototype.makeBasis = function (xAxis, yAxis, zAxis) {
-        this.setElements(xAxis.x, yAxis.x, zAxis.x, 0, xAxis.y, yAxis.y, zAxis.y, 0, xAxis.z, yAxis.z, zAxis.z, 0, 0, 0, 0, 1);
-        return this;
-    };
     Matrix4.prototype.multiply = function (m) {
         return this.multiplyMatrices(this, m);
     };
     Matrix4.prototype.premultiply = function (m) {
         return this.multiplyMatrices(m, this);
     };
-    Matrix4.prototype.transformVector3 = function (v) {
-        var x = v.x;
-        var y = v.y;
-        var z = v.z;
-        var w = 1;
-        var e = this._elements;
-        var _x = e[0] * x + e[4] * y + e[8] * z + e[12];
-        var _y = e[1] * x + e[5] * y + e[9] * z + e[13];
-        var _z = e[2] * x + e[6] * y + e[10] * z + e[14];
-        return v.set(_x, _y, _z);
-    };
     /**
    * Left-multiplies a vector by a 4x4 matrix (result is x^T*A).
    * @param {Vector4} a The vector to transform.
    * @returns {Vector4} The original vector, transformed.
    */
-    Matrix4.prototype.transformRowVector4 = function (v) {
+    Matrix4.prototype.transformRowVector = function (v) {
         var x = v.x;
         var y = v.y;
         var z = v.z;
@@ -372,7 +350,7 @@ var Matrix4 = /** @class */ (function () {
    * @param {Vector4} a The vector to transform.
    * @returns {Vector4} The original vector, transformed.
    */
-    Matrix4.prototype.transformVector4 = function (v) {
+    Matrix4.prototype.transformVector = function (v) {
         var x = v.x;
         var y = v.y;
         var z = v.z;
@@ -545,9 +523,15 @@ var Matrix4 = /** @class */ (function () {
         te[15] = a * f * k - a * g * j - b * e * k + b * g * i + c * e * j - c * f * i;
         return this;
     };
-    Matrix4.prototype.invert = function (throwOnDegenerate) {
+    /**
+   * Inverts this matrix.
+     * @param singularTol The tolerance under which the determinant is considered zero.
+   * @param throwOnDegenerate Throws an Error() if true, prints console warning if not.
+   */
+    Matrix4.prototype.invert = function (singularTol, throwOnDegenerate) {
+        if (singularTol === void 0) { singularTol = 1e-14; }
         if (throwOnDegenerate === void 0) { throwOnDegenerate = false; }
-        return this.getInverse(this, throwOnDegenerate);
+        return this.getInverse(this, throwOnDegenerate, singularTol);
     };
     Matrix4.prototype.getInverse = function (m, throwOnDegenerate, singularTol) {
         if (singularTol === void 0) { singularTol = 1e-14; }
@@ -562,9 +546,9 @@ var Matrix4 = /** @class */ (function () {
                 throw new Error(msg);
             }
             else {
-                console.warn(msg);
+                console.error(msg);
+                return this.identity();
             }
-            return this.identity();
         }
         var detInv = 1.0 / det;
         te[0] = t11 * detInv;
@@ -585,6 +569,7 @@ var Matrix4 = /** @class */ (function () {
         te[15] = (n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33) * detInv;
         return this;
     };
+    /** Scales a 3D projective transformation matrix. */
     Matrix4.prototype.scale = function (v) {
         var te = this._elements;
         var x = v.x, y = v.y, z = v.z;
@@ -642,15 +627,6 @@ var Matrix4 = /** @class */ (function () {
         this.setElements(1, y, z, 0, x, 1, z, 0, x, y, 1, 0, 0, 0, 0, 1);
         return this;
     };
-    Matrix4.prototype.equals = function (matrix) {
-        var te = this._elements;
-        var me = matrix._elements;
-        for (var i = 0; i < 16; i++) {
-            if (te[i] !== me[i])
-                return false;
-        }
-        return true;
-    };
     Matrix4.prototype.fromArray = function (array, offset) {
         if (offset === void 0) { offset = 0; }
         for (var i = 0; i < 16; i++) {
@@ -692,8 +668,8 @@ var Matrix4 = /** @class */ (function () {
         var ee = this._elements;
         var te = this._tempElements;
         var n = ee.length;
-        var r = this.rowDimension;
-        var c = this.colDimension;
+        var r = this.rows;
+        var c = this.columns;
         for (var i = 0; i < n; ++i) {
             te[i] = ee[i];
         }

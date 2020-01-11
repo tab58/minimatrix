@@ -18,12 +18,11 @@ var minimatrix_polyroots_1 = require("minimatrix-polyroots");
 var complex_1 = require("./complex");
 /**
  * A 3x3 matrix stored in column-major order.
- * @class Matrix3
  */
 var Matrix3 = /** @class */ (function () {
     function Matrix3() {
-        this.rowDimension = 3;
-        this.colDimension = 3;
+        this.rows = 3;
+        this.columns = 3;
         this.E0 = new vector3_1.Vector3(1, 0, 0);
         this.E1 = new vector3_1.Vector3(0, 1, 0);
         this.E2 = new vector3_1.Vector3(0, 0, 1);
@@ -36,12 +35,12 @@ var Matrix3 = /** @class */ (function () {
         this._tempElements = a.slice();
     }
     Matrix3.prototype.set = function (i, j, value) {
-        var n = this.colDimension;
+        var n = this.rows;
         this._elements[i + j * n] = value;
         return this;
     };
     Matrix3.prototype.get = function (i, j) {
-        var n = this.colDimension;
+        var n = this.rows;
         return this._elements[i + j * n];
     };
     /**
@@ -295,7 +294,7 @@ var Matrix3 = /** @class */ (function () {
      * @param {Vector3} a The vector to transform.
      * @returns {Vector3} The original vector, transformed.
      */
-    Matrix3.prototype.transformRowVector3 = function (a) {
+    Matrix3.prototype.transformRowVector = function (a) {
         var ae = this._elements;
         var x = a.x;
         var y = a.y;
@@ -319,7 +318,7 @@ var Matrix3 = /** @class */ (function () {
      * @param {Vector3} a The vector to transform.
      * @returns {Vector3} The original vector, transformed.
      */
-    Matrix3.prototype.transformVector3 = function (a) {
+    Matrix3.prototype.transformVector = function (a) {
         var ae = this._elements;
         var x = a.x;
         var y = a.y;
@@ -426,11 +425,13 @@ var Matrix3 = /** @class */ (function () {
     };
     /**
      * Inverts this matrix.
-     * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
+       * @param singularTol The tolerance under which the determinant is considered zero.
+     * @param throwOnDegenerate Throws an Error() if true, prints console warning if not.
      */
-    Matrix3.prototype.invert = function (throwOnDegenerate) {
+    Matrix3.prototype.invert = function (singularTol, throwOnDegenerate) {
+        if (singularTol === void 0) { singularTol = 1e-14; }
         if (throwOnDegenerate === void 0) { throwOnDegenerate = false; }
-        return this.getInverse(this, throwOnDegenerate);
+        return this.getInverse(this, throwOnDegenerate, singularTol);
     };
     /**
      * Computes the adjugates of this matrix in-place.
@@ -488,7 +489,8 @@ var Matrix3 = /** @class */ (function () {
                 throw new Error(msg);
             }
             else {
-                console.warn(msg);
+                console.error(msg);
+                return this.identity();
             }
         }
         return matrix.adjugate().multiplyScalar(1.0 / det);
@@ -522,23 +524,9 @@ var Matrix3 = /** @class */ (function () {
         return n11 + n22 + n33;
     };
     /**
-     * Compares the equality with a given matrix (strict).
-     * @param {Matrix3} matrix The given matrix.
-     */
-    Matrix3.prototype.equals = function (matrix) {
-        var te = this._elements;
-        var me = matrix._elements;
-        for (var i = 0; i < 9; i++) {
-            if (te[i] !== me[i]) {
-                return false;
-            }
-        }
-        return true;
-    };
-    /**
      * Loads values from an array into a matrix.
-     * @param {number[]} array The array to populate the matrix from.
-     * @param {number} offset The numeric array offset.
+     * @param array The array to populate the matrix from.
+     * @param offset The numeric array offset.
      */
     Matrix3.prototype.fromArray = function (array, offset) {
         if (offset === void 0) { offset = 0; }
@@ -549,8 +537,8 @@ var Matrix3 = /** @class */ (function () {
     };
     /**
      * Loads values into an array into a matrix.
-     * @param {number[]} array The array to populate the matrix values into.
-     * @param {number} offset The numeric array offset.
+     * @param array The array to populate the matrix values into.
+     * @param offset The numeric array offset.
      */
     Matrix3.prototype.toArray = function (array, offset) {
         if (array === void 0) { array = []; }
@@ -593,9 +581,9 @@ var Matrix3 = /** @class */ (function () {
     };
     /**
      * Computes the outer product of two vectors (a*b^T).
-     * @param {Vector3} a The first vector.
-     * @param {Vector3} b The second vector.
-     * @param {number} scalar The number to scale the matrix by (defaults to 1).
+     * @param a The first vector.
+     * @param b The second vector.
+     * @param scalar The number to scale the matrix by (defaults to 1).
      */
     Matrix3.prototype.setOuterProduct = function (a, b, scalar) {
         if (scalar === void 0) { scalar = 1; }
@@ -613,10 +601,10 @@ var Matrix3 = /** @class */ (function () {
         return this.setElements(n11, n12, n13, n21, n22, n23, n31, n32, n33);
     };
     /**
-     * Adds the outer product of two vectors (a*b^T) to this matrix.
-     * @param {Vector3} a The first vector.
-     * @param {Vector3} b The second vector.
-     * @param {number} scalar The number to scale the matrix by (defaults to 1).
+     * Adds the outer product of two vectors alpha*(a*b^T) to this matrix.
+     * @param a The first vector.
+     * @param b The second vector.
+     * @param scalar The number to scale the matrix by (defaults to 1).
      */
     Matrix3.prototype.addOuterProduct = function (a, b, scalar) {
         if (scalar === void 0) { scalar = 1; }
@@ -691,8 +679,8 @@ var Matrix3 = /** @class */ (function () {
         var ee = this._elements;
         var te = this._tempElements;
         var n = ee.length;
-        var r = this.rowDimension;
-        var c = this.colDimension;
+        var r = this.rows;
+        var c = this.columns;
         for (var i = 0; i < n; ++i) {
             te[i] = ee[i];
         }

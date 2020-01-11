@@ -67,7 +67,7 @@ var core = {
         var t = _Math.min(x, y) / u;
         return u * _Math.sqrt(1 + t * t);
     },
-    // compute euclidian modulo of m % n
+    // compute Euclidean modulo of m % n
     // https://en.wikipedia.org/wiki/Modulo_operation
     euclideanModulo: function (n, m) {
         return ((n % m) + m) % m;

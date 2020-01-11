@@ -51,12 +51,14 @@ var Complex = /** @class */ (function () {
         return new Complex(this._real, this._imag);
     };
     /**
-     * Creates a Complex number from a given vector in the complex plane.
+     * Copies a Complex number from a given vector in the complex plane.
      * @param v The given vector.
      * @returns This complex number.
      */
     Complex.prototype.fromVector2 = function (v) {
-        return new Complex(v.x, v.y);
+        this._real = v.x;
+        this._imag = v.y;
+        return this;
     };
     /**
      * Copies a complex number.
@@ -175,9 +177,9 @@ var Complex = /** @class */ (function () {
     };
     /**
      * Determines if this complex number is equal to the given complex number.
-     * @param {Complex} C The given complex number.
-     * @param {number} tol The numerical tolerance.
-     * @returns {boolean} True if the magnitudes are within the numerical tolerance of each other, false if not.
+     * @param C The given complex number.
+     * @param tol The numerical tolerance.
+     * @returns True if the magnitudes are within the numerical tolerance of each other, false if not.
      */
     Complex.prototype.equal = function (C, tol) {
         if (tol === void 0) { tol = 0; }

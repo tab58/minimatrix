@@ -16,24 +16,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __importDefault(require("./core"));
 var matrix3_1 = require("./matrix3");
 var vec3HelperFunctions = {
-    clampScalar: function () {
-        var _ = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            _[_i] = arguments[_i];
-        }
-    },
-    projectOnPlane: function () {
-        var _ = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            _[_i] = arguments[_i];
-        }
-    },
-    reflect: function () {
-        var _ = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            _[_i] = arguments[_i];
-        }
-    }
+    clampScalar: 0,
+    projectOnPlane: 0,
+    reflect: 0
 };
 /**
  * A 2-dimensional vector.
@@ -44,22 +29,38 @@ var Vector3 = /** @class */ (function () {
         if (y === void 0) { y = 0; }
         if (z === void 0) { z = 0; }
         this.dimension = 3;
-        this._x = x;
-        this._y = y;
-        this._z = z;
+        this._components = [x, y, z];
     }
+    Object.defineProperty(Vector3.prototype, "_x", {
+        get: function () { return this._components[0]; },
+        set: function (value) { this._components[0] = value; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector3.prototype, "_y", {
+        get: function () { return this._components[1]; },
+        set: function (value) { this._components[1] = value; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector3.prototype, "_z", {
+        get: function () { return this._components[2]; },
+        set: function (value) { this._components[2] = value; },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Vector3.prototype, "x", {
-        get: function () { return this._x; },
+        get: function () { return this._components[0]; },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(Vector3.prototype, "y", {
-        get: function () { return this._y; },
+        get: function () { return this._components[1]; },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(Vector3.prototype, "z", {
-        get: function () { return this._z; },
+        get: function () { return this._components[2]; },
         enumerable: true,
         configurable: true
     });
@@ -260,10 +261,7 @@ var Vector3 = /** @class */ (function () {
      * @returns {Vector3} This vector.
      */
     Vector3.prototype.multiply = function (v) {
-        this._x *= v.x;
-        this._y *= v.y;
-        this._z *= v.z;
-        return this;
+        return this.multiplyVectors(this, v);
     };
     /**
      * Multiplies this vector by a Matrix3.
@@ -271,7 +269,7 @@ var Vector3 = /** @class */ (function () {
      * @return {Vector3} This vector.
      */
     Vector3.prototype.multiplyMatrix3 = function (m) {
-        return m.transformVector3(this);
+        return m.transformVector(this);
     };
     /**
      * Scales this vector by a number.
@@ -542,17 +540,6 @@ var Vector3 = /** @class */ (function () {
         return vec3HelperFunctions.reflect(normal, this);
     };
     /**
-     * Assigns zero to component values below the numerical tolerance.
-     * @param {number} tol The numerical tolerance.
-     * @returns {Vector3} This vector.
-     */
-    Vector3.prototype.thresholdValuesToZero = function (tol) {
-        this._x = (core_1.default.abs(this._x) < tol ? 0 : this._x);
-        this._y = (core_1.default.abs(this._y) < tol ? 0 : this._y);
-        this._z = (core_1.default.abs(this._z) < tol ? 0 : this._z);
-        return this;
-    };
-    /**
      * Calculates the angle between this vector and the given vector.
      * @param {Vector3} v The given vector.
      * @returns {number} The angle.
@@ -584,22 +571,10 @@ var Vector3 = /** @class */ (function () {
         return dx * dx + dy * dy + dz * dz;
     };
     /**
-     * Determines equality between this vector and the given vector.
-     * @param {Vector3} v The given vector.
-     * @param {number} tol The numerical tolerance.
-     * @returns {boolean} True if all the component value differences are below the numeric tolerance, false if not.
-     */
-    Vector3.prototype.equals = function (v, tol) {
-        if (tol === void 0) { tol = 0; }
-        return (core_1.default.abs(v.x - this._x) < tol &&
-            core_1.default.abs(v.y - this._y) < tol &&
-            core_1.default.abs(v.z - this._z) < tol);
-    };
-    /**
      * Loads a vector from an array.
-     * @param {number} array The array with values.
-     * @param {number} offset The offset to start from in the array. Default is zero.
-     * @returns {Vector3} This vector.
+     * @param array The array with values.
+     * @param offset The offset to start from in the array. Default is zero.
+     * @returns This vector.
      */
     Vector3.prototype.fromArray = function (array, offset) {
         if (offset === void 0) { offset = 0; }
@@ -610,9 +585,9 @@ var Vector3 = /** @class */ (function () {
     };
     /**
      * Loads an array from this vector.
-     * @param {number[]} array The array to put the values in.
-     * @param {number} offset The offset to start from in the array. Default is zero.
-     * @returns {number[]} The array argument.
+     * @param array The array to put the values in.
+     * @param offset The offset to start from in the array. Default is zero.
+     * @returns The array argument.
      */
     Vector3.prototype.toArray = function (array, offset) {
         if (array === void 0) { array = []; }
@@ -630,12 +605,11 @@ var Vector3 = /** @class */ (function () {
      */
     Vector3.prototype.rotateAround = function (axis, angle) {
         // Rodrigues formula: v' = v * cos(t) + (k X v) * sin(t) + k * (k . v) * (1 - cos(t))
-        var v = this;
         var c = core_1.default.cos(angle);
         var s = core_1.default.sin(angle);
         var k = axis.clone().normalize();
-        var kxv = k.clone().cross(v).multiplyScalar(s);
-        var kdv = k.dot(v) * (1 - c);
+        var kxv = k.clone().cross(this).multiplyScalar(s);
+        var kdv = k.dot(this) * (1 - c);
         var kkv = k.multiplyScalar(kdv);
         return this.multiplyScalar(c) // v * cos(t)
             .add(kxv) // (k X v) * sin(t)

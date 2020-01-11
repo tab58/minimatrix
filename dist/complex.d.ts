@@ -14,7 +14,7 @@ export declare class Complex {
      */
     clone(): this;
     /**
-     * Creates a Complex number from a given vector in the complex plane.
+     * Copies a Complex number from a given vector in the complex plane.
      * @param v The given vector.
      * @returns This complex number.
      */
@@ -87,9 +87,9 @@ export declare class Complex {
     conjugate(): this;
     /**
      * Determines if this complex number is equal to the given complex number.
-     * @param {Complex} C The given complex number.
-     * @param {number} tol The numerical tolerance.
-     * @returns {boolean} True if the magnitudes are within the numerical tolerance of each other, false if not.
+     * @param C The given complex number.
+     * @param tol The numerical tolerance.
+     * @returns True if the magnitudes are within the numerical tolerance of each other, false if not.
      */
     equal(C: this, tol?: number): boolean;
     /**

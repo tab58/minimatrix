@@ -59,46 +59,4 @@ function isEqual(x, y, eps) {
     return isZero(x - y, eps);
 }
 exports.isEqual = isEqual;
-/**
- * Test if a vector length is equal to another vector length within a tolerance.
- * @function vectorLengthsAreEqual
- * @memberof Compare
- * @param {Vector2|Vector3|Vector4} x The first vector.
- * @param {Vector2|Vector3|Vector4} y The second vector.
- * @param {number} eps The numerical tolerance.
- * @returns {boolean} True if vector length difference is within the numerical tolerance, false if not.
- */
-function areVectorLengthsEqual(x, y, eps) {
-    return isZero(x.length() - y.length(), eps);
-}
-exports.areVectorLengthsEqual = areVectorLengthsEqual;
-/**
- * Test if a vector length is equal to another vector length within a tolerance.
- * @function vector2AreEqual
- * @memberof Compare
- * @param {Vector2} x The first vector.
- * @param {Vector2} y The second vector.
- * @param {number} eps The numerical tolerance.
- * @returns {boolean} True if vector component differences are within the numerical tolerance, false if not.
- */
-function areVector2Equal(x, y, eps) {
-    return (isZero(x.x - y.x, eps) &&
-        isZero(x.y - y.y, eps));
-}
-exports.areVector2Equal = areVector2Equal;
-/**
- * Test if a vector length is equal to another vector length within a tolerance.
- * @function vector3AreEqual
- * @memberof Compare
- * @param {Vector3} x The first vector.
- * @param {Vector3} y The second vector.
- * @param {number} eps The numerical tolerance.
- * @returns {boolean} True if vector component differences are within the numerical tolerance, false if not.
- */
-function areVector3Equal(x, y, eps) {
-    return (isZero(x.x - y.x, eps) &&
-        isZero(x.y - y.y, eps) &&
-        isZero(x.z - y.z, eps));
-}
-exports.areVector3Equal = areVector3Equal;
 //# sourceMappingURL=compare.js.map

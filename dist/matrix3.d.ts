@@ -4,13 +4,12 @@ import { Vector3 } from './vector3';
 import { Complex } from './complex';
 /**
  * A 3x3 matrix stored in column-major order.
- * @class Matrix3
  */
 export declare class Matrix3 implements MathMatrix {
     private _elements;
     private _tempElements;
-    readonly rowDimension: number;
-    readonly colDimension: number;
+    readonly rows: number;
+    readonly columns: number;
     readonly E0: Vector3;
     readonly E1: Vector3;
     readonly E2: Vector3;
@@ -106,13 +105,13 @@ export declare class Matrix3 implements MathMatrix {
      * @param {Vector3} a The vector to transform.
      * @returns {Vector3} The original vector, transformed.
      */
-    transformRowVector3(a: Vector3): Vector3;
+    transformRowVector(a: Vector3): Vector3;
     /**
      * Right-multiplies a vector by a 3x3 matrix (result is Ax).
      * @param {Vector3} a The vector to transform.
      * @returns {Vector3} The original vector, transformed.
      */
-    transformVector3(a: Vector3): Vector3;
+    transformVector(a: Vector3): Vector3;
     /**
      * Right-multiplies the given matrix with this one (this * m).
      * @param {Matrix3} m The given matrix.
@@ -141,9 +140,10 @@ export declare class Matrix3 implements MathMatrix {
     determinant(): number;
     /**
      * Inverts this matrix.
-     * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
+       * @param singularTol The tolerance under which the determinant is considered zero.
+     * @param throwOnDegenerate Throws an Error() if true, prints console warning if not.
      */
-    invert(throwOnDegenerate?: boolean): this;
+    invert(singularTol?: number, throwOnDegenerate?: boolean): this;
     /**
      * Computes the adjugates of this matrix in-place.
      */
@@ -169,20 +169,15 @@ export declare class Matrix3 implements MathMatrix {
      */
     trace(): number;
     /**
-     * Compares the equality with a given matrix (strict).
-     * @param {Matrix3} matrix The given matrix.
-     */
-    equals(matrix: this): boolean;
-    /**
      * Loads values from an array into a matrix.
-     * @param {number[]} array The array to populate the matrix from.
-     * @param {number} offset The numeric array offset.
+     * @param array The array to populate the matrix from.
+     * @param offset The numeric array offset.
      */
     fromArray(array: number[], offset?: number): this;
     /**
      * Loads values into an array into a matrix.
-     * @param {number[]} array The array to populate the matrix values into.
-     * @param {number} offset The numeric array offset.
+     * @param array The array to populate the matrix values into.
+     * @param offset The numeric array offset.
      */
     toArray(array?: number[], offset?: number): number[];
     /**
@@ -192,16 +187,16 @@ export declare class Matrix3 implements MathMatrix {
     getEigenvalues(): Complex[];
     /**
      * Computes the outer product of two vectors (a*b^T).
-     * @param {Vector3} a The first vector.
-     * @param {Vector3} b The second vector.
-     * @param {number} scalar The number to scale the matrix by (defaults to 1).
+     * @param a The first vector.
+     * @param b The second vector.
+     * @param scalar The number to scale the matrix by (defaults to 1).
      */
     setOuterProduct(a: Vector3, b: Vector3, scalar?: number): this;
     /**
-     * Adds the outer product of two vectors (a*b^T) to this matrix.
-     * @param {Vector3} a The first vector.
-     * @param {Vector3} b The second vector.
-     * @param {number} scalar The number to scale the matrix by (defaults to 1).
+     * Adds the outer product of two vectors alpha*(a*b^T) to this matrix.
+     * @param a The first vector.
+     * @param b The second vector.
+     * @param scalar The number to scale the matrix by (defaults to 1).
      */
     addOuterProduct(a: Vector3, b: Vector3, scalar?: number): this;
     /**
