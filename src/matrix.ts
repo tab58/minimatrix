@@ -229,7 +229,10 @@ export class Matrix {
       for (let i = 0; i < m; ++i) {
         let sum = 0;
         for (let k = 0; k < n; ++k) {
-          sum += ae[i + k * m] * a.get(k);
+          const Aij = ae[i + k * m];
+          const vk = a.get(k);
+          const product = Aij * vk;
+          sum += product;
         }
         aa[i] = sum;
       }

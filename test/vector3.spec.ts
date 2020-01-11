@@ -324,6 +324,13 @@ describe('Vector3', () => {
         s * 7 * 3, s * 7 * 5, s * 7 * 7);
       const mv = v.getOuterProduct(s);
       expect(mv).to.be.eql(m);
+
+      const v2 = new Vector3(3, 5, 7);
+      const m2 = new Matrix3().setElements(3 * 3, 3 * 5, 3 * 7,
+        5 * 3, 5 * 5, 5 * 7,
+        7 * 3, 7 * 5, 7 * 7);
+      const mv2 = v2.getOuterProduct();
+      expect(mv2).to.be.eql(m2);
     });
   });
 });

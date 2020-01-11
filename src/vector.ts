@@ -19,20 +19,11 @@ export class Vector {
   }
 
   get (i: number): number {
-    if (i < this.dimension && isPositiveInteger(i)) {
-      return this._components[i];
-    } else {
-      throw new Error(`Vector.get(): index is out of bounds.`);
-    }
+    return this.getComponent(i);
   }
 
   set (i: number, value: number): this {
-    if (i < this.dimension && isPositiveInteger(i)) {
-      this._components[i] = value;
-      return this;
-    } else {
-      throw new Error(`Vector.get(): index is out of bounds.`);
-    }
+    return this.setComponent(i, value);
   }
 
   /**
@@ -456,7 +447,7 @@ export class Vector {
       let comp = 0;
       const n = this._components.length;
       for (let i = 0; i < n; ++i) {
-        const y = this._components[i] - comp;
+        const y = (this._components[i] * v._components[i]) - comp;
         const t = sum + y;
         comp = (t - sum) - y;
         sum = t;
@@ -530,7 +521,7 @@ export class Vector {
       }
       return this;
     } else {
-      throw new Error(`Vector.max(): vector dimensions don't agree.`);
+      throw new Error(`Vector.lerp(): vector dimensions don't agree.`);
     }
   }
 
@@ -616,7 +607,7 @@ export class Vector {
       }
       return this;
     } else {
-      throw new Error(`Vector.toArray(): array length, offset, and vector dimension do not match.`);
+      throw new Error(`Vector.fromArray(): array length, offset, and vector dimension do not match.`);
     }
   }
 

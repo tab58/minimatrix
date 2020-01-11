@@ -69,7 +69,7 @@ export interface MathMatrix {
    * Inverts this matrix.
    * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
    */
-  invert (throwOnDegenerate: boolean): this;
+  invert (singularTol?: number, throwOnDegenerate?: boolean): this;
 
   /**
    * Transposes this matrix in-place.

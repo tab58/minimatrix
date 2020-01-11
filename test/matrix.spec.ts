@@ -65,6 +65,14 @@ describe('Generic Matrix', () => {
       expect(A.get(1, 1)).to.be.eql(5);
 
       expect(A.swapRows.bind(A, 1, 2)).to.throw(`swapRows(): row index out of bounds.`);
+    
+      const B = new Matrix(2, 2);
+      B.setElements(3, 5, 7, 11);
+      B.swapRows(1, 1);
+      expect(B.get(0, 0)).to.be.eql(3);
+      expect(B.get(0, 1)).to.be.eql(5);
+      expect(B.get(1, 0)).to.be.eql(7);
+      expect(B.get(1, 1)).to.be.eql(11);
     });
     it('should be able to swap columns in the matrix', () => {
       const A = new Matrix(2, 2);
@@ -76,6 +84,14 @@ describe('Generic Matrix', () => {
       expect(A.get(1, 1)).to.be.eql(7);
 
       expect(A.swapColumns.bind(A, 1, 2)).to.throw(`swapColumns(): column index out of bounds.`);
+      
+      const B = new Matrix(2, 2);
+      B.setElements(3, 5, 7, 11);
+      B.swapColumns(1, 1);
+      expect(B.get(0, 0)).to.be.eql(3);
+      expect(B.get(0, 1)).to.be.eql(5);
+      expect(B.get(1, 0)).to.be.eql(7);
+      expect(B.get(1, 1)).to.be.eql(11);
     });
     it('should select a column from a matrix', () => {
       const A = new Matrix(2, 2);

@@ -6,6 +6,7 @@
  * @author bhouston / http://clara.io
  * @author tschw
  */
+import _Math from './core';
 import { Vector2 } from './vector2';
 import { MathMatrix } from './interfaces';
 import { Matrix } from './matrix';
@@ -316,7 +317,7 @@ export class Matrix2 extends Matrix implements MathMatrix {
    * @param {Matrix2} matrix The given matrix.
    * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
    */
-  getInverse (matrix: this, throwOnDegenerate: boolean): this {
+  getInverse (matrix: this, throwOnDegenerate: boolean, singularTol = 1e-14): this {
     const me = matrix._elements;
     const te = this._elements;
     const a = me[ 0 ];
@@ -325,13 +326,12 @@ export class Matrix2 extends Matrix implements MathMatrix {
     const d = me[ 3 ];
 
     const det = a * d - b * c;
-
-    if (det === 0) {
+    if (_Math.abs(det) <= singularTol) {
       const msg = 'Matrix2.getInverse(): cannot invert matrix, determinant is 0';
       if (throwOnDegenerate === true) {
         throw new Error(msg);
       } else {
-        console.warn(msg);
+        console.error(msg);
         return this.identity();
       }
     }
@@ -347,10 +347,11 @@ export class Matrix2 extends Matrix implements MathMatrix {
 
   /**
    * Inverts this matrix.
-   * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
+	 * @param singularTol The tolerance under which the determinant is considered zero.
+   * @param throwOnDegenerate Throws an Error() if true, prints console warning if not.
    */
-  invert (throwOnDegenerate = false): this {
-    return this.getInverse(this, throwOnDegenerate);
+  invert (singularTol = 1e-14, throwOnDegenerate = false): this {
+    return this.getInverse(this, throwOnDegenerate, singularTol);
   }
 
   /**

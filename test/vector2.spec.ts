@@ -313,6 +313,11 @@ describe('Vector2', () => {
       const mv = v.getOuterProduct(s);
       const m2 = new Matrix2().setElements(s * 3 * 3, s * 3 * 5, s * 5 * 3, s * 5 * 5);
       expect(mv).to.be.eql(m2);
+
+      const v2 = new Vector2(3, 5);
+      const mv2 = v2.getOuterProduct();
+      const m22 = new Matrix2().setElements(3 * 3, 3 * 5, 5 * 3, 5 * 5);
+      expect(mv2).to.be.eql(m22);
     });
   });
 });

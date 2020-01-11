@@ -82,6 +82,14 @@ describe('Matrix2', () => {
       expect(A.get(1, 1)).to.be.eql(5);
 
       expect(A.swapRows.bind(A, 1, 2)).to.throw(`swapRows(): row index out of bounds.`);
+
+      const B = new Matrix2();
+      B.setElements(3, 5, 7, 11);
+      B.swapRows(1, 1);
+      expect(B.get(0, 0)).to.be.eql(3);
+      expect(B.get(0, 1)).to.be.eql(5);
+      expect(B.get(1, 0)).to.be.eql(7);
+      expect(B.get(1, 1)).to.be.eql(11);      
     });
     it('should be able to swap columns in the matrix', () => {
       const A = new Matrix2();
@@ -93,6 +101,14 @@ describe('Matrix2', () => {
       expect(A.get(1, 1)).to.be.eql(7);
 
       expect(A.swapColumns.bind(A, 1, 2)).to.throw(`swapColumns(): column index out of bounds.`);
+    
+      const B = new Matrix2();
+      B.setElements(3, 5, 7, 11);
+      B.swapColumns(1, 1);
+      expect(B.get(0, 0)).to.be.eql(3);
+      expect(B.get(0, 1)).to.be.eql(5);
+      expect(B.get(1, 0)).to.be.eql(7);
+      expect(B.get(1, 1)).to.be.eql(11);
     });
     it('should select a column from a matrix', () => {
       const A = new Matrix2();
@@ -225,17 +241,28 @@ describe('Matrix2', () => {
       const d = 11;
       A.setElements(a, b, c, d);
       const detA = A.determinant();
-      A.invert(false);
+      A.invert();
       const x = A.toArray();
       expect(x[0]).to.be.eql(d / detA);
       expect(x[2]).to.be.eql(-b / detA);
       expect(x[1]).to.be.eql(-c / detA);
       expect(x[3]).to.be.eql(a / detA);
 
+      A.setElements(a, b, c, d);
+      A.invert(1e-14, false);
+      const y = A.toArray();
+      expect(y[0]).to.be.eql(d / detA);
+      expect(y[2]).to.be.eql(-b / detA);
+      expect(y[1]).to.be.eql(-c / detA);
+      expect(y[3]).to.be.eql(a / detA);
+
       const B = new Matrix2();
       B.setElements(a, b, 0, 0);
-      expect(() => B.invert(true)).to.throw('Matrix2.getInverse(): cannot invert matrix, determinant is 0');
-      expect(() => B.invert(false)).to.not.throw;
+      expect(B.invert.bind(B, 1e-14, true)).to.throw('Matrix2.getInverse(): cannot invert matrix, determinant is 0'); 
+      expect(B.invert.bind(B, 1e-14, false)).to.not.throw;
+
+      const M = new Matrix2().identity();
+      expect(B.getInverse(B, false)).to.be.eql(M);
     });
     it('should calculate the adjugate', () => {
       const A = new Matrix2();
@@ -244,8 +271,6 @@ describe('Matrix2', () => {
       const c = 7;
       const d = 11;
       A.setElements(a, b, c, d);
-      // const detA = A.determinant();
-      // A.invert();
       A.adjugate();
       const x = A.toArray();
       expect(x[0]).to.be.eql(d);
@@ -321,6 +346,12 @@ describe('Matrix2', () => {
       expect(A.get(0, 1)).to.be.eql(33 * 2);
       expect(A.get(1, 0)).to.be.eql(35 * 2);
       expect(A.get(1, 1)).to.be.eql(55 * 2);
+
+      A.setOuterProduct(a, b);
+      expect(A.get(0, 0)).to.be.eql(21);
+      expect(A.get(0, 1)).to.be.eql(33);
+      expect(A.get(1, 0)).to.be.eql(35);
+      expect(A.get(1, 1)).to.be.eql(55);
     });
     it('should calculate and add an outer product correctly', () => {
       const a = 13;
@@ -336,6 +367,13 @@ describe('Matrix2', () => {
       expect(A.get(0, 1)).to.be.eql(33 * s + b);
       expect(A.get(1, 0)).to.be.eql(35 * s + c);
       expect(A.get(1, 1)).to.be.eql(55 * s + d);
+
+      A.setElements(a, b, c, d);
+      A.addOuterProduct(u, v);
+      expect(A.get(0, 0)).to.be.eql(21 + a);
+      expect(A.get(0, 1)).to.be.eql(33 + b);
+      expect(A.get(1, 0)).to.be.eql(35 + c);
+      expect(A.get(1, 1)).to.be.eql(55 + d);
     });
   });
 });

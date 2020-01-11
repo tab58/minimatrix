@@ -153,6 +153,25 @@ describe('Matrix4', () => {
       expect(A.swapRows.bind(A, 0, 5)).to.throw(`swapRows(): row index out of bounds.`);
       expect(A.swapRows.bind(A, 5, 0)).to.throw(`swapRows(): row index out of bounds.`);
       expect(A.swapRows.bind(A, 4, 5)).to.throw(`swapRows(): row index out of bounds.`);
+    
+      A.setElements(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53);
+      A.swapRows(2, 2);
+      expect(A.get(0, 0)).to.be.eql(2);
+      expect(A.get(0, 1)).to.be.eql(3);
+      expect(A.get(0, 2)).to.be.eql(5);
+      expect(A.get(0, 3)).to.be.eql(7);
+      expect(A.get(1, 0)).to.be.eql(11);
+      expect(A.get(1, 1)).to.be.eql(13);
+      expect(A.get(1, 2)).to.be.eql(17);
+      expect(A.get(1, 3)).to.be.eql(19);
+      expect(A.get(2, 0)).to.be.eql(23);
+      expect(A.get(2, 1)).to.be.eql(29);
+      expect(A.get(2, 2)).to.be.eql(31);
+      expect(A.get(2, 3)).to.be.eql(37);
+      expect(A.get(3, 0)).to.be.eql(41);
+      expect(A.get(3, 1)).to.be.eql(43);
+      expect(A.get(3, 2)).to.be.eql(47);
+      expect(A.get(3, 3)).to.be.eql(53);
     });
     it('should swap columns in a matrix', () => {
       const A = new Matrix4();
@@ -181,6 +200,28 @@ describe('Matrix4', () => {
       expect(A.swapColumns.bind(A, 0, 4)).to.throw(`swapColumns(): column index out of bounds.`);
       expect(A.swapColumns.bind(A, 4, 0)).to.throw(`swapColumns(): column index out of bounds.`);
       expect(A.swapColumns.bind(A, 4, 5)).to.throw(`swapColumns(): column index out of bounds.`);
+      
+      A.setElements(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53);
+      A.swapColumns(2, 2);
+      expect(A.get(0, 0)).to.be.eql(2);
+      expect(A.get(0, 1)).to.be.eql(3);
+      expect(A.get(0, 2)).to.be.eql(5);
+      expect(A.get(0, 3)).to.be.eql(7);
+      
+      expect(A.get(1, 0)).to.be.eql(11);
+      expect(A.get(1, 1)).to.be.eql(13);
+      expect(A.get(1, 2)).to.be.eql(17);
+      expect(A.get(1, 3)).to.be.eql(19);
+      
+      expect(A.get(2, 0)).to.be.eql(23);
+      expect(A.get(2, 1)).to.be.eql(29);
+      expect(A.get(2, 2)).to.be.eql(31);
+      expect(A.get(2, 3)).to.be.eql(37);
+
+      expect(A.get(3, 0)).to.be.eql(41);
+      expect(A.get(3, 1)).to.be.eql(43);
+      expect(A.get(3, 2)).to.be.eql(47);
+      expect(A.get(3, 3)).to.be.eql(53);
     });
     it('should get a row from the matrix', () => {
       const A = new Matrix4();
@@ -396,7 +437,10 @@ describe('Matrix4', () => {
 
       const B = new Matrix4();
       B.setElements(0, 0, 0, 0, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53);
-      expect(B.invert.bind(B, true)).to.throw('Matrix4.getInverse(): matrix is degenerate.');
+      expect(B.invert.bind(B, 1e-14, true)).to.throw('Matrix4.getInverse(): matrix is degenerate.');
+      
+      const M = new Matrix4().identity();
+      expect(B.getInverse(B, false)).to.be.eql(M);
     });
     it('should multiply 2 matrices together', () => {
       const a = new Matrix4();
@@ -719,6 +763,28 @@ describe('Matrix4', () => {
       expect(A.get(3, 1)).to.be.eql(91 * s);
       expect(A.get(3, 2)).to.be.eql(119 * s);
       expect(A.get(3, 3)).to.be.eql(161 * s);
+
+      const B = new Matrix4();
+      B.setOuterProduct(u, v);
+      expect(B.get(0, 0)).to.be.eql(22);
+      expect(B.get(0, 1)).to.be.eql(26);
+      expect(B.get(0, 2)).to.be.eql(34);
+      expect(B.get(0, 3)).to.be.eql(46);
+
+      expect(B.get(1, 0)).to.be.eql(33);
+      expect(B.get(1, 1)).to.be.eql(39);
+      expect(B.get(1, 2)).to.be.eql(51);
+      expect(B.get(1, 3)).to.be.eql(69);
+      
+      expect(B.get(2, 0)).to.be.eql(55);
+      expect(B.get(2, 1)).to.be.eql(65);
+      expect(B.get(2, 2)).to.be.eql(85);
+      expect(B.get(2, 3)).to.be.eql(115);
+
+      expect(B.get(3, 0)).to.be.eql(77);
+      expect(B.get(3, 1)).to.be.eql(91);
+      expect(B.get(3, 2)).to.be.eql(119);
+      expect(B.get(3, 3)).to.be.eql(161);
     });
     it('should calculate and add an outer product correctly', () => {
       const a = 29;
@@ -746,6 +812,28 @@ describe('Matrix4', () => {
       expect(A.get(3, 1)).to.be.eql(91 * s + a);
       expect(A.get(3, 2)).to.be.eql(119 * s + a);
       expect(A.get(3, 3)).to.be.eql(161 * s + a);
+
+      const B = new Matrix4().setElements(a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a);
+      B.addOuterProduct(u, v);
+      expect(B.get(0, 0)).to.be.eql(22 + a);
+      expect(B.get(0, 1)).to.be.eql(26 + a);
+      expect(B.get(0, 2)).to.be.eql(34 + a);
+      expect(B.get(0, 3)).to.be.eql(46 + a);
+
+      expect(B.get(1, 0)).to.be.eql(33 + a);
+      expect(B.get(1, 1)).to.be.eql(39 + a);
+      expect(B.get(1, 2)).to.be.eql(51 + a);
+      expect(B.get(1, 3)).to.be.eql(69 + a);
+      
+      expect(B.get(2, 0)).to.be.eql(55 + a);
+      expect(B.get(2, 1)).to.be.eql(65 + a);
+      expect(B.get(2, 2)).to.be.eql(85 + a);
+      expect(B.get(2, 3)).to.be.eql(115 + a);
+
+      expect(B.get(3, 0)).to.be.eql(77 + a);
+      expect(B.get(3, 1)).to.be.eql(91 + a);
+      expect(B.get(3, 2)).to.be.eql(119 + a);
+      expect(B.get(3, 3)).to.be.eql(161 + a);
     });
   });
 });

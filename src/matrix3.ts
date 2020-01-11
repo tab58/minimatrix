@@ -445,10 +445,11 @@ export class Matrix3 implements MathMatrix {
 
   /**
    * Inverts this matrix.
-   * @param {boolean} throwOnDegenerate Throws an Error() if true, prints console warning if not.
+	 * @param singularTol The tolerance under which the determinant is considered zero.
+   * @param throwOnDegenerate Throws an Error() if true, prints console warning if not.
    */
-  invert (throwOnDegenerate = false): this {
-    return this.getInverse(this, throwOnDegenerate);
+  invert (singularTol = 1e-14, throwOnDegenerate = false): this {
+    return this.getInverse(this, throwOnDegenerate, singularTol);
   }
 
   /**
@@ -510,7 +511,7 @@ export class Matrix3 implements MathMatrix {
       if (throwOnDegenerate) {
         throw new Error(msg);
       } else {
-        console.warn(msg);
+        console.error(msg);
         return this.identity();
       }      
     }

@@ -292,6 +292,14 @@ describe('Vector4', () => {
         s * 7 * 2, s * 7 * 3, s * 7 * 5, s * 7 * 7);
       const m = v.getOuterProduct(s);
       expect(m).to.be.eql(mv);
+
+      const v2 = new Vector4(2, 3, 5, 7);
+      const mv2 = new Matrix4().setElements(2 * 2, 2 * 3, 2 * 5, 2 * 7,
+        3 * 2, 3 * 3, 3 * 5, 3 * 7,
+        5 * 2, 5 * 3, 5 * 5, 5 * 7,
+        7 * 2, 7 * 3, 7 * 5, 7 * 7);
+      const m2 = v2.getOuterProduct();
+      expect(m2).to.be.eql(mv2);
     })
   });
 });
